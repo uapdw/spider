@@ -5,6 +5,9 @@
 #
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
+from faker import Factory
+
+fake = Factory.create()
 
 BOT_NAME = 'infomation_crawler'
 
@@ -12,6 +15,11 @@ SPIDER_MODULES = ['infomation_crawler.spiders']
 NEWSPIDER_MODULE = 'infomation_crawler.spiders'
 DEFAULT_ITEM_CLASS = 'infomation_crawler.BaiduNewsItem'
 
-ITEM_PIPELINES = {'infomation_crawler.pipelines.InfomationCrawlerPipeline': 1}
+ITEM_PIPELINES = {
+  'infomation_crawler.pipelines.BaiduNewsPipeline': 1,
+  'infomation_crawler.pipelines.StockCompanyInfoPipeline':2
+}
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'infomation_crawler (+http://www.yourdomain.com)'
+# USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'
+USER_AGENT = fake.user_agent()
+DOWNLOAD_DELAY = 2
