@@ -18,6 +18,8 @@ class StockCompanyInfoItem(Item):
   stockCode = Field()
   #股票名称
   stockName = Field() 
+  #item类型
+  iType = Field()
   #公司全称
   fullName = Field() 
   #英文名称
@@ -47,11 +49,43 @@ class StockCompanyInfoItem(Item):
   listSponsor = Field() #上市推荐人
   recomInstitution = Field() #保荐机构
 
+class StockBalanceSheetItem(Item):
+  #股票代码
+  stockCode = Field()
+  #股票名称
+  stockName = Field() 
+  #item类型
+  iType = Field()
 
+class StockIncomeStatementsItem(Item):
+  #股票代码
+  stockCode = Field()
+  #股票名称
+  stockName = Field() 
+  #item类型
+  iType = Field()
 
+class StockCashFlowItem(Item):
+  #股票代码
+  stockCode = Field()
+  #股票名称
+  stockName = Field() 
+  #item类型
+  iType = Field()
 
+class StockFinancialReportItem(Item):
+  #股票代码
+  stockCode = Field()
+  #股票名称
+  stockName = Field() 
+  #item类型
+  iType = Field()
 
-
+class SteelIndexNumberItem(Item):
+  #发布日期
+  pubDate = Field()
+  #钢材综合指数
+  indexNumber = Field()
 
 
 class InfomationCrawlerItem(Item):

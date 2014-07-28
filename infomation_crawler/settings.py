@@ -13,11 +13,15 @@ BOT_NAME = 'infomation_crawler'
 
 SPIDER_MODULES = ['infomation_crawler.spiders']
 NEWSPIDER_MODULE = 'infomation_crawler.spiders'
-DEFAULT_ITEM_CLASS = 'infomation_crawler.BaiduNewsItem'
 
 ITEM_PIPELINES = {
   'infomation_crawler.pipelines.BaiduNewsPipeline': 1,
-  'infomation_crawler.pipelines.StockCompanyInfoPipeline':2
+  'infomation_crawler.pipelines.StockCompanyInfoPipeline':2,
+  'infomation_crawler.pipelines.StockBalanceSheetPipeline':3,
+  'infomation_crawler.pipelines.StockIncomeStatementsPipeline':4,
+  'infomation_crawler.pipelines.StockCashFlowPipeline':5,
+  'infomation_crawler.pipelines.StockFinancialReportPipeline':6,
+  'infomation_crawler.pipelines.SteelIndexNumberPipeline':7
 }
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'
