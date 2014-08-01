@@ -111,5 +111,17 @@ class StatsMacroDataItem(Item):
   ts = Field()
   types = Field()
 
+class WhpjItem(Item):
+  currentname = Field()
+  price_spot_in = Field()
+  price_cash_in = Field()
+  price_spot_out = Field()
+  price_cash_out = Field()
+  midprice = Field()
+  bocprice = Field()
+  releasetime = Field()
+  note = Field()
+  ts = Field()
+
 class InfomationCrawlerItem(Item):
   pass

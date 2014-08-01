@@ -3,6 +3,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import pymongo
+import datetime
 
 class BaiduNewsPipeline(object):
     def process_item(self, item, spider):
@@ -163,4 +164,22 @@ class StatsMacroDataPipeline(object):
       tMacroData.update({'key':item['key']},{'$set':data},True)
     return item
 
+
+class WhpjPipeline(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['whpj']:
+      return item
+
+    print "enter WhpjPipeline....."
+    conn = pymongo.Connection('localhost',27017)
+    infoDB = conn.info
+    tWhpjRate = infoDB.bm_rate
+
+    t = datetime.datetime.strptime(item['releasetime'],'%Y.%m.%d %H:%M:%S')
+    #t = time.strftime('%Y-%m-%d %H:%M:%S',t)
+    item['releasetime'] = t
+
+    data = {'currentname':item['currentname'],'price_spot_in':item['price_spot_in'],'price_cash_in':item['price_cash_in'],'price_spot_out':item['price_spot_out'],'price_cash_out':item['price_cash_out'],'midprice':item['midprice'],'bocprice':item['bocprice'],'releasetime':item['releasetime'],'note':item['note'],'ts':item['ts']}
+    tWhpjRate.insert(data)
+    return item
 
