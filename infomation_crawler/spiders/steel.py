@@ -1,5 +1,4 @@
-import re
-from scrapy.http import Request
+import datetime
 from scrapy.spider import Spider
 from scrapy.selector import Selector
 from infomation_crawler.items import SteelIndexNumberItem
@@ -7,8 +6,9 @@ from infomation_crawler.items import SteelIndexNumberItem
 class SteelSpider(Spider):
     name = 'steel'
     allowed_domains = ['glinfo.com']
-    start_urls = ['http://index.glinfo.com/xpic/report.ms?tabName=GANGCAIZONGHE&typeName=%25u94A2%25u6750%25u7EFC%25u5408&dateType=day&startTime=1980-07-01&endTime=2014-07-24']
-
+    startTime = (datetime.date.today()-datetime.timedelta(11)).strftime('%Y-%m-%d')
+    endTime = (datetime.date.today()-datetime.timedelta(1)).strftime('%Y-%m-%d')
+    start_urls = ['http://index.glinfo.com/xpic/report.ms?tabName=GANGCAIZONGHE&typeName=%26u94A2%25u6750%25u7EFC%25u5408&dateType=day&startTime=' + startTime + '&endTime=' + endTime]
 
     def parse(self, response):
         sel = Selector(response)

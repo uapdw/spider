@@ -19,6 +19,8 @@ class CninfoStockSpider(Spider):
     'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
   ]
 
+  monthList = ['-03-31','-06-30','-09-30','-12-31']
+
   arrBalanceSheetColumn = {
     u'科目':'km',
     u'货币资金':'hbzj',
@@ -97,29 +99,24 @@ class CninfoStockSpider(Spider):
       arr = theStr.replace("setLmCode('",'').replace("');",'').split('?')
       code = p.search(arr[1]).group()
       companyInfoUrl = 'http://www.cninfo.com.cn/information/' + arr[0] + '/' + arr[1] + '.html'
-
-      # balanceSheetUrl = 'http://www.cninfo.com.cn/information/balancesheet/' + arr[1] + '.html'
-      # incomeStatementsUrl = 'http://www.cninfo.com.cn/information/incomestatements/' + arr[1] + '.html'
-      # cashFlowUrl = 'http://www.cninfo.com.cn/information/cashflow/' + arr[1] + '.html'
-      # financialReportUrl = 'http://www.cninfo.com.cn/information/financialreport/' + arr[1] + '.html'
-
       balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode=' + code
       incomeStatementsUrl = 'http://www.cninfo.com.cn/information/stock/incomestatements_.jsp?stockCode=' + code
       cashFlowUrl = 'http://www.cninfo.com.cn/information/stock/cashflow_.jsp?stockCode=' + code
       financialReportUrl = 'http://www.cninfo.com.cn/information/stock/financialreport_.jsp?stockCode=' + code
-
-
-      yield Request(companyInfoUrl, self.parseCompanyInfo)
-      yield Request(url=balanceSheetUrl, callback=self.parseBalanceSheet, method='POST',meta={'cwzb':'balancesheet','mm':'-06-30','yyyy':'2012'})
-      '''
-      yield Request(incomeStatementsUrl, self.parseIncomeStatements)
-      yield Request(cashFlowUrl, self.parseCashFlow)
-      yield Request(financialReportUrl, self.parseFinancialReport)
-      '''
+      for yyyy in range(2000,2015):
+	for mm in self.monthList:
+	  #yield Request(companyInfoUrl, self.parseCompanyInfo)
+	  yield Request(url=balanceSheetUrl, callback=self.parseBalanceSheet, method='GET',meta={'mm':mm,'yyyy':yyyy})
+	  '''
+	  yield Request(incomeStatementsUrl, self.parseIncomeStatements)
+	  yield Request(cashFlowUrl, self.parseCashFlow)
+	  yield Request(financialReportUrl, self.parseFinancialReport)
+	  '''
 
   def parseCompanyInfo(self, response):
     print 'Method => companyInfo'
     sel = Selector(response)
+
     tmpStr = sel.xpath('//table[@class="table"]/tr/td[@style]/text()').extract()
     stockCode = tmpStr[0].strip()
     stockName = tmpStr[1].strip().replace(' ','')
@@ -182,6 +179,12 @@ class CninfoStockSpider(Spider):
   def parseBalanceSheet(self, response):
     print 'Method => balanceSheet'
     sel = Selector(response)
+    print response.url
+
+    # from scrapy.shell import inspect_response
+    # inspect_response(response)
+
+    '''
     tmpStr = sel.xpath('//form[@id="cninfoform"]/table/tr/td/text()').extract()
     stockCode = tmpStr[0].strip()
     stockName = tmpStr[1].strip()
@@ -200,6 +203,7 @@ class CninfoStockSpider(Spider):
 	item['subject'] = arrRes[key]
 
     print item
+    '''
     #return item
 
   def parseIncomeStatements(self, response):

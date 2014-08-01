@@ -21,7 +21,9 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.StockIncomeStatementsPipeline':4,
   'infomation_crawler.pipelines.StockCashFlowPipeline':5,
   'infomation_crawler.pipelines.StockFinancialReportPipeline':6,
-  'infomation_crawler.pipelines.SteelIndexNumberPipeline':7
+  'infomation_crawler.pipelines.SteelIndexNumberPipeline':7,
+  'infomation_crawler.pipelines.StatsMacroIndexPipeline':8,
+  'infomation_crawler.pipelines.StatsMacroDataPipeline':9
 }
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'

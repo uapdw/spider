@@ -87,6 +87,27 @@ class SteelIndexNumberItem(Item):
   #钢材综合指数
   indexNumber = Field()
 
+class StatsMacroIndexItem(Item):
+  code = Field()
+  name = Field()
+  parentCode = Field()
+  period = Field()
+  ifData = Field()
+  unit = Field()
+  note = Field()
+  ts = Field()
+
+class StatsMacroDataItem(Item):
+  key = Field()
+  code = Field()
+  name = Field()
+  area = Field()
+  ydate = Field()
+  qdate = Field()
+  mdate = Field()
+  value = Field()
+  desc = Field()
+  ts = Field()
 
 class InfomationCrawlerItem(Item):
   pass

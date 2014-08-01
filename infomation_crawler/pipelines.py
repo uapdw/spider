@@ -125,3 +125,33 @@ class SteelIndexNumberPipeline(object):
 
     return item
 
+class StatsMacroIndexPipeline(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['statsindex']:
+      return item
+
+    conn = pymongo.Connection('localhost',27017)
+    infoDB = conn.info
+    tMacroIndex = infoDB.bm_macro_index
+
+    print "enter StatsMacroIndexPipeline....."
+    data = {"name":item['name'],"parentcode":item['parentCode'],"period":item['period'],'ts':item['ts'],'ifdata':item['ifData'],'unit':item['unit'],'note':item['note']}
+    tMacroIndex.update({'code':item['code']},{'$set':data},True)
+
+    return item
+
+class StatsMacroDataPipeline(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['statsdata']:
+      return item
+
+    conn = pymongo.Connection('localhost',27017)
+    infoDB = conn.info
+    tMacroData = infoDB.bm_macro_data
+
+    print "enter StatsMacroDataPipeline....."
+    data = {"code":item['code'],"name":item['name'],'area':item['area'],'ydate':item['ydate'],'qdate':item['qdate'],'mdate':item['mdate'],'value':item['value'],'desc':item['desc'],'ts':item['ts']}
+    tMacroData.update({'key':item['key']},{'$set':data},True)
+    return item
+
+
