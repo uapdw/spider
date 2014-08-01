@@ -147,11 +147,20 @@ class StatsMacroDataPipeline(object):
 
     conn = pymongo.Connection('localhost',27017)
     infoDB = conn.info
+    tMacroIndex = infoDB.bm_macro_index
     tMacroData = infoDB.bm_macro_data
 
     print "enter StatsMacroDataPipeline....."
-    data = {"code":item['code'],"name":item['name'],'area':item['area'],'ydate':item['ydate'],'qdate':item['qdate'],'mdate':item['mdate'],'value':item['value'],'desc':item['desc'],'ts':item['ts']}
-    tMacroData.update({'key':item['key']},{'$set':data},True)
+    if item['types'] == 'index':
+      print "Update index's unit....."
+      indexItem = tMacroIndex.find_one({'code':item['code']})
+      indexItem['unit'] = item['unit']
+      indexItem['note'] = item['note']
+      tMacroIndex.update({'code':item['code']},indexItem)
+    elif item['types'] == 'data':
+      print "Insert macro data....."
+      data = {"code":item['code'],"name":item['name'],'area':item['area'],'ydate':item['ydate'],'qdate':item['qdate'],'mdate':item['mdate'],'value':item['value'],'desc':item['desc'],'ts':item['ts']}
+      tMacroData.update({'key':item['key']},{'$set':data},True)
     return item
 
 

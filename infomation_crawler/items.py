@@ -96,6 +96,7 @@ class StatsMacroIndexItem(Item):
   unit = Field()
   note = Field()
   ts = Field()
+  types = Field()
 
 class StatsMacroDataItem(Item):
   key = Field()
@@ -108,6 +109,7 @@ class StatsMacroDataItem(Item):
   value = Field()
   desc = Field()
   ts = Field()
+  types = Field()
 
 class InfomationCrawlerItem(Item):
   pass

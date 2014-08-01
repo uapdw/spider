@@ -1,6 +1,6 @@
 from scrapy.spider import Spider
 from scrapy.selector import Selector
-from infomation_crawler.items import StatsMacroDataItem
+from infomation_crawler.items import StatsMacroDataItem, StatsMacroIndexItem
 from time import time
 import pymongo
 import json
@@ -18,7 +18,6 @@ class StatsdataSpider(Spider):
   indexList = tMacroIndex.find({'ifdata':'1'})
 
   for i in indexList:
-    print i['code'],i['name']
     startTime = ''
     if i['period'] == 'hgnd':
       startTime = '1949'
@@ -33,18 +32,6 @@ class StatsdataSpider(Spider):
 
   def parse(self, response):
     sel = Selector(response)
-    string = (sel.xpath('//p/text()').extract())[0]
-    jsonList = json.loads(string)
-    arrTableData = jsonList['tableData']
-    arrIndex = jsonList['value']['index'][0]
-    arrArea = jsonList['value']['region'][0]
-    print '='*30
-    #print arrIndex
-    print arrIndex['id'],arrIndex['name'],arrIndex['unit'],arrIndex['note']
-
-    if len(arrTableData) <= 0:
-      return
-
     period = ''
     if 'hgnd' in response.url:
       period = 'hgnd'
@@ -53,8 +40,23 @@ class StatsdataSpider(Spider):
     elif 'hgjd' in response.url:
       period = 'hgjd'
 
+    string = (sel.xpath('//p/text()').extract())[0]
+    jsonList = json.loads(string)
+    arrTableData = jsonList['tableData']
+    arrIndex = jsonList['value']['index'][0]
+    arrArea = jsonList['value']['region'][0]
+
+    indexItem = StatsMacroIndexItem()
+    indexItem['code'] = arrIndex['id']
+    indexItem['unit'] = arrIndex['unit']
+    indexItem['note'] = arrIndex['note']
+    indexItem['types'] = 'index'
+    yield indexItem
+
+    if len(arrTableData) <= 0:
+      return
+
     for key in arrTableData:
-      print key,arrTableData[key]
       item = StatsMacroDataItem()
       item['key'] = key
       item['code'] = arrIndex['id']
@@ -94,8 +96,8 @@ class StatsdataSpider(Spider):
       item['value'] = value
       item['desc'] = ''
       item['ts'] = int(time())
+      item['types'] = 'data'
       yield item
-
 
     
 
