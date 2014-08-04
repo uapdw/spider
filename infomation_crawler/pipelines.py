@@ -15,6 +15,7 @@ class BaiduNewsPipeline(object):
       tArticles = infoDB.articles
       article = {"title":item['title'][0],'sitename':item['sitename'][0],'posttime':item['posttime'][0]}
       tArticles.update({'link':item['href'][0]},{'$set':article},True)
+      conn.close()
 
       # print "#"*20
       # print item["title"][0],item['href'][0],item['sitename'][0],item['posttime'][0]
@@ -124,6 +125,7 @@ class SteelIndexNumberPipeline(object):
       data = {"indexnum":item['indexNumber'][index]}
       tSteelIndex.update({'pubdate':pubDate},{'$set':data},True)
 
+    conn.close()
     return item
 
 class StatsMacroIndexPipeline(object):
@@ -139,6 +141,7 @@ class StatsMacroIndexPipeline(object):
     data = {"name":item['name'],"parentcode":item['parentCode'],"period":item['period'],'ts':item['ts'],'ifdata':item['ifData'],'unit':item['unit'],'note':item['note']}
     tMacroIndex.update({'code':item['code']},{'$set':data},True)
 
+    conn.close()
     return item
 
 class StatsMacroDataPipeline(object):
@@ -162,6 +165,7 @@ class StatsMacroDataPipeline(object):
       print "Insert macro data....."
       data = {"code":item['code'],"name":item['name'],'area':item['area'],'ydate':item['ydate'],'qdate':item['qdate'],'mdate':item['mdate'],'value':item['value'],'desc':item['desc'],'ts':item['ts']}
       tMacroData.update({'key':item['key']},{'$set':data},True)
+    conn.close()
     return item
 
 
@@ -181,5 +185,6 @@ class WhpjPipeline(object):
 
     data = {'currentname':item['currentname'],'price_spot_in':item['price_spot_in'],'price_cash_in':item['price_cash_in'],'price_spot_out':item['price_spot_out'],'price_cash_out':item['price_cash_out'],'midprice':item['midprice'],'bocprice':item['bocprice'],'releasetime':item['releasetime'],'note':item['note'],'ts':item['ts']}
     tWhpjRate.insert(data)
+    conn.close()
     return item
 

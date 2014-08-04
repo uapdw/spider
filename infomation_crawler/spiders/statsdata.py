@@ -16,6 +16,7 @@ class StatsdataSpider(Spider):
   tMacroIndex = infoDB.bm_macro_index
   #indexList = tMacroIndex.find({'ifdata':'1','period':'hgjd'})
   indexList = tMacroIndex.find({'ifdata':'1'})
+  conn.close()
 
   for i in indexList:
     startTime = ''

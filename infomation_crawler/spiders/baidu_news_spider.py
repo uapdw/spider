@@ -15,6 +15,7 @@ class BaiduNewsSpider(Spider):
   infoDB = conn.info
   tKeywords = infoDB.keywords
   listKeywords = tKeywords.find()
+  conn.close()
   urls = []
 
   for item in listKeywords:
