@@ -29,4 +29,4 @@ ITEM_PIPELINES = {
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'
 USER_AGENT = fake.user_agent()
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 1

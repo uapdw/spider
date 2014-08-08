@@ -16,7 +16,6 @@ class StatsdataSpider(Spider):
   tMacroIndex = infoDB.bm_macro_index
   #indexList = tMacroIndex.find({'ifdata':'1','period':'hgjd'})
   indexList = tMacroIndex.find({'ifdata':'1'})
-  conn.close()
 
   for i in indexList:
     startTime = ''
@@ -51,6 +50,7 @@ class StatsdataSpider(Spider):
     indexItem['code'] = arrIndex['id']
     indexItem['unit'] = arrIndex['unit']
     indexItem['note'] = arrIndex['note']
+    indexItem['period'] = period
     indexItem['types'] = 'index'
     yield indexItem
 
@@ -89,7 +89,6 @@ class StatsdataSpider(Spider):
 	item['ydate'] = ''
 	item['qdate'] = int(year + qStr)
 	item['mdate'] = ''
-
       value = arrTableData[key].replace(',','')
       if value == '':
 	value = 0

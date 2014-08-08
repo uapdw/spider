@@ -121,7 +121,6 @@ class SteelIndexNumberPipeline(object):
 
     print "enter SteelIndexNumberPipeline....."
     for index,pubDate in enumerate(item['pubDate']):
-      print pubDate, item['indexNumber'][index]
       data = {"indexnum":item['indexNumber'][index]}
       tSteelIndex.update({'pubdate':pubDate},{'$set':data},True)
 
@@ -133,15 +132,9 @@ class StatsMacroIndexPipeline(object):
     if spider.name not in ['statsindex']:
       return item
 
-    conn = pymongo.Connection('localhost',27017)
-    infoDB = conn.info
-    tMacroIndex = infoDB.bm_macro_index
-
     print "enter StatsMacroIndexPipeline....."
-    data = {"name":item['name'],"parentcode":item['parentCode'],"period":item['period'],'ts':item['ts'],'ifdata':item['ifData'],'unit':item['unit'],'note':item['note']}
-    tMacroIndex.update({'code':item['code']},{'$set':data},True)
-
-    conn.close()
+    data = {"name":item['name'],"parentcode":item['parentCode'],'ts':item['ts'],'ifdata':item['ifData'],'unit':item['unit'],'note':item['note']}
+    spider.tMacroIndex.update({'code':item['code'],'period':item['period']},{'$set':data},True)
     return item
 
 class StatsMacroDataPipeline(object):
@@ -149,23 +142,18 @@ class StatsMacroDataPipeline(object):
     if spider.name not in ['statsdata']:
       return item
 
-    conn = pymongo.Connection('localhost',27017)
-    infoDB = conn.info
-    tMacroIndex = infoDB.bm_macro_index
-    tMacroData = infoDB.bm_macro_data
-
     print "enter StatsMacroDataPipeline....."
+
     if item['types'] == 'index':
-      print "Update index's unit....."
-      indexItem = tMacroIndex.find_one({'code':item['code']})
+      #print "Update index's unit....."
+      indexItem = spider.tMacroIndex.find_one({'code':item['code'],'period':item['period']})
       indexItem['unit'] = item['unit']
       indexItem['note'] = item['note']
-      tMacroIndex.update({'code':item['code']},indexItem)
+      spider.tMacroIndex.update({'_id':indexItem['_id']},indexItem)
     elif item['types'] == 'data':
-      print "Insert macro data....."
+      #print "Insert macro data....."
       data = {"code":item['code'],"name":item['name'],'area':item['area'],'ydate':item['ydate'],'qdate':item['qdate'],'mdate':item['mdate'],'value':item['value'],'desc':item['desc'],'ts':item['ts']}
-      tMacroData.update({'key':item['key']},{'$set':data},True)
-    conn.close()
+      spider.tMacroData.update({'key':item['key']},{'$set':data},True)
     return item
 
 
@@ -180,7 +168,6 @@ class WhpjPipeline(object):
     tWhpjRate = infoDB.bm_rate
 
     t = datetime.datetime.strptime(item['releasetime'],'%Y.%m.%d %H:%M:%S')
-    #t = time.strftime('%Y-%m-%d %H:%M:%S',t)
     item['releasetime'] = t
 
     data = {'currentname':item['currentname'],'price_spot_in':item['price_spot_in'],'price_cash_in':item['price_cash_in'],'price_spot_out':item['price_spot_out'],'price_cash_out':item['price_cash_out'],'midprice':item['midprice'],'bocprice':item['bocprice'],'releasetime':item['releasetime'],'note':item['note'],'ts':item['ts']}

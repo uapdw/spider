@@ -4,15 +4,21 @@ from scrapy.selector import Selector
 from infomation_crawler.items import StatsMacroIndexItem
 from time import time
 import json
+import pymongo
 
 class StatsindexSpider(Spider):
   name = "statsindex"
   allowed_domains = ["stats.gov.cn"]
   ts = str(int(time()))
+
+  conn = pymongo.Connection('localhost',27017)
+  infoDB = conn.info
+  tMacroIndex = infoDB.bm_macro_index
+
   start_urls = (
-      'http://data.stats.gov.cn/quotas/init?t=' + ts + '&dbcode=hgnd&dimension=zb&selectedCodeId=',
       'http://data.stats.gov.cn/quotas/init?t=' + ts + '&dbcode=hgjd&dimension=zb&selectedCodeId=',
       'http://data.stats.gov.cn/quotas/init?t=' + ts + '&dbcode=hgyd&dimension=zb&selectedCodeId=',
+      'http://data.stats.gov.cn/quotas/init?t=' + ts + '&dbcode=hgnd&dimension=zb&selectedCodeId=',
       )
 
   def parse(self, response):
@@ -30,7 +36,6 @@ class StatsindexSpider(Spider):
 
     for i in jsonList:
       if i['pId'] == '1':
-	print i['id'],i['name']
 	item = StatsMacroIndexItem()
 
 	item['code'] = i['id']
@@ -46,8 +51,6 @@ class StatsindexSpider(Spider):
 	yield Request('http://data.stats.gov.cn/quotas/getchildren?code=' + i['id'] + '&dbcode=' + period + '&dimension=zb', self.parse_item)
 
   def parse_item(self,response):
-    print '='*20
-    print "Response = " + response.body
     if response.body.strip() == '':
       return
     sel = Selector(response)
@@ -65,7 +68,6 @@ class StatsindexSpider(Spider):
       period = 'hgjd'
 
     for i in jsonList:
-      print i['id'],i['name']
       item = StatsMacroIndexItem()
 
       item['code'] = i['id']
