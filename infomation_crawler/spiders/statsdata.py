@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from scrapy.spider import Spider
 from scrapy.selector import Selector
 from infomation_crawler.items import StatsMacroDataItem, StatsMacroIndexItem
@@ -14,6 +15,7 @@ class StatsdataSpider(Spider):
   conn = pymongo.Connection('localhost',27017)
   infoDB = conn.info
   tMacroIndex = infoDB.bm_macro_index
+  tMacroData = infoDB.bm_macro_data
   #indexList = tMacroIndex.find({'ifdata':'1','period':'hgjd'})
   indexList = tMacroIndex.find({'ifdata':'1'})
 

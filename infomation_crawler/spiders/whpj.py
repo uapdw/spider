@@ -4,14 +4,19 @@ from scrapy.selector import Selector
 from infomation_crawler.items import WhpjItem
 from time import time
 import re
+import pymongo
 
 class WhpjSpider(Spider):
     name = "whpj"
     allowed_domains = ["boc.cn"]
 
+    conn = pymongo.Connection('localhost',27017)
+    infoDB = conn.info
+    tWhpjRate = infoDB.bm_rate
+
     def start_requests(self):
       reqList = []
-      for i in range(1,87711):
+      for i in range(1,88484):
 	reqList.append(FormRequest('http://srh.bankofchina.com/search/whpj/search.jsp',formdata={'erectDate':'2004-01-01','nothing':'2014-08-01','page':str(i),'pjname':'0'},callback=self.parse_url))
 
       return reqList
@@ -24,7 +29,6 @@ class WhpjSpider(Spider):
 	tdList = tr.xpath('./td[not(@colspan)]').extract()
 	if len(tdList) < 1:
 	  continue
-	print '='*30
 	item = WhpjItem()
 	item['currentname'] = re_h.sub('',tdList[0].replace(u'\xa0',u'').strip())
 	item['price_spot_in'] = re_h.sub('',tdList[1].replace(u'\xa0',u'').strip())
