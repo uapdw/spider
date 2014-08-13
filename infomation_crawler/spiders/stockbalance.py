@@ -4,11 +4,10 @@ import pymongo
 from scrapy.http import Request
 from scrapy.spider import Spider
 from scrapy.selector import Selector
-from scrapy.item import BaseItem
-from scrapy.contrib.loader import ItemLoader
+from scrapy.item import Item, Field
 
-class FlexibleItem(dict, BaseItem):
-  pass
+class FlexibleItem(Item):
+  row = Field()
 
 class StockbalanceSpider(Spider):
   name = "stockbalance"
@@ -49,6 +48,8 @@ class StockbalanceSpider(Spider):
     year = response.meta['year']
     month = response.meta['month']
     tmpStr = sel.xpath('//form[@id="cninfoform"]/table/tr/td/text()').extract()
+    if len(tmpStr) < 1:
+      return
     stockCode = tmpStr[0].strip()
     stockName = tmpStr[1].strip()
 
@@ -57,13 +58,13 @@ class StockbalanceSpider(Spider):
     arrRes = dict([(i.strip(),arrValue[index].strip()) for index,i in enumerate(arrTitle)])
 
     item = FlexibleItem()
-    loader = ItemLoader(item)
-
-    loader.add_value('stockCode',stockCode)
-    loader.add_value('stockName',stockName)
-    loader.add_value('pubtime',year + month)
+    row = {}
+    row['stockCode'] = stockCode
+    row['stockName'] = stockName
+    row['pubtime'] = year + month
 
     for key in arrRes.keys():
-      loader.add_value(key.encode('utf8'), arrRes[key])
+      row[key.encode('utf8')] = arrRes[key]
 
-    return loader.load_item()
+    item['row'] = row
+    return item

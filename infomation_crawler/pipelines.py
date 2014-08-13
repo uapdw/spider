@@ -39,13 +39,13 @@ class StockBalanceSheetPipeline(object):
       print "enter StockBalanceSheetPipeline....."
 
       arrInfo = {}
-      if u'科目'.encode('utf8') in item:
-	for i in item:
+      if u'科目'.encode('utf8') in item['row']:
+	for i in item['row']:
 	  if i == 'stockCode' or i == 'pubtime':
 	    continue
-	  arrInfo[i] = item[i][0]
+	  arrInfo[i] = item['row'][i]
 
-	spider.tBalanceSheet.update({'stockCode':item['stockCode'][0],'pubtime':item['pubtime'][0]},{'$set':arrInfo},True)
+	spider.tBalanceSheet.update({'stockCode':item['row']['stockCode'],'pubtime':item['row']['pubtime']},{'$set':arrInfo},True)
 	return item
       else:
 	raise DropItem('No stock balance sheet datas in %s' % item)
@@ -58,13 +58,13 @@ class StockIncomeStatementsPipeline(object):
       print "enter StockIncomeStatementsPipeline....."
 
       arrInfo = {}
-      if u'科目'.encode('utf8') in item:
-	for i in item:
+      if u'科目'.encode('utf8') in item['row']:
+	for i in item['row']:
 	  if i == 'stockCode' or i == 'pubtime':
 	    continue
-	  arrInfo[i] = item[i][0]
+	  arrInfo[i] = item['row'][i]
 
-	spider.tIncome.update({'stockCode':item['stockCode'][0],'pubtime':item['pubtime'][0]},{'$set':arrInfo},True)
+	spider.tIncome.update({'stockCode':item['row']['stockCode'],'pubtime':item['row']['pubtime']},{'$set':arrInfo},True)
 	return item
       else:
 	raise DropItem('No stock income statements datas in %s' % item)
@@ -76,13 +76,13 @@ class StockCashFlowPipeline(object):
       print "enter StockCashFlowPipeline....."
 
       arrInfo = {}
-      if u'科目'.encode('utf8') in item:
-	for i in item:
+      if u'科目'.encode('utf8') in item['row']:
+	for i in item['row']:
 	  if i == 'stockCode' or i == 'pubtime':
 	    continue
-	  arrInfo[i] = item[i][0]
+	  arrInfo[i] = item['row'][i]
 
-	spider.tCashFlow.update({'stockCode':item['stockCode'][0],'pubtime':item['pubtime'][0]},{'$set':arrInfo},True)
+	spider.tCashFlow.update({'stockCode':item['row']['stockCode'],'pubtime':item['row']['pubtime']},{'$set':arrInfo},True)
 	return item
       else:
 	raise DropItem('No stock cash flow datas in %s' % item)

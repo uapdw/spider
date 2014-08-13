@@ -4,11 +4,10 @@ import pymongo
 from scrapy.http import Request
 from scrapy.spider import Spider
 from scrapy.selector import Selector
-from scrapy.item import BaseItem
-from scrapy.contrib.loader import ItemLoader
+from scrapy.item import Item, Field
 
-class FlexibleItem(dict, BaseItem):
-  pass
+class FlexibleItem(Item):
+  row = Field()
 
 class StockincomeSpider(Spider):
   name = "stockincome"
@@ -19,15 +18,15 @@ class StockincomeSpider(Spider):
   infoDB = conn.info
   tIncome = infoDB.stock_incomestatements
 
-  # start_urls = (
-  #   'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
-  #   'http://www.cninfo.com.cn/information/sz/sme/szsmelclist.html',
-  #   'http://www.cninfo.com.cn/information/sz/cn/szcnlclist.html',
-  #   'http://www.cninfo.com.cn/information/sh/mb/shmblclist.html',
-  # )
-  start_urls = [
+  start_urls = (
     'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
-  ]
+    'http://www.cninfo.com.cn/information/sz/sme/szsmelclist.html',
+    'http://www.cninfo.com.cn/information/sz/cn/szcnlclist.html',
+    'http://www.cninfo.com.cn/information/sh/mb/shmblclist.html',
+  )
+  # start_urls = [
+  #   'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
+  # ]
 
   def parse(self, response):
     sel = Selector(response)
@@ -60,13 +59,13 @@ class StockincomeSpider(Spider):
     arrRes = dict([((re_h.sub('',i)).strip(),(re_h.sub('',arrValue[index])).strip()) for index,i in enumerate(arrTitle)])
 
     item = FlexibleItem()
-    loader = ItemLoader(item)
-
-    loader.add_value('stockCode',stockCode)
-    loader.add_value('stockName',stockName)
-    loader.add_value('pubtime',year + month)
+    row = {}
+    row['stockCode'] = stockCode
+    row['stockName'] = stockName
+    row['pubtime'] = year + month
 
     for key in arrRes.keys():
-      loader.add_value(key.encode('utf8'), arrRes[key])
+      row[key.encode('utf8')] = arrRes[key]
 
-    return loader.load_item()
+    item['row'] = row
+    return item
