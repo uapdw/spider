@@ -2,3 +2,7 @@
 build/
 project.egg-info/
 setup.py
+dbs/
+eggs/
+items/
+logs/
