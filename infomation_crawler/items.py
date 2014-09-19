@@ -194,5 +194,20 @@ class WhpjItem(Item):
   note = Field()
   ts = Field()
 
+class WebArticleItem(Item):
+  title = Field()
+  url = Field()
+  addTime = Field()
+  content = Field()
+  siteName = Field()
+
+class WebBlogItem(Item):
+  title = Field()
+  url = Field()
+  addTime = Field()
+  content = Field()
+  siteName = Field()
+  author = Field()
+
 class InfomationCrawlerItem(Item):
   pass

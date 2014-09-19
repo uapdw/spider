@@ -159,3 +159,29 @@ class WhpjPipeline(object):
     #spider.tWhpjRate.insert(data)
     return item
 
+class WebArticlePipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['csdn']:
+      return item
+
+    print "enter WebArticlePipeLine...."
+    if item['title'] == '' or item['content'] == '':
+      raise DropItem("there is no article item: %s" % item)
+    else:
+      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName']}
+      spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
+      return item
+
+class WebBlogPipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['iteye']:
+      return item
+
+    print "enter WebBlogPipeLine...."
+    if item['title'] == '' or item['content'] == '':
+      raise DropItem("there is no blog item: %s" % item)
+    else:
+      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName'],'author':item['author']}
+      spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
+      return item
+

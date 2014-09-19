@@ -1,19 +1,9 @@
-# Scrapy settings for infomation_crawler project
-#
-# For simplicity, this file contains only the most important settings by
-# default. All the other settings are documented here:
-#
-#     http://doc.scrapy.org/en/latest/topics/settings.html
-#
 from faker import Factory
-
 fake = Factory.create()
 
 BOT_NAME = 'infomation_crawler'
-
 SPIDER_MODULES = ['infomation_crawler.spiders']
 NEWSPIDER_MODULE = 'infomation_crawler.spiders'
-
 ITEM_PIPELINES = {
   'infomation_crawler.pipelines.BaiduNewsPipeline': 1,
   'infomation_crawler.pipelines.StockCompanyInfoPipeline':2,
@@ -24,9 +14,19 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.SteelIndexNumberPipeline':7,
   'infomation_crawler.pipelines.StatsMacroIndexPipeline':8,
   'infomation_crawler.pipelines.StatsMacroDataPipeline':9,
-  'infomation_crawler.pipelines.WhpjPipeline':10
+  'infomation_crawler.pipelines.WhpjPipeline':10,
+  'infomation_crawler.pipelines.WebArticlePipeLine':11,
+  'infomation_crawler.pipelines.WebBlogPipeLine':12,
 }
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'
-USER_AGENT = fake.user_agent()
-DOWNLOAD_DELAY = 1
+USER_AGENT = fake.internet_explorer()
+
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 4
+AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_DEBUG = True
+
+DOWNLOAD_DELAY = 4
+CONCURRENT_REQUESTS_PER_DOMAIN = 2
+CONCURRENT_REQUESTS = 2
