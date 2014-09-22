@@ -18,15 +18,15 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.WebArticlePipeLine':11,
   'infomation_crawler.pipelines.WebBlogPipeLine':12,
 }
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'infomation_crawler (+http://www.kevenking.cn)'
 USER_AGENT = fake.internet_explorer()
 
+'''
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 4
 AUTOTHROTTLE_MAX_DELAY = 60
 AUTOTHROTTLE_DEBUG = True
+'''
 
-DOWNLOAD_DELAY = 4
-CONCURRENT_REQUESTS_PER_DOMAIN = 2
-CONCURRENT_REQUESTS = 2
+DOWNLOAD_DELAY = 10
+CONCURRENT_REQUESTS_PER_DOMAIN = 1
+CONCURRENT_REQUESTS = 1

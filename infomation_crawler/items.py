@@ -209,5 +209,13 @@ class WebBlogItem(Item):
   siteName = Field()
   author = Field()
 
+class WebBBSItem(Item):
+  title = Field()
+  url = Field()
+  addTime = Field()
+  content = Field()
+  siteName = Field()
+  author = Field()
+
 class InfomationCrawlerItem(Item):
   pass
