@@ -5,7 +5,7 @@ from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
 
-class CsdnSpider(CrawlSpider):
+class It168Spider(CrawlSpider):
   name = 'it168'
   allowed_domains = ['cio.it168.com']
   start_urls = ['http://cio.it168.com/']
