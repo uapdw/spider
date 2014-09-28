@@ -161,7 +161,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['csdn']:
+    if spider.name not in ['csdn', 'it168']:
       return item
 
     print "enter WebArticlePipeLine...."
