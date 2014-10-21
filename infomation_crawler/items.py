@@ -217,5 +217,13 @@ class WebBBSItem(Item):
   siteName = Field()
   author = Field()
 
+class IndustryReportItem(Item):
+  title = Field()
+  url = Field()
+  publishTime = Field()
+  InfSource = Field()
+  addTime = Field()
+  siteName = Field()
+
 class InfomationCrawlerItem(Item):
   pass

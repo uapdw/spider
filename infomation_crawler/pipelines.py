@@ -161,7 +161,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['csdn', 'it168', 'chinabyte']:
+    if spider.name not in ['csdn', 'it168', 'chinabyte', 'zdnet']:
       return item
 
     print "enter WebArticlePipeLine...."
@@ -185,3 +185,15 @@ class WebBlogPipeLine(object):
       spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
       return item
 
+class IndustryReportPipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['idc', 'gartner']:
+      return item
+
+    print "enter IndustryReportPipeLine...."
+    if item['url'] == '':
+      raise DropItem("there is no report item: %s" % item)
+    else:
+      data = {'title':item['title'],'publishTime':item['publishTime'],'InfSource':item['InfSource'],'addTime':item['addTime'],'siteName':item['siteName']}
+      spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
+      return item

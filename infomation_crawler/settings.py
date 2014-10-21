@@ -17,6 +17,7 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.WhpjPipeline':10,
   'infomation_crawler.pipelines.WebArticlePipeLine':11,
   'infomation_crawler.pipelines.WebBlogPipeLine':12,
+  'infomation_crawler.pipelines.IndustryReportPipeLine':13,
 }
 USER_AGENT = fake.internet_explorer()
 
