@@ -199,6 +199,8 @@ class WebArticleItem(Item):
   url = Field()
   addTime = Field()
   content = Field()
+  publishTime = Field()
+  keyWords = Field()
   siteName = Field()
 
 class WebBlogItem(Item):

@@ -168,7 +168,7 @@ class WebArticlePipeLine(object):
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no article item: %s" % item)
     else:
-      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName']}
+      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'publishTime':item['publishTime'],'keyWords':item['keyWords'],'siteName':item['siteName']}
       spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       return item
 
