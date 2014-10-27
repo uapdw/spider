@@ -28,7 +28,7 @@ class ChinaByteSpider(CrawlSpider):
     i['url'] = response.url
     i['addTime'] = datetime.datetime.now()
     i['content'] = (len(sel.xpath('//div[@id="logincontent"]').extract())) and sel.xpath('//div[@id="logincontent"]').extract()[0] or ''
-    pubTimeStr = (len(sel.xpath('//span[@id="pubtime_baidu"]/text()').extract())>0) and sel.xpath('//span[@id="pubtime_baidu"]/text()').extract()[0] or ''
+    pubTimeStr = (len(sel.xpath('//span[@class="date"]/text()').extract())>0) and sel.xpath('//span[@class="date"]/text()').extract()[0] or ''
     publishTime = re.findall(r'\d{4}-\d{2}-\d{2}', pubTimeStr, re.M)
     if len(publishTime)>0:
       i['publishTime'] = publishTime[0]
