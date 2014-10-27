@@ -12,8 +12,8 @@ class BaiduNewsPipeline(object):
       if spider.name not in ['baidu']:
 	return item
 
-      article = {"title":item['title'][0],'sitename':item['sitename'][0],'posttime':item['posttime'][0]}
-      spider.tArticles.update({'link':item['href'][0]},{'$set':article},True)
+      article = {"title":item['title'][0],'sitename':item['sitename'][0],'publishtime':item['publishtime'][0],'content':item['content'][0],'addtime':item['addtime'],'keywords':item['keywords']}
+      spider.tArticles.update({'url':item['url'][0]},{'$set':article},True)
       return item
 
 class StockCompanyInfoPipeline(object):

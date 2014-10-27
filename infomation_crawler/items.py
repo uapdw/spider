@@ -9,9 +9,12 @@ from scrapy.item import Item, Field
 class BaiduNewsItem(Item):
     title = Field()
     sitename = Field()
-    href = Field()
-    posttime = Field()
-    keyword = Field()
+    url = Field()
+    publishtime = Field()
+    keywords = Field()
+    content = Field()
+    addtime = Field()
+
 
 class StockCompanyInfoItem(Item):
   stockCode = Field() #股票代码
