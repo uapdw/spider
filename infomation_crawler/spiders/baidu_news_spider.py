@@ -57,7 +57,7 @@ class BaiduNewsSpider(Spider):
       siteStr = site.xpath("div[@class='c-title-author']/text()").extract()
       siteStrList = siteStr[0].replace(u'\xa0',u' ').split(' ')
       siteName.append(siteStrList[0])
-      postTime.append(datetime.datetime.strptime(siteStrList[2] + ' ' + siteStrList[4],'%Y-%m-%d %H:%M:%S'))
+      postTime.append(datetime.datetime.strptime(siteStrList[2],'%Y-%m-%d'))
 
       item = BaiduNewsItem()
       item["title"] = title
