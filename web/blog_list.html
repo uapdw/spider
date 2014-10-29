@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>互联网舆情信息管理系统</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="css/dashboard.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="js/ie-emulation-modes-warning.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">互联网舆情信息管理系统</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#">个人信息</a></li>
+						<li><a href="#">退出</a></li>
+					</ul>
+					<!--
+					<form class="navbar-form navbar-right">
+						<input type="text" class="form-control" placeholder="Search...">
+					</form>
+					-->
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-3 col-md-2 sidebar">
+					<ul class="nav nav-sidebar">
+						<li ><a href="index.html">新闻列表</a></li>
+						<li ><a href="report_list.html">报告列表</a></li>
+						<li class="active"><a href="blog_list.html">博客列表</a></li>
+					</ul>
+				</div>
+				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+					<h2 class="sub-header">博客列表</h2>
+					<div class="table-responsive">
+						<form class="form-inline" id="frmSearch">
+							<div class="form-group">
+								<label class="">关键词：</label>
+								<input type="text" class="form-control" placeholder="请输入关键词" id="txtKeyword">
+							</div>
+							<button type="submit" class"btn btn-default" id="btnSearch">搜索</button>
+						</form>
+						<div class="row" style="height:10px;"></div>
+						<table class="table table-bordered" id="dataTable">
+							<thead>
+								<tr>
+									<th>标题</th>
+									<th>网站名称</th>
+									<th>发布时间</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<!--
+						<ul class="pagination">
+							<li><a href="#">&laquo;</a></li>
+							<li class="active"><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">&raquo;</a></li>
+						</ul>
+						-->
+					</div>
+					<div class="row">
+				  </div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/docs.min.js"></script>
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="js/ie10-viewport-bug-workaround.js"></script>
+		<script src="js/elasticsearch-js/elasticsearch.jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				var client = $.es.Client({
+					hosts: '172.20.8.3:9200',
+					log: "trace"
+				});
+				
+				client.search({
+					index:'web-articles',
+					type:'blog',
+					size:50,
+					body:{
+						query:{
+							match_all:{
+							}
+						},
+						sort:{
+							addtime:{
+								order:"desc"
+							}
+						}
+					}
+				}).then(function(json){
+					$.each(json.hits.hits,function(i,v){
+						data = v._source
+						var title = data.title
+						var sitename = data.sitename
+						var publishtime = (data.addtime).replace("T"," ")
+						var url = data.url
+						var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
+							
+						$("#dataTable tbody").append(newRow);
+					});
+			  });
+
+				var searchKeywords = function(){
+					if($("#txtKeyword").val() == ''){
+						alert("请输入关键词！");	
+					}else{
+						keyword = $("#txtKeyword").val();
+						client.search({
+							index:'web-articles',
+							type:'blog',
+							size:50,
+							body:{
+								query:{
+									match:{
+										title:keyword
+									}
+								},
+								sort:{
+									addtime:{
+										order:"desc"
+									}
+								}
+							}
+						}).then(function(json){
+						  if(json.hits.total == 0){
+								alert('没有您要搜索的数据！');
+							}else{
+								$("#dataTable tbody tr").remove();
+								$.each(json.hits.hits,function(i,v){
+									data = v._source
+									var title = data.title
+									var sitename = data.sitename
+									var publishtime = (data.addtime).replace("T"," ")
+									var url = data.url
+									var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
+										
+									$("#dataTable tbody").append(newRow);
+								});
+							}
+						}, function(err){
+							console.trace(err.message);
+					  });
+				  }
+				};
+
+				$("#frmSearch").submit(function(){
+					searchKeywords();
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>
+
+
