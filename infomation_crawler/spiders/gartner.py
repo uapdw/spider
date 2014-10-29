@@ -3,7 +3,7 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.http import Request
 from infomation_crawler.items import IndustryReportItem
-import datetime
+import time,datetime
 import pymongo
 
 class GartnerSpider(CrawlSpider):
@@ -33,9 +33,12 @@ class GartnerSpider(CrawlSpider):
       if(len(reportURL)>0):
         i['title'] = report.xpath('td/div/h3/a/text()').extract()[0].strip()
         i['url'] = report.xpath('td/div/h3/a/@href').extract()[0]
-        i['publishTime'] = report.xpath('td/div/h4/text()').extract()[0].strip()
+        pubTime = report.xpath('td/div/h4/text()').extract()[0].strip()
+        t = time.strptime(pubTime, "%d %B %Y")
+	y,m,d = t[0:3]
+        i['publishTime'] = str(datetime.date(y,m,d))
         analysts = report.xpath('td/div/p[@class="results-analyst"]/a/text()').extract()
-        infSource = analysts[0].strip()
+        infSource = len(analysts)>0 and analysts[0].strip() or ''
         for m in range(len(analysts)-1):
            infSource = infSource + '|' + analysts[m+1].strip()
         i['InfSource'] = infSource 
