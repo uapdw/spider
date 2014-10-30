@@ -128,15 +128,15 @@
 					type:'article',
 					size:50,
 					body:{
-						query:{
-							match_all:{
-							}
-						},
-						sort:{
-							publishtime:{
-								order:"desc"
-							}
-						}
+					  query:{
+					    match_all:{
+					    }
+					  },
+					  sort:{
+					    publishtime:{
+					      order:"desc"
+					    }
+					  }
 					}
 				}).then(function(json){
 					$.each(json.hits.hits,function(i,v){
@@ -170,6 +170,12 @@
 									publishtime:{
 										order:"desc"
 									}
+								},
+								highlight:{
+								  tags_schema:'styled',
+								  fields:{
+								    title:{}
+								  }
 								}
 							}
 						}).then(function(json){
@@ -179,7 +185,8 @@
 								$("#dataTable tbody tr").remove();
 								$.each(json.hits.hits,function(i,v){
 									data = v._source
-									var title = data.title
+									dataHighLight = v.highlight
+									var title = dataHighLight.title
 									var sitename = data.sitename
 									var publishtime = (data.publishtime).replace("T"," ")
 									var url = data.url

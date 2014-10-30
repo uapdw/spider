@@ -170,7 +170,14 @@
 									publishtime:{
 										order:"desc"
 									}
+								},
+								highlight:{
+								  tags_schema:'styled',
+								  fields:{
+								    title:{}
+								  }
 								}
+
 							}
 						}).then(function(json){
 						  if(json.hits.total == 0){
@@ -179,7 +186,8 @@
 								$("#dataTable tbody tr").remove();
 								$.each(json.hits.hits,function(i,v){
 									data = v._source
-									var title = data.title
+									dataHighLight = v.highlight
+									var title = dataHighLight.title
 									var sitename = data.sitename
 									var publishtime = (data.publishtime).replace("T"," ")
 									var url = data.url
