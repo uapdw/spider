@@ -73,7 +73,7 @@ es.indices.put_mapping(
 
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
-	es.index(index='web-articles',doc_type='article', body={'sitename':i['sitename'],'publishtime':i['publishtime'],'url':i['url'],'title':i['title'],'keywords':i['keywords'],'content':i['content'],'addtime':i['addtime']})
+	es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'publishtime':i['publishTime'],'url':i['url'],'title':i['title'],'keywords':i['keyWords'],'content':i['content'],'addtime':i['addTime']})
 
 listWebArticles = tWebArticles.find()
 for i in listWebArticles:
