@@ -103,7 +103,11 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
 em.hlt1{
   color:red;
   font-style: normal;
+}
+.txt-green{
+  color:#008000;
 }

@@ -167,7 +167,7 @@
 						var publishtime = (data.publishtime).replace("T"," ")
 						var url = data.url
 						var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
-						var strNewRow = "<tr><td><div class='media'><div class='media-body'> <h4 class='media-heading'><a href='" + url + "'>" + title + "</a></h4> " + content + "</div> </div></td></tr>"
+						var strNewRow = "<tr><td><div class='media'><div class='media-body'> <h4 class='media-heading'><a href='" + url + "'>" + title + "</a></h4><p>" + content + "</p><p class='txt-green'>" + publishtime + " - " + sitename  + "</p></div> </div></td></tr>"
 							
 						$("#dataTable tbody").append(newRow);
 						$("#dataTable1 tbody").append(strNewRow);
@@ -216,7 +216,7 @@
 									var publishtime = (data.publishtime).replace("T"," ")
 									var url = data.url
 									var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
-									var strNewRow = "<tr><td><div class='media'><div class='media-body'> <h4 class='media-heading'><a href='" + url + "'>" + title + "</a></h4> " + content + "</div> </div></td></tr>"
+									var strNewRow = "<tr><td><div class='media'><div class='media-body'> <h4 class='media-heading'><a href='" + url + "'>" + title + "</a></h4><p>" + content + "</p><p class='txt-green'>" + publishtime + " - " + sitename  + "</p></div> </div></td></tr>"
 										
 									$("#dataTable tbody").append(newRow);
 									$("#dataTable1 tbody").append(strNewRow);
