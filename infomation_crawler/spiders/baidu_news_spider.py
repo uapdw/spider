@@ -14,7 +14,7 @@ class BaiduNewsSpider(Spider):
   conn = pymongo.Connection('localhost',27017)
   infoDB = conn.info
   tKeywords = infoDB.keywords
-  tArticles = infoDB.web_articles
+  tArticles = infoDB.baidu_articles
   listKeywords = tKeywords.find()
   urls = []
 
