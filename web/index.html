@@ -137,6 +137,7 @@
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script src="js/ie10-viewport-bug-workaround.js"></script>
 		<script src="js/elasticsearch-js/elasticsearch.jquery.min.js"></script>
+		<script src="js/utils.js"></script>
 		<script>
 			$(document).ready(function(){
 				var client = $.es.Client({
@@ -164,7 +165,7 @@
 						data = v._source
 						var title = data.title
 						var sitename = data.sitename
-						var content = data.content
+						var content = subString(data.content,30,true)
 						var publishtime = (data.publishtime).replace("T"," ")
 						var url = data.url
 						var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"

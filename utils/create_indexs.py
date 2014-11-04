@@ -40,7 +40,7 @@ es.indices.put_mapping(
 		doc_type="baidu",
 		ignore_conflicts='true',
 		body={
-			"article":{
+			"baidu":{
 				"properties":{
 					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
 					"addtime":{"type":"date", "store":'true' },
