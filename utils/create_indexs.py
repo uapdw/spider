@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 import pymongo
+import re
 from elasticsearch import Elasticsearch
 
+reHtml = re.compile('</?\w+[^>]*>')
 es = Elasticsearch()
 conn = pymongo.Connection('localhost',27017)
 infoDB = conn.info
@@ -89,20 +91,25 @@ es.indices.put_mapping(
 			}
 		)
 
+'''
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
-	es.index(index='web-articles',doc_type='baidu', body={'sitename':i['siteName'],'publishtime':i['publishTime'],'url':i['url'],'title':i['title'],'keywords':i['keyWords'],'content':i['content'],'addtime':i['addTime']})
-
+  es.index(index='web-articles',doc_type='baidu', body={'sitename':i['siteName'],'publishtime':i['publishTime'],'url':i['url'],'title':i['title'],'keywords':i['keyWords'],'content':reHtml.sub('',i['content']),'addtime':i['addTime']})
+'''
 listWebArticles = tWebArticles.find()
 for i in listWebArticles:
-	if i['publishTime'] == '':
-		continue
-	es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'keywords':i['keyWords'],'url':i['url'],'title':i['title'],'content':i['content']})
+  if i['publishTime'] == '':
+    continue
+  print reHtml.sub('',i['content'])
+  print '='*30
+  #es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'keywords':i['keyWords'],'url':i['url'],'title':i['title'],'content':reHtml.sub('',i['content'])})
 
+'''
 listInfReport = tInfReport.find()
 for i in listInfReport:
-	es.index(index='web-articles',doc_type='report', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'infsource':i['InfSource'],'url':i['url'],'title':i['title']})
+  es.index(index='web-articles',doc_type='report', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'infsource':i['InfSource'],'url':i['url'],'title':i['title']})
 
 listWebBlogs = tWebBlogs.find()
 for i in listWebBlogs:
-	es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':'','author':i['author']})
+  es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':reHtml.sub('',i['content']),'author':i['author']})
+'''
