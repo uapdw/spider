@@ -4,6 +4,7 @@ import pymongo
 import re
 from elasticsearch import Elasticsearch
 
+reComments = re.compile('<!--[^>]*-->')
 reHtml = re.compile('</?\w+[^>]*>')
 es = Elasticsearch()
 conn = pymongo.Connection('localhost',27017)
@@ -100,7 +101,7 @@ listWebArticles = tWebArticles.find()
 for i in listWebArticles:
   if i['publishTime'] == '':
     continue
-  print reHtml.sub('',i['content'])
+  print reComments.sub('',reHtml.sub('',i['content']))
   print '='*30
   #es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'keywords':i['keyWords'],'url':i['url'],'title':i['title'],'content':reHtml.sub('',i['content'])})
 
