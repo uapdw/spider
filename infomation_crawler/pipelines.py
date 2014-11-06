@@ -194,6 +194,6 @@ class IndustryReportPipeLine(object):
     if item['url'] == '':
       raise DropItem("there is no report item: %s" % item)
     else:
-      data = {'title':item['title'],'publishTime':item['publishTime'],'InfSource':item['InfSource'],'addTime':item['addTime'],'siteName':item['siteName'],'abstract':item['abstract']}
+      data = {'title':item['title'],'publishTime':item['publishTime'],'infSource':item['infSource'],'addTime':item['addTime'],'siteName':item['siteName'],'abstract':item['abstract']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
       return item
