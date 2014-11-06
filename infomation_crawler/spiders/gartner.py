@@ -15,7 +15,7 @@ class GartnerSpider(CrawlSpider):
  
   def __init__(self, crawl=None, *args, **kwargs):
     super(GartnerSpider, self).__init__(*args, **kwargs)
-    self.start_urls = ['http://www.gartner.com/search/site/freecontent/binSearch?binValue=1', 'http://www.gartner.com/search/site/premiumresearch/sort?sortType=date&sortDir=desc']
+    self.start_urls = ['http://www.gartner.com/search/site/freecontent/simple', 'http://www.gartner.com/search/site/premiumresearch/sort?sortType=date&sortDir=desc']
     if(cmp(crawl, 'all')==0):
       GartnerSpider.SCROLLCOUNT=5
 
@@ -41,9 +41,10 @@ class GartnerSpider(CrawlSpider):
         infSource = len(analysts)>0 and analysts[0].strip() or ''
         for m in range(len(analysts)-1):
            infSource = infSource + '|' + analysts[m+1].strip()
-        i['InfSource'] = infSource 
+        i['infSource'] = infSource 
         i['addTime'] = datetime.datetime.now()
         i['siteName'] = 'gartner'
+        i['abstract'] = report.xpath('td/div/p[@class="arial result-summary"]/text()').extract()[0].strip()
       else:
         i['url'] = ''
         return

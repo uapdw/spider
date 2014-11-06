@@ -35,9 +35,10 @@ class IDCSpider(CrawlSpider):
         i['title'] = report.xpath('text()').extract()[0]
         i['url'] = 'http://idc.com.cn'+report.xpath('a/@href').extract()[0]
         i['publishTime'] = report.xpath('b/text()').extract()[0]
-        i['InfSource'] = report.xpath('text()').extract()[1].replace('|','').strip()
+        i['infSource'] = report.xpath('text()').extract()[1].replace('|','').strip()
         i['addTime'] = datetime.datetime.now()
         i['siteName'] = 'idc'
+        i['abstract'] = ''
       else:
         i['url'] = ''
         return

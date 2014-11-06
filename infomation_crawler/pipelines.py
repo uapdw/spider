@@ -161,7 +161,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['csdn', 'it168', 'chinabyte', 'zdnet']:
+    if spider.name not in ['csdn', 'it168', 'chinabyte', 'zdnet', 'zol']:
       return item
 
     print "enter WebArticlePipeLine...."
@@ -181,7 +181,7 @@ class WebBlogPipeLine(object):
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no blog item: %s" % item)
     else:
-      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName'],'author':item['author']}
+      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName'],'author':item['author'],'publishTime':item['publishTime'],'keyWords':item['keyWords']}
       spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
       return item
 
@@ -194,6 +194,6 @@ class IndustryReportPipeLine(object):
     if item['url'] == '':
       raise DropItem("there is no report item: %s" % item)
     else:
-      data = {'title':item['title'],'publishTime':item['publishTime'],'InfSource':item['InfSource'],'addTime':item['addTime'],'siteName':item['siteName']}
+      data = {'title':item['title'],'publishTime':item['publishTime'],'InfSource':item['InfSource'],'addTime':item['addTime'],'siteName':item['siteName'],'abstract':item['abstract']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
       return item

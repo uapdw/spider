@@ -213,6 +213,8 @@ class WebBlogItem(Item):
   content = Field()
   siteName = Field()
   author = Field()
+  publishTime = Field()
+  keyWords = Field()
 
 class WebBBSItem(Item):
   title = Field()
@@ -221,14 +223,17 @@ class WebBBSItem(Item):
   content = Field()
   siteName = Field()
   author = Field()
+  publishTime = Field()
+  keyWords = Field()
 
 class IndustryReportItem(Item):
   title = Field()
   url = Field()
   publishTime = Field()
-  InfSource = Field()
+  infSource = Field()
   addTime = Field()
   siteName = Field()
+  abstract = Field()
 
 class InfomationCrawlerItem(Item):
   pass
