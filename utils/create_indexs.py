@@ -33,6 +33,8 @@ tBaiduArticles = infoDB.baidu_articles
 tWebArticles = infoDB.web_articles
 tWebBlogs = infoDB.web_blogs
 tInfReport = infoDB.IndustryReport
+tWeiboContent = infoDB.wb_content
+tWeiboUser = infoDB.wb_user
 
 es.indices.delete(index='web-articles',ignore=[400,404])
 
@@ -41,76 +43,93 @@ es.indices.create(index="web-articles")
 
 #define mapping
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="article",
-		ignore_conflicts='true',
-		body={
-			"article":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="article",
+    ignore_conflicts='true',
+    body={
+      "article":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="baidu",
-		ignore_conflicts='true',
-		body={
-			"baidu":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="baidu",
+    ignore_conflicts='true',
+    body={
+      "baidu":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="report",
-		ignore_conflicts='true',
-		body={
-			"report":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="report",
+    ignore_conflicts='true',
+    body={
+      "report":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="blog",
-		ignore_conflicts='true',
-		body={
-			"blog":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"author":{"type":"string", "store":'true', "index":"not_analyzed" },
-					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="blog",
+    ignore_conflicts='true',
+    body={
+      "blog":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "author":{"type":"string", "store":'true', "index":"not_analyzed" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
+es.indices.put_mapping(
+    index="web-articles",
+    doc_type="weibo",
+    ignore_conflicts='true',
+    body={
+      "weibo":{
+	"properties":{
+	  "user_id":{ "type":"integer", "store":"true"},
+	  "screen_name":{"type":"string", "store":'true', "index":"not_analyzed" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "comments_count":{"type":"integer", "store":'true'},
+	  "reposts_count":{"type":"integer","store":'true'}
+	  }
+	}
+      }
+    )
 
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
@@ -129,6 +148,10 @@ for i in listInfReport:
 listWebBlogs = tWebBlogs.find()
 for i in listWebBlogs:
   es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip(),'author':i['author']})
+
+listWeiboContent = tWeiboContent.find()
+for i in listWeiboContent:
+	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'addtime':i['addTime'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
 
 
 
