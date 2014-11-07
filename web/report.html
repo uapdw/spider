@@ -662,51 +662,54 @@ $(document).ready(function(){
 	});
 
 	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
-		if(keyword == ''){
-			alert("请输入关键词！");	
-		}else{
-			client.search({
-				index:indexName,
-				type:typeName,
-				size:num,
-				body:{
-				    "query": {
-				      "query_string": {
-						"query": keyword,
-						"fields": [
-						  "title"
-						]
-				      }
-				    },
-				    "sort": {
-						"publishtime": {
-							"order": "desc"
-						}
-				    }
-				  }
-			}).then(function(json){
-				$("#"+cateId+" tbody tr").remove();
-			  	if(json.hits.total == 0){
-					//alert('没有您要搜索的数据！');
-				}else{
-					$.each(json.hits.hits,function(i,v){
-						data = v._source
-						dataHighLight = v.highlight
-						var title = data.title
-						var sitename = data.sitename
-						var publishtime = (data.publishtime).replace("T"," ")
-						var url = data.url
-						var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
-							
-						
-						$("#"+cateId+" tbody").append(strNewRow);
-						//$("#dataList").append(strNewRow);
-					});
-				}
-			}, function(err){
-				console.trace(err.message);
-		  	});
-		}
+	  var query = '';
+	  if(cateId == 'zmt-weibo'){
+	    query = 'content:'+keyword
+	  }else{
+	    query = 'title:'+keyword
+	  }
+
+	  if(keyword == ''){
+	    alert("请输入关键词！");	
+	  }else{
+	    client.search({
+	      index:indexName,
+	      type:typeName,
+	      size:num,
+	      q:query,
+	      sort:'publishtime:desc'
+	    }).then(function(json){
+	      $("#"+cateId+" tbody tr").remove();
+	      if(json.hits.total == 0){
+		//alert('没有您要搜索的数据！');
+	      }else{
+		$.each(json.hits.hits,function(i,v){
+		  data = v._source
+		  dataHighLight = v.highlight
+		  if(cateId == 'zmt-weibo'){
+		    var userUrl = "http://weibo.com/u/" + data.user_id
+		    var screenName = data.screen_name
+		    var content = data.content
+		    var commentsNum = data.comments_count
+		    var repostsNum = data.reposts_count
+		    var strNewRow = '<table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  > <tr> <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://img.t.sinajs.cn/t5/style/images/face/male_180.png" width="54" height="54" /></td> <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top"> <a style="color: #006A92;font-weight: bold;" href="' + userUrl + '">' + screenName + '</a> <span>' + content + '</span> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="left" style="color: #7195A7;font-size:11px; "> 来自新浪微博</td> <td align="right" style="color: #7195A7;font-size:11px;">转发(' + repostsNum + ') | 评论(' + commentsNum + ')</td> </tr> </table></td> </tr> </table>'
+		    $("#"+cateId+"").append(strNewRow);
+		  }else{
+		    var title = data.title
+		    var sitename = data.sitename
+		    var publishtime = (data.publishtime).replace("T"," ")
+		    var url = data.url
+		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+		    $("#"+cateId+" tbody").append(strNewRow);
+		  }
+
+
+		});
+	      }
+	    }, function(err){
+	      console.trace(err.message);
+	    });
+	  }
 	};
 
 	arrCate = new Array(

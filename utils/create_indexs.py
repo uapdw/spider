@@ -120,7 +120,7 @@ es.indices.put_mapping(
 		body={
 			"weibo":{
 				"properties":{
-					"user_id":{ "type":"integer", "store":"true"},
+					"user_id":{ "type":"string", "store":"true"},
 					"screen_name":{"type":"string", "store":'true', "index":"not_analyzed" },
 					"content":{"type":"string", "store":'true',"analyzer":"ik" },
 					"publishtime":{"type":"date", "store":'true' },
