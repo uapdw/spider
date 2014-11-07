@@ -199,7 +199,6 @@
 							      "tags_schema": "styled",
 							      "fields": {
 								"title": {},
-								"content": {}
 							      }
 							    },
 							    "sort": {
@@ -217,13 +216,13 @@
 								$.each(json.hits.hits,function(i,v){
 									data = v._source
 									dataHighLight = v.highlight
-									if(dataHighLight.title){
+									if(v.highlight && dataHighLight.title){
 									  var title = dataHighLight.title
 									}else{
 									  var title = data.title
 									}
 									var sitename = data.sitename
-									if(dataHighLight.content){
+									if(v.highlight && dataHighLight.content){
 									  var content = dataHighLight.content + '...'
 									}else{
 									  var content = subString((data.content).replace(/<\/?[^>]*>/g,''),200,true);
