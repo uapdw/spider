@@ -43,59 +43,59 @@ es.indices.create(index="web-articles")
 
 #define mapping
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="article",
-		ignore_conflicts='true',
-		body={
-			"article":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="article",
+    ignore_conflicts='true',
+    body={
+      "article":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="baidu",
-		ignore_conflicts='true',
-		body={
-			"baidu":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="baidu",
+    ignore_conflicts='true',
+    body={
+      "baidu":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 
 es.indices.put_mapping(
-		index="web-articles",
-		doc_type="report",
-		ignore_conflicts='true',
-		body={
-			"report":{
-				"properties":{
-					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-					"addtime":{"type":"date", "store":'true' },
-					"publishtime":{"type":"date", "store":'true' },
-					"infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
-					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
-					"title":{"type":"string","store":'true', "analyzer":"ik"}
-					}
-				}
-			}
-		)
+    index="web-articles",
+    doc_type="report",
+    ignore_conflicts='true',
+    body={
+      "report":{
+	"properties":{
+	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+	  "addtime":{"type":"date", "store":'true' },
+	  "publishtime":{"type":"date", "store":'true' },
+	  "infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
+	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
+	  "title":{"type":"string","store":'true', "analyzer":"ik"}
+	  }
+	}
+      }
+    )
 es.indices.put_mapping(
 		index="web-articles",
 		doc_type="blog",
@@ -130,7 +130,7 @@ es.indices.put_mapping(
 				}
 			}
 		)
-'''
+
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
   es.index(index='web-articles',doc_type='baidu', body={'sitename':i['siteName'],'publishtime':i['publishTime'],'url':i['url'],'title':i['title'],'keywords':i['keyWords'],'content':filter_tags(i['content']).strip(),'addtime':i['addTime']})
@@ -148,11 +148,10 @@ for i in listInfReport:
 listWebBlogs = tWebBlogs.find()
 for i in listWebBlogs:
   es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip(),'author':i['author']})
-'''
+
 listWeiboContent = tWeiboContent.find()
 for i in listWeiboContent:
 	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'addtime':i['addTime'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
-
 
 
 
