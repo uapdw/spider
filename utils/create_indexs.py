@@ -43,59 +43,59 @@ es.indices.create(index="web-articles")
 
 #define mapping
 es.indices.put_mapping(
-    index="web-articles",
-    doc_type="article",
-    ignore_conflicts='true',
-    body={
-      "article":{
-	"properties":{
-	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-	  "addtime":{"type":"date", "store":'true' },
-	  "publishtime":{"type":"date", "store":'true' },
-	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
-	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
-	  "title":{"type":"string","store":'true', "analyzer":"ik"}
-	  }
-	}
-      }
-    )
+		index="web-articles",
+		doc_type="article",
+		ignore_conflicts='true',
+		body={
+			"article":{
+				"properties":{
+					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+					"addtime":{"type":"date", "store":'true' },
+					"publishtime":{"type":"date", "store":'true' },
+					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+					"content":{"type":"string", "store":'true',"analyzer":"ik" },
+					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
+					"title":{"type":"string","store":'true', "analyzer":"ik"}
+					}
+				}
+			}
+		)
 es.indices.put_mapping(
-    index="web-articles",
-    doc_type="baidu",
-    ignore_conflicts='true',
-    body={
-      "baidu":{
-	"properties":{
-	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-	  "addtime":{"type":"date", "store":'true' },
-	  "publishtime":{"type":"date", "store":'true' },
-	  "keywords":{"type":"string", "store":'true',"analyzer":"ik" },
-	  "content":{"type":"string", "store":'true',"analyzer":"ik" },
-	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
-	  "title":{"type":"string","store":'true', "analyzer":"ik"}
-	  }
-	}
-      }
-    )
+		index="web-articles",
+		doc_type="baidu",
+		ignore_conflicts='true',
+		body={
+			"baidu":{
+				"properties":{
+					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+					"addtime":{"type":"date", "store":'true' },
+					"publishtime":{"type":"date", "store":'true' },
+					"keywords":{"type":"string", "store":'true',"analyzer":"ik" },
+					"content":{"type":"string", "store":'true',"analyzer":"ik" },
+					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
+					"title":{"type":"string","store":'true', "analyzer":"ik"}
+					}
+				}
+			}
+		)
 
 es.indices.put_mapping(
-    index="web-articles",
-    doc_type="report",
-    ignore_conflicts='true',
-    body={
-      "report":{
-	"properties":{
-	  "sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
-	  "addtime":{"type":"date", "store":'true' },
-	  "publishtime":{"type":"date", "store":'true' },
-	  "infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
-	  "url":{"type":"string", "store":'true', "index":"not_analyzed"},
-	  "title":{"type":"string","store":'true', "analyzer":"ik"}
-	  }
-	}
-      }
-    )
+		index="web-articles",
+		doc_type="report",
+		ignore_conflicts='true',
+		body={
+			"report":{
+				"properties":{
+					"sitename":{ "type":"string", "store":"true", "index":"not_analyzed" },
+					"addtime":{"type":"date", "store":'true' },
+					"publishtime":{"type":"date", "store":'true' },
+					"infSource":{"type":"string", "store":'true',"index":"not_analyzed" },
+					"url":{"type":"string", "store":'true', "index":"not_analyzed"},
+					"title":{"type":"string","store":'true', "analyzer":"ik"}
+					}
+				}
+			}
+		)
 es.indices.put_mapping(
 		index="web-articles",
 		doc_type="blog",
@@ -123,7 +123,7 @@ es.indices.put_mapping(
 					"user_id":{ "type":"integer", "store":"true"},
 					"screen_name":{"type":"string", "store":'true', "index":"not_analyzed" },
 					"content":{"type":"string", "store":'true',"analyzer":"ik" },
-					"addtime":{"type":"date", "store":'true' },
+					"publishtime":{"type":"date", "store":'true' },
 					"comments_count":{"type":"integer", "store":'true'},
 					"reposts_count":{"type":"integer","store":'true'}
 					}
@@ -151,7 +151,7 @@ for i in listWebBlogs:
 
 listWeiboContent = tWeiboContent.find()
 for i in listWeiboContent:
-	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'addtime':i['addTime'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
+	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'publishtime':i['created_at'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
 
 
 

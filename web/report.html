@@ -36,9 +36,11 @@ a{
 
       <table width="100%"  align="center" border="0" cellspacing="0" cellpadding="6" >
           <tr>
-            <td width="76%"  style="padding-left:40px;"><div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">2014年09月19日--22日</span></div>
-              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">115个</span></div>
+            <td width="76%"  style="padding-left:40px;"><div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span></div>
+              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">34个</span></div>
+							<!--
               <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">采集数据:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">总信息8477</span></div></td>
+						-->
 	    <td    style="padding-bottom:20px;"> </td>
           </tr>
         </table>
@@ -651,6 +653,9 @@ a{
 <script src="js/utils.js"></script>
 <script>
 $(document).ready(function(){
+  var objDate = new Date();
+	$("#spanDate").text(objDate.toLocaleDateString());
+
 	var client = $.es.Client({
 		hosts: '172.20.8.3:9200',
 		log: "trace"
@@ -752,7 +757,6 @@ $(document).ready(function(){
 			continue;
 		} else if (arrCate[i] == 'zmt-weibo') {
 			typeName = 'weibo';
-			continue;
 		} else if (arrCate[i] == 'zmt-blog') {
 			typeName = 'blog';
 			continue;
