@@ -637,15 +637,17 @@ a{
 </td></tr></table>
 <table width="800" border="0" cellspacing="0" cellpadding="0" align="center">
   <tr>
-    <td width="45%"style="border-right:1px solid #adadad;padding-right:10px;" ><div align="right"><span style="font-size:13px;font-family:微软雅黑; "><a style=" text-decoration: none; color: #000;" href="mailto:yonyouup@yonyou.com">意见反馈</a></span></div></td>
+    <td width="45%"style="border-right:1px solid #adadad;padding-right:10px;" ><div align="right"><span style="font-size:13px;font-family:微软雅黑; "><a style=" text-decoration: none; color: #000;" href="mailto:uapdw@yonyou.com">意见反馈</a></span></div></td>
+		<!--
     <td width="10%" style="border-right:1px solid #adadad;"><div align="center"><span style="font-size:13px;font-family:微软雅黑;"><a style=" text-decoration: none; color: #000;" href="http://www.yunger.com/">更多资讯</a></span></div></td>
+		-->
     <td  style=" padding-left:10px;"><div align="left"><span style="font-size:13px;font-family:微软雅黑;"><a style=" text-decoration: none; color: #000;" href="mailto:wg@yonyou.com">申请订阅</a></span></div></td>
   </tr>
   <tr>
     <td colspan="4" style="padding-top:10px; " ><div align="center"><span style="font-size:13px;font-family:微软雅黑; ">主办部门：用友集团UAP中心&nbsp;&nbsp;&nbsp;产品市场部 </span></div></td>
   </tr>
   <tr>
-    <td colspan="4" style=""><div align="center"><span style="font-size:13px;font-family:微软雅黑; ">技术服务：云鸽在线（北京）信息技术有限公司</span></div></td>
+    <td colspan="4" style=""><div align="center"><span style="font-size:13px;font-family:微软雅黑; ">技术服务：用友集团UAP中心AE&nbsp;&nbsp;&nbsp;产品部</span></div></td>
   </tr>
 </table>
 <script src="js/jquery-1.11.1.min.js"></script>
@@ -665,6 +667,10 @@ $(document).ready(function(){
 	  var query = '';
 	  if(cateId == 'zmt-weibo'){
 	    query = 'content:'+keyword
+	  }else if(cateId == 'yjbg-gartner'){
+			query = 'sitename:gartner'
+	  }else if(cateId == 'yjbg-idc'){
+			query = 'sitename:idc'
 	  }else{
 	    query = 'title:'+keyword
 	  }
@@ -735,7 +741,7 @@ $(document).ready(function(){
 		"移动 移动信息化 移动开发平台 物联网 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店",
 		"安全 数据安全 通讯安全 服务器安全 权限 身份管理 设备管理",
 		"企业集成 SOA ESB iPaaS 应用集成 主数据 MDM 身份管理 IdM ROA IT系统现代化 流程集成 数据集成 门户集成 软件定义IT",
-		"BI 商业分析 商业智能 数据挖掘 数据可视化 深度学习 数据挖掘算法 分布式数据挖掘 分析模型 数据采集",
+		"商业分析 商业智能 数据挖掘 数据可视化 深度学习 数据挖掘算法 分布式数据挖掘 分析模型 数据采集",
 		"sap",
 		"oracle 甲骨文",
 		"ibm",
@@ -745,7 +751,7 @@ $(document).ready(function(){
 		"用友 用友UAP AE BQ UAP 谢东 谢志华",
 		"开源 JAVA HADOOP 数据挖掘 商业分析",
 		"开源 JAVA HADOOP 数据挖掘 商业分析",
-		"CIO选型 CIO俱乐部 IT规划 实施方法论",
+		"CIO 俱乐部 IT规划 实施方法论",
 		"_all"
 	)
 
@@ -762,7 +768,8 @@ $(document).ready(function(){
 			typeName = 'weibo';
 		} else if (arrCate[i] == 'zmt-blog') {
 			typeName = 'blog';
-			continue;
+		} else if (arrCate[i] == 'jpdt-jd' || arrCate[i] == 'jpdt-oracle' || arrCate[i] == 'yydt-yyuap' || arrCate[i] == 'ywtz-cio' || arrCate[i] == 'cpyy-syfx') {
+		  typeName = 'baidu'
 		} else {
 			typeName = 'article';
 		};
