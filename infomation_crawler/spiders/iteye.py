@@ -18,16 +18,23 @@ class IteyeSpider(CrawlSpider):
   def parse_item(self, response):
     sel = Selector(response)
     i = response.meta['item']
-    i['title'] = sel.xpath('//h3/a/text()').extract()[0]
-    i['content'] = sel.xpath('//div[@id="blog_content"]').extract()[0]
-    i['addTime'] = datetime.datetime.now()
-    i['siteName'] = 'iteye'
-    i['author'] = sel.xpath('//div[@id="blog_owner_name"]/text()').extract()[0]
-    tagWords = sel.xpath('//div[@class="news_tag"]/a/text()').extract()
-    keyWords = len(tagWords)>0 and tagWords[0].strip() or ''
-    for m in range(len(tagWords)-1):
-      keyWords = keyWords + '|' + tagWords[m+1].strip()
+   
+    author = sel.xpath('//div[@id="blog_owner_name"]/text()').extract()
+    i['author'] = len(author)>0 and author[0].strip() or ''
+
+    keyWordList = sel.xpath('//div[@class="news_tag"]/a/text()').extract()
+    keyWords = len(keyWordList)>0 and keyWordList[0].strip() or ''
+    for key in range(len(keyWordList)-1):
+      keyWords = keyWords + '|' + keyWordList[key+1].strip()
     i['keyWords'] = keyWords
+
+    content = sel.xpath('//div[@id="blog_content"]').extract()
+    i['content'] = len(content)>0 and content[0] or ''
+
+    i['siteName'] = 'iteye'
+
+    i['addTime'] = datetime.datetime.now()
+
     return i
 
   def parse(self, response):
@@ -37,7 +44,20 @@ class IteyeSpider(CrawlSpider):
     for blog in indexBlogs:
       i = WebBlogItem()
       i['url'] = blog.xpath('div/h3/a/@href').extract()[0]
-      i['publishTime'] = blog.xpath('div/div[@class="blog_info"]/span[@class="date"]/text()').extract()[0][:10]
+      
+      title = blog.xpath('div/h3/a/text()').extract()
+      i['title'] = len(title)>0 and title[0].strip() or ''
+    
+      abstract = blog.xpath('div/div[1]/text()').extract()
+      i['abstract'] = len(abstract)>1 and abstract[1] or ''
+
+      pubTime = blog.xpath('div/div[@class="blog_info"]/span[@class="date"]/text()').extract()
+      i['publishTime'] = len(pubTime)>0 and pubTime[0].split()[0] or str(datetime.date.today())
+     
+      source = blog.xpath('div/h3/span/a/text()').extract()
+      i['source'] = len(source)>0 and source[0][1:-1] or ''    
+  
       items.append(i)
+    
     for item in items:
       yield Request(item['url'],meta={'item':item},callback=self.parse_item)

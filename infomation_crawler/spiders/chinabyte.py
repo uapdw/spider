@@ -23,20 +23,32 @@ class ChinaByteSpider(CrawlSpider):
     print "enter chinabyte_parse_item...."
     sel = Selector(response)
     i = WebArticleItem()
-    i['siteName'] = 'chinabyte'
-    i['title'] = (len(sel.xpath('//h1/text()').extract())>0) and sel.xpath('//h1/text()').extract()[0] or ''
+    
+    title = sel.xpath('//h1/text()').extract()
+    i['title'] = len(title)>0 and title[0].strip() or ''
+
     i['url'] = response.url
-    i['addTime'] = datetime.datetime.now()
-    i['content'] = (len(sel.xpath('//div[@id="logincontent"]').extract())) and sel.xpath('//div[@id="logincontent"]').extract()[0] or ''
-    pubTimeStr = (len(sel.xpath('//span[@class="date"]/text()').extract())>0) and sel.xpath('//span[@class="date"]/text()').extract()[0] or ''
-    publishTime = re.findall(r'\d{4}-\d{2}-\d{2}', pubTimeStr, re.M)
-    if len(publishTime)>0:
-      i['publishTime'] = publishTime[0]
-    else:
-      i['publishTime'] = ''    
-    tagWords = sel.xpath('//div[@class="keywords"]/a/text()').extract()
-    keyWords = len(tagWords)>0 and tagWords[0].strip() or ''
-    for m in range(len(tagWords)-1):
-      keyWords = keyWords + '|' + tagWords[m+1].strip()
+
+    pubTime = sel.xpath('//div[@class="info"]/span[@class="date"]/text()').extract()
+    source = sel.xpath('//div[@class="info"]/span[@class="where"]/text()').extract()
+    author = sel.xpath('//div[@class="info"]/span[@class="auth"]/text()').extract()
+    i['publishTime'] = len(pubTime)>0 and pubTime[0].split()[0] or str(datetime.date.today())
+    i['source'] = len(source)>0 and source[0] or ''
+    i['author'] = len(author)>0 and author[0] or ''
+    
+    i['abstract'] = ''
+    
+    keyWordList = sel.xpath('//div[@class="keywords"]/a/text()').extract()
+    keyWords = len(keyWordList)>0 and keyWordList[0].strip() or ''
+    for key in range(len(keyWordList)-1):
+      keyWords = keyWords + '|' + keyWordList[key+1].strip()
     i['keyWords'] = keyWords
+
+    content = sel.xpath('//div[@id="logincontent"]').extract()
+    i['content'] = len(content)>0 and content[0] or ''
+
+    i['siteName'] = 'chinabyte'
+
+    i['addTime'] = datetime.datetime.now()
+
     return i

@@ -16,31 +16,53 @@ class CsdnSpider(CrawlSpider):
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
   
-  #yesterday = datetime.date.today() - datetime.timedelta(days=1)
-  today = datetime.date.today()  
-
-  rules = (
-    Rule(SgmlLinkExtractor(allow=r'/article/(.*)'+str(today)), callback='parse_item'),
-  )
-
   def parse_item(self, response):
-    print "enter Csdn_parse_item...."
     sel = Selector(response)
-    i = WebArticleItem()
-    i['siteName'] = 'csdn'
-    i['title'] = (len(sel.xpath('//h1/text()').extract())>0) and sel.xpath('//h1/text()').extract()[0] or ''
-    i['url'] = response.url
-    i['addTime'] = datetime.datetime.now()
-    i['content'] = (len(sel.xpath('//div[@class="con news_content"]').extract())) and sel.xpath('//div[@class="con news_content"]').extract()[0] or ''
-    publishTime = re.findall(r'\d{4}-\d{2}-\d{2}', response.url, re.M)
+    i = response.meta['item']
+    
+    author = sel.xpath('//div[@class="tit_bar"]/span[5]/text()').extract()
+    i['author'] = len(author)>0 and author[0].strip() or ''
+    
+    publishTime = re.findall(r'\d{4}-\d{2}-\d{2}', i['url'], re.M)
     if len(publishTime)>0:
       i['publishTime'] = publishTime[0]
     else:
-      i['publishTime'] = ''
-    tagWords = sel.xpath('//div[@class="tag"]/a/text()').extract()
-    keyWords = tagWords[0].strip()
-    for m in range(len(tagWords)-1):
-      keyWords = keyWords + '|' + tagWords[m+1].strip()
-    i['keyWords'] = keyWords
+      i['publishTime'] = str(datetime.date.today())
+
+    content = sel.xpath('//div[@class="con news_content"]').extract()
+    i['content'] = len(content)>0 and content[0] or ''
+    
+    i['siteName'] = 'csdn'
+
+    i['addTime'] = datetime.datetime.now()
+
     return i
 
+  def parse(self, response):
+    print "enter csdn_parse_item...."
+    sel = Selector(response)
+    items = []
+    newsLists = sel.xpath('//ul[@class="list"]/li')[0:]
+    for news in newsLists:
+      i = WebArticleItem()
+      i['url'] = news.xpath('div[@class="line_list"]/a/@href').extract()[0]
+
+      title = news.xpath('div[@class="line_list"]/a/text()').extract()
+      i['title'] = len(title)>0 and title[0].strip() or ''
+
+      abstract = news.xpath('div[@class="line_list"]/span[@class="tag_summary"]/text()').extract()
+      i['abstract'] = len(abstract)>0 and abstract[0] or ''
+
+      source = news.xpath('div[@class="line_list"]/div[@class="dwon_words"]/span[@class="tag_source"][1]/a/text()').extract()
+      i['source'] = len(source)>0 and source[0] or ''
+      
+      keyWordList = news.xpath('div[@class="line_list"]/div[@class="dwon_words"]/span[@class="tag_source"][2]/a/text()').extract()
+      keyWords = len(keyWordList)>0 and keyWordList[0].strip() or ''
+      for key in range(len(keyWordList)-1):
+        keyWords = keyWords + '|' + keyWordList[key+1].strip()
+      i['keyWords'] = keyWords
+
+      items.append(i)
+    for item in items:
+      yield Request(item['url'],meta={'item':item},callback=self.parse_item)
+                                                                                      

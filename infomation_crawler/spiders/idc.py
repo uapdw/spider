@@ -1,6 +1,7 @@
 from scrapy.selector import Selector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.http import Request
 from infomation_crawler.items import IndustryReportItem
 import datetime
 import pymongo
@@ -24,22 +25,44 @@ class IDCSpider(CrawlSpider):
   infoDB = conn.info
   tIndustryReport = infoDB.IndustryReport
 
+  def parse_item(self, response):
+    sel = Selector(response)
+    i = response.meta['item']
+
+    content = sel.xpath('//td[@class="bodybk"]').extract()
+    i['content'] = len(content)>0 and content[0] or ''
+
+    i['siteName'] = 'idc'
+    i['addTime'] = datetime.datetime.now()
+
+    return i
+
   def parse(self, response):
     print "enter idc_parse_item...."
     sel = Selector(response)
-    reportContents = sel.xpath('//table/tr[1]/td[1]/table/tr[1]/td[1]/table/tr[2]/td[1]/table/tr[1]/td[1]/p')[0:]
+    items = []
+    reportContents = sel.xpath('//td[@class="bodybk"]/p')[0:]
     for report in reportContents:
-      reportURL = report.xpath('a/@href').extract()
       i = IndustryReportItem()
-      if(len(reportURL)>0):
-        i['title'] = report.xpath('text()').extract()[0]
-        i['url'] = 'http://idc.com.cn'+report.xpath('a/@href').extract()[0]
-        i['publishTime'] = report.xpath('b/text()').extract()[0]
-        i['infSource'] = report.xpath('text()').extract()[1].replace('|','').split(':')[1].strip()
-        i['addTime'] = datetime.datetime.now()
-        i['siteName'] = 'idc'
-        i['abstract'] = ''
+      url = report.xpath('a/@href').extract()
+      if len(url) > 0 and url[0].find('http://')==-1:
+        i['url'] = 'http://idc.com.cn'+url[0]
       else:
-        i['url'] = ''
-        return
-      yield IndustryReportItem(i)
+        continue
+      title = report.xpath('text()').extract()
+      i['title'] = len(title)>0 and title[0].strip() or ''
+
+      i['author'] = ''
+      i['abstract'] = ''
+      i['keyWords'] = ''
+
+      pubTime = report.xpath('b/text()').extract()
+      i['publishTime'] = len(pubTime)>0 and pubTime[0].strip() or str(datetime.date.today())
+      
+      source = report.xpath('text()').extract()
+      i['source'] = len(source)>1 and source[1].replace('|','').split(':')[1].strip() or ''
+      
+      items.append(i)
+
+    for item in items:
+      yield Request(item['url'],meta={'item':item},callback=self.parse_item)
