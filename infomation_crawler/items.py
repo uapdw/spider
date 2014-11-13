@@ -245,5 +245,16 @@ class IndustryReportItem(Item):
   source = Field()
   addTime = Field()
 
+class WebActivityItem(Item):
+  title = Field()
+  url = Field()
+  trad = Field()
+  time = Field()
+  location = Field()
+  keyWords = Field()
+  activityID = Field()
+  siteName = Field()
+  addTime = Field()
+
 class InfomationCrawlerItem(Item):
   pass

@@ -187,7 +187,7 @@ class WebBlogPipeLine(object):
 
 class IndustryReportPipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['idc', 'gartner']:
+    if spider.name not in ['idc','gartner','iresearchReport','eguan']:
       return item
 
     print "enter IndustryReportPipeLine...."
@@ -196,4 +196,17 @@ class IndustryReportPipeLine(object):
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
+      return item
+
+class WebActivityPipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['csdnActivity']:
+      return item
+
+    print "enter WebActivityPipeLine...."
+    if item['title'] == '' or item['activityID'] == '': 
+      raise DropItem("there is no activity item: %s" % item)
+    else:
+      data = {'title':item['title'],'trad':item['trad'],'time':item['time'],'location':item['location'],'keyWords':item['keyWords'],'activityID':item['activityID'],'siteName':item['siteName'],'addTime':item['addTime']}
+      spider.tWebActivity.update({'url':item['url']},{'$set':data},True)
       return item
