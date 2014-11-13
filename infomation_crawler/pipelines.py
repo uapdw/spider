@@ -161,14 +161,14 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['csdn', 'it168', 'chinabyte', 'zdnet', 'zol']:
+    if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb']:
       return item
 
     print "enter WebArticlePipeLine...."
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no article item: %s" % item)
     else:
-      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'publishTime':item['publishTime'],'keyWords':item['keyWords'],'siteName':item['siteName']}
+      data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       return item
 
@@ -181,7 +181,7 @@ class WebBlogPipeLine(object):
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no blog item: %s" % item)
     else:
-      data = {'title':item['title'],'addTime':item['addTime'],'content':item['content'],'siteName':item['siteName'],'author':item['author'],'publishTime':item['publishTime'],'keyWords':item['keyWords']}
+      data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
       return item
 
@@ -191,9 +191,9 @@ class IndustryReportPipeLine(object):
       return item
 
     print "enter IndustryReportPipeLine...."
-    if item['url'] == '':
+    if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no report item: %s" % item)
     else:
-      data = {'title':item['title'],'publishTime':item['publishTime'],'infSource':item['infSource'],'addTime':item['addTime'],'siteName':item['siteName'],'abstract':item['abstract']}
+      data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
       return item
