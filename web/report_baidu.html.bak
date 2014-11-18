@@ -70,19 +70,6 @@ a{
 				</td>
 		 	</tr>
 		          </table>
-				<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【云计算】</span></td>
-          </tr>
-        </table>
-        <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="jsdt-yjs">
-      		      	 	<tr>
-            	<td style="padding-left:40px; "><li><a href="http://news.feng.com/publish/content.php?id=219200&amp;Custom3=&amp;Custom4=?tn=gongxinjun.com">
-	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">YouTube:Flash完全够用 HTML5存重大缺陷</span></a>
-				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> </span></li>
-				</td>
-		 	</tr>
-		          </table>
       		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【移动】</span></td>
@@ -290,6 +277,7 @@ a{
 				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> mt.sohu.com</span></li>
 				</td>
 		 	</tr>
+		 	<!--
 		          </table>
       		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
           <tr>
@@ -382,6 +370,7 @@ a{
 				</td>
 		 	</tr>
 		          </table>
+      	-->
 		<table width="90%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" style="border-bottom:1px solid #adadad;">
           <tr>
             <td width="17%" heignt="27px" style="padding-top:10px;"  ><div style="background-color:#c00000;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>研究报告</strong></div></td>
@@ -742,7 +731,6 @@ $(document).ready(function(){
 
 	arrCate = new Array(
 		"jsdt-dsj",
-		"jsdt-yjs",
 		"jsdt-yd",
 		"jsdt-aq",
 		"cpyy-qyjc",
@@ -751,7 +739,6 @@ $(document).ready(function(){
 		"jpdt-oracle",
 		"jpdt-ibm",
 		"jpdt-jd",
-		"jpdt-hlw",
 		"yjbg-gartner",
 		"yjbg-idc",
 		"yydt-yyuap",
@@ -761,21 +748,19 @@ $(document).ready(function(){
 		"hyhd"
 	);
 	arrKeywords = new Array(
-		"大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5 方法 研究",
-		"云计算 方法 研究 算法 混合云",
-		"移动 移动信息化 移动开发平台 物联网 方法 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店",
-		"安全 数据安全 云计算安全 通讯安全 服务器安全 权限 身份管理 设备管理",
+		"大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5",
+		"移动 移动信息化 移动开发平台 物联网 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店",
+		"安全 数据安全 通讯安全 服务器安全 权限 身份管理 设备管理",
 		"企业集成 SOA ESB iPaaS 应用集成 主数据 MDM 身份管理 IdM ROA IT系统现代化 流程集成 数据集成 门户集成 软件定义IT",
 		"商业分析 商业智能 数据挖掘 数据可视化 深度学习 数据挖掘算法 分布式数据挖掘 分析模型 数据采集",
 		"sap",
 		"oracle 甲骨文",
 		"ibm",
 		"金蝶",
-		"vmware 浪潮 腾讯 阿里 百度 普元",
 		"_all",
 		"_all",
 		"用友 用友UAP AE BQ UAP 谢东 谢志华",
-		"开源 HADOOP JAVA 数据挖掘 商业分析",
+		"开源 JAVA HADOOP 数据挖掘 商业分析",
 		"开源 JAVA HADOOP 数据挖掘 商业分析",
 		"CIO 俱乐部 IT规划 实施方法论",
 		"_all"
@@ -797,7 +782,7 @@ $(document).ready(function(){
 		} else if (arrCate[i] == 'jpdt-jd' || arrCate[i] == 'jpdt-oracle' || arrCate[i] == 'yydt-yyuap' || arrCate[i] == 'ywtz-cio' || arrCate[i] == 'cpyy-syfx') {
 		  typeName = 'baidu'
 		} else {
-			typeName = 'article';
+			typeName = 'baidu';
 		};
 		searchKeywords(arrCate[i],arrKeywords[i],indexName,typeName,20);	
 		

@@ -143,15 +143,14 @@ for i in listWebArticles:
 
 listInfReport = tInfReport.find()
 for i in listInfReport:
-  es.index(index='web-articles',doc_type='report', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'infsource':i['InfSource'],'url':i['url'],'title':i['title']})
+  es.index(index='web-articles',doc_type='report', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'infsource':i['source'],'url':i['url'],'title':i['title']})
 
 listWebBlogs = tWebBlogs.find()
 for i in listWebBlogs:
-  es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip(),'author':i['author']})
+  #es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip(),'author':i['author']})
+  es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':'','author':i['author']})
 
 listWeiboContent = tWeiboContent.find()
 for i in listWeiboContent:
 	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'publishtime':i['created_at'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
-
-
 
