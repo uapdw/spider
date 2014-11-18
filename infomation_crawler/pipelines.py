@@ -161,7 +161,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb']:
+    if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinamobile','leiphone','ctocioCN']:
       return item
 
     print "enter WebArticlePipeLine...."
