@@ -36,9 +36,6 @@ class SohuSpider(CrawlSpider):
     author = sel.xpath('//div[@class="time-source"]/div[@class="source"]/span[2]/text()').extract()
     author = len(author)>0 and author or sel.xpath('//div[@class="news-info"]/span[@class="source"]/span[2]/text()').extract()
     i['publishTime'] = len(pubTime)>0 and pubTime[0].split()[0] or str(datetime.date.today())
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    if cmp(i['publishTime'],str(yesterday))!=0 and cmp(i['publishTime'],str(datetime.date.today()))!=0:
-      return
     i['source'] = len(source)>0 and source[0].strip() or ''
     i['author'] = len(author)>0 and author[0].strip().replace(u'\u4f5c\u8005\uff1a','') or ''
     

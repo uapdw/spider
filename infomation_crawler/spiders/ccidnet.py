@@ -22,9 +22,6 @@ class CcidnetSpider(CrawlSpider):
     info = sel.xpath('//div[@class="cont-div2"]/h3/text()').extract()
     info = len(info)>0 and info[0].strip().split('\n\t\t\t\t') or ''
     i['publishTime'] = len(info)>3 and info[0].strip().replace(u'\u53d1\u5e03\u65f6\u95f4\uff1a','').split()[0].replace('.','-') or str(datetime.date.today())
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    if cmp(i['publishTime'],str(yesterday))!=0 and cmp(i['publishTime'],str(datetime.date.today()))!=0:
-      return
     i['source'] = len(info)>3 and info[2].strip().replace(u'\u6765\u6e90\uff1a','') or ''
     i['author'] = len(info)>3 and info[3].strip().replace(u'\u4f5c\u8005\uff1a','').replace(' ',',') or ''
 

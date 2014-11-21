@@ -164,6 +164,10 @@ class WebArticlePipeLine(object):
     if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinamobile','leiphone','ctocioCN','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews']:
       return item
 
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    if cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+      print "@@@ publishTime:"+item['publishTime']+" url:"+item['url']
+      raise DropItem("the article is not new!")
     print "enter WebArticlePipeLine...."
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no article item: %s" % item)
