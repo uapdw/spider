@@ -6,48 +6,51 @@ import datetime
 import pymongo
 import re
 
-class ChinaByteSpider(CrawlSpider):
-  name = 'chinabyte'
-  allowed_domains = ['chinabyte.com']
-  start_urls = ['http://info.chinabyte.com/','http://cloud.chinabyte.com/']
+class SinaSpider(CrawlSpider):
+  name = 'sina'
+  allowed_domains = ['sina.com.cn']
+  start_urls = ['http://tech.sina.com.cn/']
 
   conn = pymongo.Connection('localhost',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 
   rules = (
-    Rule(SgmlLinkExtractor(allow=r'(info|cloud)\.chinabyte\.com/\d+/\d+\.shtml', deny=r'icloud\.chinabyte\.com'), callback='parse_item'),
+    Rule(SgmlLinkExtractor(allow=r'tech\.sina\.com\.cn'), callback='parse_item'),
   )
 
   def parse_item(self, response):
-    print "enter chinabyte_parse_item...."
+    print "enter sina_parse_item...."
     sel = Selector(response)
     i = WebArticleItem()
     
-    title = sel.xpath('//h1/text()').extract()
+    title = sel.xpath('//h1[@id="artibodyTitle"]/text()').extract()
     i['title'] = len(title)>0 and title[0].strip() or ''
 
     i['url'] = response.url
 
-    pubTime = sel.xpath('//div[@class="info"]/span[@class="date"]/text()').extract()
-    source = sel.xpath('//div[@class="info"]/span[@class="where"]/text()').extract()
-    author = sel.xpath('//div[@class="info"]/span[@class="auth"]/text()').extract()
-    i['publishTime'] = len(pubTime)>0 and pubTime[0].split()[0] or str(datetime.date.today())
+    publishTime = re.findall(r'\d{4}-\d{2}-\d{2}', i['url'], re.M)
+    if len(publishTime)>0:
+      i['publishTime'] = publishTime[0]
+    else:
+      i['publishTime'] = str(datetime.date.today())
+    source = sel.xpath('//span[@id="media_name"]/a/text()').extract()
     i['source'] = len(source)>0 and source[0] or ''
+    author = sel.xpath('//span[@id="author_ename"]/a/text()').extract()
     i['author'] = len(author)>0 and author[0] or ''
     
     i['abstract'] = ''
     
-    keyWordList = sel.xpath('//div[@class="keywords"]/a/text()').extract()
+    keyWordList = sel.xpath('//p[@class="art_keywords"]/a/text()').extract()
     keyWords = len(keyWordList)>0 and keyWordList[0].strip() or ''
     for key in range(len(keyWordList)-1):
       keyWords = keyWords + '|' + keyWordList[key+1].strip()
     i['keyWords'] = keyWords
 
-    content = sel.xpath('//div[@id="logincontent"]').extract()
+    content = sel.xpath('//div[@id="artibody"]').extract()
     i['content'] = len(content)>0 and content[0] or ''
 
-    i['siteName'] = 'chinabyte'
+    i['siteName'] = 'sina'
 
     i['addTime'] = datetime.datetime.now()
 
