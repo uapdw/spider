@@ -164,13 +164,12 @@ class WebArticlePipeLine(object):
     if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinamobile','leiphone','ctocioCN','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews']:
       return item
 
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    if cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
-      print "@@@ publishTime:"+item['publishTime']+" url:"+item['url']
-      raise DropItem("the article is not new!")
     print "enter WebArticlePipeLine...."
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
     if item['title'] == '' or item['content'] == '':
-      raise DropItem("there is no article item: %s" % item)
+      raise DropItem("there is no article item! @@@url=%s" % item['url'])
+    elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+      raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
@@ -182,8 +181,11 @@ class WebBlogPipeLine(object):
       return item
 
     print "enter WebBlogPipeLine...."
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
     if item['title'] == '' or item['content'] == '':
-      raise DropItem("there is no blog item: %s" % item)
+      raise DropItem("there is no blog item! @@@url=%s" % item['url'])
+    elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+      raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
@@ -195,8 +197,11 @@ class IndustryReportPipeLine(object):
       return item
 
     print "enter IndustryReportPipeLine...."
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
     if item['title'] == '' or item['content'] == '':
-      raise DropItem("there is no report item: %s" % item)
+      raise DropItem("there is no report item! @@@url=%s" % item['url'])
+    elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+      raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
@@ -208,8 +213,8 @@ class WebActivityPipeLine(object):
       return item
 
     print "enter WebActivityPipeLine...."
-    if item['title'] == '' or item['activityID'] == '': 
-      raise DropItem("there is no activity item: %s" % item)
+    if item['title'] == '' or item['activityID'] == '':
+      raise DropItem("there is no activity item! @@@url=%s" % item['url'])
     else:
       data = {'title':item['title'],'trad':item['trad'],'time':item['time'],'location':item['location'],'keyWords':item['keyWords'],'activityID':item['activityID'],'siteName':item['siteName'],'addTime':item['addTime']}
       spider.tWebActivity.update({'url':item['url']},{'$set':data},True)
