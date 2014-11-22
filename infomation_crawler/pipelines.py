@@ -6,6 +6,14 @@
 import pymongo
 import datetime
 from scrapy.exceptions import DropItem
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from hbase import Hbase
+from hbase.ttypes import *
+import pymongo
+import hashlib
+import time
 
 class BaiduNewsPipeline(object):
     def process_item(self, item, spider):
@@ -160,6 +168,16 @@ class WhpjPipeline(object):
     return item
 
 class WebArticlePipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.62"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+  
   def process_item(self, item, spider):
     if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinamobile','leiphone','ctocioCN','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews']:
       return item
@@ -173,9 +191,33 @@ class WebArticlePipeLine(object):
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='other_articles:url',value=item['url']))
+      mutations.append(Mutation(column='other_articles:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:publishTime',value=item['publishTime']))
+      mutations.append(Mutation(column='other_articles:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='other_articles:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='other_articles:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
 
 class WebBlogPipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.62"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+
   def process_item(self, item, spider):
     if spider.name not in ['iteye']:
       return item
@@ -189,9 +231,33 @@ class WebBlogPipeLine(object):
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tWebBlogs.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='blog:url',value=item['url']))
+      mutations.append(Mutation(column='blog:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='blog:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='blog:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='blog:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='blog:publishTime',value=item['publishTime']))
+      mutations.append(Mutation(column='blog:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='blog:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='blog:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='blog:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
 
 class IndustryReportPipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.62"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+
   def process_item(self, item, spider):
     if spider.name not in ['idc','gartner','iresearchReport','eguan']:
       return item
@@ -205,9 +271,33 @@ class IndustryReportPipeLine(object):
     else:
       data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       spider.tIndustryReport.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='report:url',value=item['url']))
+      mutations.append(Mutation(column='report:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='report:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='report:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='report:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='report:publishTime',value=item['publishTime']))
+      mutations.append(Mutation(column='report:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='report:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='report:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='report:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
 
 class WebActivityPipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.62"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+
   def process_item(self, item, spider):
     if spider.name not in ['csdnActivity']:
       return item
@@ -218,4 +308,17 @@ class WebActivityPipeLine(object):
     else:
       data = {'title':item['title'],'trad':item['trad'],'time':item['time'],'location':item['location'],'keyWords':item['keyWords'],'activityID':item['activityID'],'siteName':item['siteName'],'addTime':item['addTime']}
       spider.tWebActivity.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='activity:url',value=item['url']))
+      mutations.append(Mutation(column='activity:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='activity:trad',value=item['trad'].encode("utf8")))
+      mutations.append(Mutation(column='activity:time',value=item['time'].encode("utf8")))
+      mutations.append(Mutation(column='activity:location',value=item['location'].encode("utf8")))
+      mutations.append(Mutation(column='activity:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='activity:activityID',value=item['activityID']))
+      mutations.append(Mutation(column='activity:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
