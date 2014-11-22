@@ -4,6 +4,9 @@ import pymongo
 import re
 from elasticsearch import Elasticsearch
 
+print "="*40
+print datetime.datetime.now()
+print " "
 
 def filter_tags(htmlstr):  
   #先过滤CDATA  
@@ -24,6 +27,7 @@ def filter_tags(htmlstr):
   s=blank_line.sub('',s)  
   return s
 
+print "Connect Mongodb...."
 reComments = re.compile('<!--[^>]*-->')
 reHtml = re.compile('</?\w+[^>]*>')
 es = Elasticsearch()
@@ -36,11 +40,14 @@ tInfReport = infoDB.IndustryReport
 tWeiboContent = infoDB.wb_content
 tWeiboUser = infoDB.wb_user
 
+print "Remove index...."
 es.indices.delete(index='web-articles',ignore=[400,404])
 
+print "Create index...."
 #create indexs
 es.indices.create(index="web-articles")
 
+print "Define mapping...."
 #define mapping
 es.indices.put_mapping(
 		index="web-articles",
@@ -131,25 +138,35 @@ es.indices.put_mapping(
 			}
 		)
 
+
+print "Create baidu articles indexes...."
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
   es.index(index='web-articles',doc_type='baidu', body={'sitename':i['siteName'],'publishtime':i['publishTime'],'url':i['url'],'title':i['title'],'keywords':i['keyWords'],'content':filter_tags(i['content']).strip(),'addtime':i['addTime']})
 
+print "Create other articles indexes...."
 listWebArticles = tWebArticles.find()
 for i in listWebArticles:
-  if i['publishTime'] == '':
-    continue
-  es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'keywords':i['keyWords'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip()})
+	try:
+		if i['publishTime'] == '':
+			continue
 
+		es.index(index='web-articles',doc_type='article', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'keywords':i['keyWords'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip()})
+	except:
+		continue
+
+print "Create report indexes...."
 listInfReport = tInfReport.find()
 for i in listInfReport:
   es.index(index='web-articles',doc_type='report', body={'sitename':i['siteName'],'addtime':i['addTime'],'publishtime':i['publishTime'],'infsource':i['source'],'url':i['url'],'title':i['title']})
 
+print "Create blog indexes...."
 listWebBlogs = tWebBlogs.find()
 for i in listWebBlogs:
   #es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':filter_tags(i['content']).strip(),'author':i['author']})
   es.index(index='web-articles',doc_type='blog',timeout='2m', body={'sitename':i['siteName'],'addtime':i['addTime'],'url':i['url'],'title':i['title'],'content':'','author':i['author']})
 
+print "Create weibo indexes...."
 listWeiboContent = tWeiboContent.find()
 for i in listWeiboContent:
 	es.index(index='web-articles',doc_type='weibo',timeout='2m', body={'user_id':i['user_id'],'publishtime':i['created_at'],'content':i['text'],'screen_name':i['screen_name'],'comments_count':i['comments_count'],'reposts_count':i['reposts_count']})
