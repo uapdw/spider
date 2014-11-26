@@ -301,8 +301,8 @@ class HBaseOperator():
 			self.client.mutateRow('info_data',rowKey,mutations,None)
 
 	def importAllDatas(self):
-		self.deleteInfoTables()
-		self.createInfoTables()
+		#self.deleteInfoTables()
+		#self.createInfoTables()
 
 		self.importBaiduArticlesDatas()
 		self.importOtherArticlesDatas()
