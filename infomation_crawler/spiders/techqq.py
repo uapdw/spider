@@ -14,7 +14,7 @@ class TechqqSpider(CrawlSpider):
   conn = pymongo.Connection('localhost',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
-
+ 
   def parse_item(self, response):
     sel = Selector(response)
     i = response.meta['item']
@@ -47,9 +47,9 @@ class TechqqSpider(CrawlSpider):
       title = news.xpath('h3/a/text()').extract()
       i['title'] = len(title)>0 and title[0].strip() or ''
       
-      abstract = news.xpath('p[@class="123"]/text()').extract()
-      i['abstract'] = len(abstract)>0 and abstract[0] or ''
-
+      abstract = news.xpath('p[@class="l23"]/text()').extract()
+      i['abstract'] = len(abstract)>0 and abstract[0].strip() or ''
+       
       keyWordList = news.xpath('div[@class="newsinfo cf"]/div/span[2]/em/a/text()').extract()
       keyWords = len(keyWordList)>0 and keyWordList[0].strip() or ''
       for key in range(len(keyWordList)-1):
