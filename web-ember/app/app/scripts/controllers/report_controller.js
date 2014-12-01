@@ -62,35 +62,4 @@ App.ReportController = Ember.Controller.extend({
 }
  
 
-
-    // $.getJSON('172.20.8.3:9200',{
-    //   format:"json"
-    // },
-    // function(data){
-    //     alert("aaa");
-    // })
-    // isCurrentItem: function(){
-    //     this.get
-    // }
-//    clickTosearch: function(){
-//        this.toggleProperty('isShowingBody');
-//    },
-  	
-  //   isClicked: function(key, value){
-  // 		// var model = this.get('model');
-  // 		this.set('isClicked', value);
-
- 	// 	// if(value) {
- 	// 	// 	this.set('hello', 'click');
- 	// 	// } else {
- 	// 	// 	this.set('hello', 'no click');
- 	// 	// }
-
- 	// 	// var date = new Date();
- 	// 	// this.set('date', new Date());
-
- 	// 	return this.get('isClicked');
- 	// }.property('model.isClicked')
-
-
 });
