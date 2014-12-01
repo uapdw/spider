@@ -699,6 +699,7 @@ $(document).ready(function(){
 	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
 	  var query = '';
 		var orderStr = 'publishtime:desc';
+		var bodyStr = '{query:{match:{title:"'+ keyword +'"}}}'
 	  if(cateId == 'zmt-weibo'){
 	    query = 'content:'+keyword
 	  }else if(cateId == 'yjbg-gartner'){
@@ -719,7 +720,8 @@ $(document).ready(function(){
 	      index:indexName,
 	      type:typeName,
 	      size:num,
-	      q:query,
+	      //q:query,
+				body:bodyStr,
 	      sort:orderStr
 	    }).then(function(json){
 	      $("#"+cateId+" tbody tr").remove();
