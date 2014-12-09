@@ -18,16 +18,20 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.WebArticlePipeLine':11,
   'infomation_crawler.pipelines.WebBlogPipeLine':12,
   'infomation_crawler.pipelines.IndustryReportPipeLine':13,
+  'infomation_crawler.pipelines.WebActivityPipeLine':14,
 }
 USER_AGENT = fake.internet_explorer()
 
 '''
 AUTOTHROTTLE_ENABLED = True
-AUTOTHROTTLE_START_DELAY = 4
-AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_START_DELAY = 1
+AUTOTHROTTLE_MAX_DELAY = 10
 AUTOTHROTTLE_DEBUG = True
 '''
 
-DOWNLOAD_DELAY = 10
+DOWNLOAD_DELAY = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
 CONCURRENT_REQUESTS = 1
+
+LOG_LEVEL = 'WARNING'
+#LOG_FILE = 'scrapy.log'
