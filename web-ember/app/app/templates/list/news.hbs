@@ -1,0 +1,26 @@
+<h2 class="sub-header">新闻列表</h2>
+<div class="table-responsive">
+		<form class="form-inline" id="frmSearch">
+			<div class="form-group">
+				<label class="">关键字：</label>
+				{{input type="text" class="form-control" id="txtKeyword" placeholder="请输入关键词" value=newTitle}}
+			</div>
+			<button class"btn btn-default" id="btnSearch" {{action search target="controller"}}>搜索</button>
+		
+		</form>
+		<div class="row" style="height:20px;"></div>
+		<div class="row" style="height:20px;"></div>
+		<div class="" id="dataList">
+		</div>
+		<table class="table table-striped" id="dataTable1">
+			 <tbody id='data'>
+			</tbody>
+			
+			{{#unless controller.isSearched}}
+			{{view App.NewsListView}}
+			{{/unless}}
+		</table>
+		<div class="row">
+			{{outlet}}
+		</div>
+	</div>

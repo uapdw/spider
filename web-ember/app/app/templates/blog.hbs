@@ -1,0 +1,32 @@
+<h2 class="sub-header"> {{App.Blog.title}} </h2>
+<div class="table-responsive">
+		<form class="form-inline" id="frmSearch">
+			<div class="form-group">
+				<label class="">关键字：</label>
+				{{input type="text" class="form-control" id="txtKeyword" placeholder="请输入关键词" value=newTitle}}
+			</div>
+			<button class"btn btn-default" id="btnSearch" {{action search target="controller"}}>搜索</button>
+		
+		</form>
+		<div class="row" style="height:10px;"></div>
+			<table class="table table-bordered" id="dataTable">
+				<thead>
+					<tr>
+						<th>标题</th>
+						<th>网站名称</th>
+						<th>发布时间</th>
+					</tr>
+				</thead>
+
+				<tbody>
+				</tbody>
+				{{#unless controller.isSearched}}
+					{{view App.BlogListView}}
+			    {{/unless}}
+				
+			</table>
+		</div>
+		<div class="row">
+			{{outlet}}
+		</div>
+	</div>
