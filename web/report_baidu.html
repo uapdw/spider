@@ -784,6 +784,9 @@ $(document).ready(function(){
 	  }else if(cateId == 'zmt-blog'){
 	    query = 'title:'+keyword
 			orderStr = 'addtime:desc'
+	  }else if(cateId == 'hyhd'){
+	    query = 'sitename:csdn'
+			orderStr = 'activityid:desc'
 	  }else{
 	    query = 'title:'+keyword
 	  }
@@ -819,6 +822,14 @@ $(document).ready(function(){
 		    var publishtime = (data.addtime).replace("T"," ")
 		    var url = data.url
 		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+		    $("#"+cateId+" tbody").append(strNewRow);
+			}else if(cateId == 'hyhd'){
+		    var title = data.title
+		    var sitename = data.sitename
+		    var timeStr = data.time
+		    var url = data.url
+		    //var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+				var strNewRow = '<tr> <td style="padding-left:40px; "><li><a href="'+url+'"> <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+timeStr+'</span></li> </td> </tr>'
 		    $("#"+cateId+" tbody").append(strNewRow);
 		  }else{
 		    var title = data.title
@@ -898,8 +909,7 @@ $(document).ready(function(){
 		if (arrCate[i] == 'yjbg-gartner' || arrCate[i] == 'yjbg-idc') {
 			typeName = 'report';
 		} else if (arrCate[i] == 'hyhd') {
-			typeName = 'huiyi';
-			continue;
+			typeName = 'activity';
 		} else if (arrCate[i] == 'zmt-weibo') {
 			typeName = 'weibo';
 		} else if (arrCate[i] == 'zmt-blog') {
