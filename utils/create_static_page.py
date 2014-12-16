@@ -15,6 +15,8 @@ bodyStr = {
 res = es.search(index='web-articles',doc_type='article',body=bodyStr,sort="addtime:desc",size=20)
 
 print res
+for i in res['hits']['hits']:
+	print i["_source"]
 
 print "="*40
 print datetime.datetime.now()
