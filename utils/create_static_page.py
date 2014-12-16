@@ -30,218 +30,266 @@ class CreateStaticPage():
 		'''
 
 		htmlStr = '''
-		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style>
+  body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,select,textarea,button,p,blockquote,table,th,td,menu,figure,img
+  { 
+    margin: 0;
+    padding: 0;
+  }
+  body{
+    font-family: 'Microsoft YaHei', 'Arial Narrow';
+  }
+  a{
+    text-decoration:none;
+  }
+  ul,li{
+    list-style:none;
+  }
+  .fl{
+    float:left;
+  } 
+  .fr{
+    float:right;
+  }
+  .clearfix:before,.clearfix:after {
+    content: "";
+    display: table;
+  }
+  
+  .clearfix:after {
+    clear: both;
+  }
+  
+  .clearfix {
+    zoom: 1;
+  }
+  .mt30{
+    margin-top:30px;
+  }
+  
+  .tech-news{
+    width:960px;
+    margin: 0 auto;
+    /* background:#fafafa; */
+  }
+  
+  .one-third{
+    width:34%;
+  }
+  .two-third{
+    width:63%;  
+  }
+  
+  .te-title1{
+    font-size:21px;
+  }
+  .te-title2{
+    font-size:17px;
+    color:#333333;
+    font-family: 'Microsoft YaHei', 'Arial Narrow';
+    font-weight:bold;
+  }
+  .te-font1{
+    font-size:12px;
+    line-height:30px;
+  }
+  
+  .te-black:{
+    color:#333333;
+  }
+  .tech-news .te-title1{
+    font-weight:bold;
+    padding:15px 0 10px 0;
+  }
+  .qutar-block{
+    width:50%;
+    float:left;
+  }
+  .qutar-block.te-font1{
+    line-height:26px;
+  }
+  .qutar-block .te-title2{
+    margin-top:20px;
+  }
+  .te-dot{
+    width:0px;
+    height:0px;
+    border:2px solid #bbbbbb;
+    display:block;
+    float:left;
+    margin: 12px 7px 0px 0;
+  }
+  .te-blog{
+    border-bottom:1px solid #bbbbbb;
+    margin-top:40px;
+    padding-bottom:10px;
+  }
+  .te-imgbox{
+    width:90px;
+    height:90px;
+    float:left;
+    margin:20px;
+  }
+  .blog-list{
+    border-bottom:1px solid #bbbbbb;
+  }
+  .blog-title{
+    font-weight:bold;
+    color:#01638d;
+    margin-right:10px;
+  }
+  .blog-list a.link{
+    color:#2852ff;
+    margin-left:10px;
+  }
+  .blog-list .link-source{
+    color:#bdccd5;
+  }
+  .qutar-block .te-font1 *{
+    vertical-align:middle;
+  }
+  .pre-num{
+    padding:0px 2px;
+    background:#bbbbbb;
+    font-size:10px;
+    margin-right:5px;
+    color:#fff;
+  }
+  .pre-num.hl{
+    background:#d71f18;
+  }
+  .yy-news p:first-child{
+    margin-top:20px;  
+  }
+  .yy-news .link-source{
+    float:right;
+    color:#9c9c9c;
+  }
+  .te-font1,.te-font1 a{
+    color:#666666;
+  }
+  .te-font1 a:hover{
+    color:#d71618;
+    text-decoration:underline;
+  }
+  .te-blog .more{
+    font-size:12px;
+    color:#333333;
+  }
+  .te-blog .more:hover{
+    text-decoration:underline;
+    color:#d7df18;
+  }
+  .page-support{
+    text-align:center;
+    color:#828282;
+    font-family:SimSum;
+    font-size:12px;
+    padding-bottom:20px;
+    border-bottom:1px solid #bbbbbb;
+    width:75%;
+    margin:90px auto 0 auto ;
+  }
+  .two-third,.yy-news{
+    border-top:1px solid #bbbbbb;
+  }
+  .blog-list .te-font1{
+    margin-top:12px;
+    line-height:27px;
+  }
+  .qutar-block .fir{
+    margin-top:8px;
+  }
+  .qutar-block.odd{
+    float:right;
+  }
+  </style>
+  </head>
+  <body>
+    <div class="tech-news">
+      <div class="te-title1 te-black">
+        技术动态
+        <div class="one-third fr">用友动态</div>
+      </div>
+      <div class="clearfix">
+        <div class="one-third fr te-font1 yy-news">
+        '''
 
-		<html xmlns="http://www.w3.org/1999/xhtml">
+    uapRes = self.searchES('web-articles','article','用友UAP AE 用友BQ UAP UDH 谢东 谢志华',20,'addtime:desc')
+    j = 1
+    for i in uapRes['hits']['hits']:
+      htmlStr +=  '<p><b class="pre-num hl">'+j+'</b><a href="'+(i['_source']['url']).encode('utf8')+'" target=_blank>'+(i['_source']['title']).encode('utf8')+'</a><span class="link-source">['+(i['_source']['sitename']).encode('utf8')+']</span></p>'
+      j++
 
-		<head>
 
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    htmlStr += '''
+        </div>
+        <div class="two-third fl clearfix">
+          <div class="qutar-block te-font1">
+            <div class="te-title2">大数据</div>
+            '''
 
-		<title>技术情报 - 用友开发者社区</title>
+    bigDataRes = self.searchES('web-articles','article','大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5 方法 研究',20,'addtime:desc')
+    for i in bigDataRes['hits']['hits']:
+      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
 
-		<meta name="keywords" content="技术情报" />
+    htmlStr += '''
+          </div>
+          <div class="qutar-block te-font1 odd">
+            <div class="te-title2">云计算</div>
+            '''
 
-		<meta name="description" content="技术情报" />
+    cloudRes = self.searchES('web-articles','article','云计算 方法 研究 算法 混合云',20,'addtime:desc')
+    for i in cloudRes['hits']['hits']:
+      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
 
-		<meta name="copyright" content="2001-2013 用友UAP中心" />
+    htmlStr += '''
+          </div>
+          <br style="clear:both;"/>
+          <div class="qutar-block te-font1">
+            <div class="te-title2">移动</div>
+            '''
 
-		<meta name="MSSmartTagsPreventParsing" content="True" />
+    mobileRes = self.searchES('web-articles','article','移动 移动信息化 移动开发平台 物联网 方法 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店',20,'addtime:desc')
+    for i in mobileRes['hits']['hits']:
+      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
 
-		<meta http-equiv="MSThemeCompatible" content="Yes" />
+    htmlStr += '''
+          </div>
+          <div class="qutar-block te-font1 odd">
+            <div class="te-title2">安全</div>
+            '''
 
-		<base href="http://udn.yyuap.com/" />
-		<link rel="stylesheet" type="text/css" href="http://udn.yyuap.com/data/cache/style_2_common.css?FPw" />
-		<link rel="stylesheet" type="text/css" href="http://udn.yyuap.com/data/cache/style_2_portal_list.css?FPw" />
-		<script type="text/javascript">window.onerror = function() { return true; }; var STYLEID = '2', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'FPw', charset = 'utf-8', discuz_uid = '0', cookiepre = '4sun_2132_', cookiedomain = '', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread', creditnotice = '1|专家分|,2|财富值|,3|贡献|,4|饷银|', defaultstyle = '', REPORTURL = 'aHR0cDovL3Vkbi55eXVhcC5jb20vbXpvbmUv', SITEURL = 'http://udn.yyuap.com/', JSPATH = 'data/cache/', DYNAMICURL = '';</script>
+    securityRes = self.searchES('web-articles','article','安全 数据安全 云计算安全 通讯安全 服务器安全 权限 身份管理 设备管理',20,'addtime:desc')
+    for i in securityRes['hits']['hits']:
+      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
 
-		<script src="http://udn.yyuap.com/static/js/mobile/jquery-1.8.3.min.js?FPw" type="text/javascript"></script>
-
-		<meta name="application-name" content="用友开发者社区" />
-		<meta name="msapplication-tooltip" content="用友开发者社区" />
-		<!--网站的图标 -->
-		<link rel="shortcut icon" href="http://udn.yyuap.com/static/image/common/favicon.ico" type="images/x-icon" />
-		<link rel="Bookmark" href="http://udn.yyuap.com/static/image/common/favicon.ico">
-		<link rel="icon" href="http://udn.yyuap.com/static/image/common/favicon.png" type="images/png" />
-
-		<meta name="msapplication-task"
-		content="name=首页;action-uri=http://udn.yyuap.com/portal.php;icon-uri=http://udn.yyuap.com/static/image/common/portal.ico" />
-		<meta name="msapplication-task"
-		content="name=论坛;action-uri=http://udn.yyuap.com/forum.php;icon-uri=http://udn.yyuap.com/static/image/common/bbs.ico" />
-		<link rel="stylesheet" href="http://udn.yyuap.com/template/yongyou/style/css.css" type="text/css" media="screen" charset="utf-8">
-
-		<!--UAP63体验CSS  -->
-		<link rel="stylesheet" type="text/css" href="http://udn.yyuap.com/template/yongyou/style/experience/css/experience.css">
-
-		</head>
-
-		<body id="nv_portal"
-		class="pg_list pg_list_2">
-
-		<div id="append_parent"></div>
-		<div id="ajaxwaitid"></div>
-
-		<style>
-		.top_bg_on div{
-		border-radius:0px;
-		}
-		body #box.top_bg_on{
-		background-color: #fff;
-		}
-
-		#top.top_bg_on, #box.top_bg_on{
-		margin-left:auto;
-		margin-right:auto;
-		width:960px;
-		padding:10px;
-		}
-
-		#top.top_bg_on{
-		margin-top:200px; 
-		background-color:#fff;
-		border-bottom-left-radius:0px;
-		border-bottom-right-radius:0px;
-		}
-		#box.top_bg_on{
-		border-top-left-radius:0px;
-		border-top-right-radius:0px;
-		}
-		#toptb{
-		border-bottom: 0px;
-		}
-
-		.cate_name{
-		font-size: 21px;
-		font-family: 'Microsoft YaHei', 微软雅黑, 宋体, Tahoma, Helvetica, 'SimSun',sans-serif;
-		color: #333333;
-		}
-		.sub_cate_name{
-		font-size: 18px;
-		font-family: 'Microsoft YaHei', 微软雅黑, 宋体, Tahoma, Helvetica, 'SimSun',sans-serif;
-		color: #585858;
-		margin-bottom: 20px;
-		}
-
-		.border-bottom-line{
-		border-bottom: 1px solid #bbbbbb;
-		margin-top: 10px;
-		margin-bottom: 20px;
-		}
-
-		ul.news_list{
-
-		}
-		li.news_item{ 
-			list-style: disc inside url('http://information.k.cn:8080/images/dot_03.jpg');
-			font-size: 12px;
-			font-family: 宋体, Tahoma, Helvetica, 'SimSun',sans-serif;
-			color: #585858;
-			line-height: 22px;
-		}
-		li.news_item_num{
-			list-style: none;
-			font-size: 12px;
-			font-family: 宋体, Tahoma, Helvetica, 'SimSun',sans-serif;
-			color: #585858;
-			line-height: 22px;
-		}
-
-		.news_area{
-			margin-bottom: 30px;
-		}
-		.list_block_l{
-			width: 350px;
-		}
-		.list_block_r{
-			width: 290px;
-		}
-		</style>
-
-		<div id="box" class="wp">
-		<style id="diy_style" type="text/css"></style>
-		<!-- CSS -->
-		<link href="http://udn.yyuap.com/template/yongyou/style/mobile_develop.css" rel="stylesheet" type="text/css" />
-		<div class="mobile" id="mobile">
-
-			 <!-- 轮播图片和热帖排行 -->
-			 <div class="clearfix top">
-						
-						<div class="turn l">
-						 <div class="cate_name">技术动态</div>
-						 <div class="border-bottom-line"></div>
-						 <div class="news_area clearfix">
-							<div class="l list_block_l">
-								<div class="sub_cate_name">大数据</div>
-								<div class="">
-									<ul class="">
+    htmlStr += '''
+          </div>
+        </div>
+      </div>
+      <div class="te-title1 te-blog">
+        微博
+      </div>
+      <ul>
+      '''
+    weiboRes = self.searchES('web-articles','article','HADOOP 开源 JAVA 数据挖掘 商业分析',20,'addtime:desc')
+    for i in weiboRes['hits']['hits']:
+      htmlStr +=  '<li class="blog-list clearfix"> <div class="te-imgbox"><img src="./person.png"/></div> <div class="te-font1"> <span class="blog-title">'+(i['_source']['screen_name']).encode('utf8')+'</span>'+(i['_source']['content']).encode('utf8')+'<br/><span class="link-source"><a href="http://weibo.com/u/'+i['_source']['user_id']+'" target="_blank">来自新浪微博</a></span> </div> </li> '
+    
+    htmlStr += '''
+      </ul>
+      <p class="page-support">页面资讯由：用友舆情信息管理系统提供</p>
+    </div>
+  </body>
+</html>
 		'''
 
-		bigDataRes = self.searchES('web-articles','article','大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5 方法 研究',20,'addtime:desc')
-		for i in bigDataRes['hits']['hits']:
-			htmlStr +=  '<li class="news_item"><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></li>'
-
-		htmlStr += '''
-									</ul>
-								</div>
-							</div>
-							<div class="r list_block_r">
-								<div class="sub_cate_name">云计算</div>
-								<div>
-									<ul class="">
-									'''
-
-		cloudRes = self.searchES('web-articles','article','云计算 方法 研究 算法 混合云',20,'addtime:desc')
-		for i in cloudRes['hits']['hits']:
-			htmlStr +=  '<li class="news_item"><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></li>'
-
-		htmlStr += '''
-									</ul>
-								</div>
-							</div>
-						 </div> 
-						 <div class="news_area clearfix">
-							<div class="l list_block_l">
-								<div class="sub_cate_name">移动</div>
-								<div>
-									<ul class="">
-									'''
-
-		mobileRes = self.searchES('web-articles','article','移动 移动信息化 移动开发平台 物联网 方法 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店',20,'addtime:desc')
-		for i in mobileRes['hits']['hits']:
-			htmlStr +=  '<li class="news_item"><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></li>'
-
-		htmlStr += '''
-									</ul>
-								</div>
-							</div>
-							<div class="r list_block_r">
-								<div class="sub_cate_name">安全</div>
-								<div>
-									<ul class="">
-									'''
-
-		securityRes = self.searchES('web-articles','article','安全 数据安全 云计算安全 通讯安全 服务器安全 权限 身份管理 设备管理',20,'addtime:desc')
-		for i in securityRes['hits']['hits']:
-			htmlStr +=  '<li class="news_item"><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></li>'
-
-		htmlStr += '''
-									</ul>
-								</div>
-							</div>
-						 </div>
-						</div>
-						
-						<div class="sort r">
-							 <div class="cate_name">用友动态</div>
-							 <div class="border-bottom-line"></div>
-							 <div>
-									<ul class="">
-									'''
-
-
-		uapRes = self.searchES('web-articles','article','用友UAP AE 用友BQ UAP UDH 谢东 谢志华',20,'addtime:desc')
-		for i in uapRes['hits']['hits']:
-			htmlStr +=  '<li class="news_item"><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></li>'
+		
 		htmlStr += '''
 									</ul>
 
