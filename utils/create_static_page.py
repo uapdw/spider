@@ -2,33 +2,41 @@
 import re
 import os
 import datetime
+import ssh
 from elasticsearch import Elasticsearch
 
 class CreateStaticPage():
 	def __init__(self,filePath,fileName):
 		self.es = Elasticsearch()
+		self.fileName = fileName
 		self.filePath = filePath + '/' + fileName
+		self.fileServer = '172.16.50.54'
+		self.port = 22
+		self.userName = 'sftp-daily'
+		self.passWord = 'sftp-daily-141216'
 
 	def searchES(self,indexName,typeName,keywords,sizeNum,sortStr):
 		self.es = Elasticsearch()
-		bodyStr = {
-			"query":{
-				"match":{
-					"title":keywords
+		if typeName == "weibo":
+			bodyStr = {
+				"query":{
+					"match":{
+						"content":keywords
+					}	
+				}		
+			}
+		else:
+			bodyStr = {
+				"query":{
+					"match":{
+						"title":keywords
+					}
 				}
 			}
-		}
 		res = self.es.search(index=indexName,doc_type=typeName,body=bodyStr,sort=sortStr,size=sizeNum)
 		return res
 		
 	def createPage(self):
-		'''
-		print res
-		for i in res['hits']['hits']:
-			print i["_source"]['title']
-			print i["_source"]['addtime']
-		'''
-
 		htmlStr = '''
 		<!DOCTYPE html>
 <html>
@@ -217,58 +225,59 @@ class CreateStaticPage():
       </div>
       <div class="clearfix">
         <div class="one-third fr te-font1 yy-news">
-        '''
+		'''
 
-    uapRes = self.searchES('web-articles','article','用友UAP AE 用友BQ UAP UDH 谢东 谢志华',20,'addtime:desc')
-    j = 1
-    for i in uapRes['hits']['hits']:
-      htmlStr +=  '<p><b class="pre-num hl">'+j+'</b><a href="'+(i['_source']['url']).encode('utf8')+'" target=_blank>'+(i['_source']['title']).encode('utf8')+'</a><span class="link-source">['+(i['_source']['sitename']).encode('utf8')+']</span></p>'
-      j++
-
-
-    htmlStr += '''
+		uapRes = self.searchES('web-articles','article','用友UAP AE 用友BQ UAP UDH 谢东 谢志华',10,'addtime:desc')
+		j = 1
+		for i in uapRes['hits']['hits']:
+			htmlStr += '<p><b class="pre-num hl">'
+			if j < 10:
+				htmlStr += str(j)
+			else:
+				htmlStr += str(j)
+			htmlStr += '</b><a href="'+(i['_source']['url']).encode('utf8')+'" target=_blank>'+(i['_source']['title']).encode('utf8')+'</a><span class="link-source">['+(i['_source']['sitename']).encode('utf8')+']</span></p>'
+			j += 1
+			
+		htmlStr += '''
         </div>
         <div class="two-third fl clearfix">
           <div class="qutar-block te-font1">
             <div class="te-title2">大数据</div>
-            '''
-
-    bigDataRes = self.searchES('web-articles','article','大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5 方法 研究',20,'addtime:desc')
-    for i in bigDataRes['hits']['hits']:
-      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
-
-    htmlStr += '''
+		'''
+		
+		bigDataRes = self.searchES('web-articles','article','大数据 Spanner hadoop impala spark storm mahout zookeeper Oozie sqoop flume R语言 HTML5 方法 研究',10,'addtime:desc')
+		for i in bigDataRes['hits']['hits']:
+			htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
+			
+		htmlStr += '''
           </div>
           <div class="qutar-block te-font1 odd">
             <div class="te-title2">云计算</div>
-            '''
-
-    cloudRes = self.searchES('web-articles','article','云计算 方法 研究 算法 混合云',20,'addtime:desc')
-    for i in cloudRes['hits']['hits']:
-      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
-
-    htmlStr += '''
+		'''
+		cloudRes = self.searchES('web-articles','article','云计算 方法 研究 算法 混合云',10,'addtime:desc')
+		for i in cloudRes['hits']['hits']:
+			htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
+			
+		htmlStr += '''
           </div>
           <br style="clear:both;"/>
           <div class="qutar-block te-font1">
             <div class="te-title2">移动</div>
-            '''
-
-    mobileRes = self.searchES('web-articles','article','移动 移动信息化 移动开发平台 物联网 方法 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店',20,'addtime:desc')
-    for i in mobileRes['hits']['hits']:
-      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
-
-    htmlStr += '''
+		'''
+		mobileRes = self.searchES('web-articles','article','移动 移动信息化 移动开发平台 物联网 方法 M2M 企业移动应用平台 企业移动管理 MDM MAM MCM 移动云服务 企业移动应用商店',10,'addtime:desc')
+		for i in mobileRes['hits']['hits']:
+			htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
+			
+		htmlStr += '''
           </div>
           <div class="qutar-block te-font1 odd">
             <div class="te-title2">安全</div>
-            '''
-
-    securityRes = self.searchES('web-articles','article','安全 数据安全 云计算安全 通讯安全 服务器安全 权限 身份管理 设备管理',20,'addtime:desc')
-    for i in securityRes['hits']['hits']:
-      htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
-
-    htmlStr += '''
+		'''
+		securityRes = self.searchES('web-articles','article','安全 数据安全 云计算安全 通讯安全 服务器安全 权限 身份管理 设备管理',10,'addtime:desc')
+		for i in securityRes['hits']['hits']:
+			htmlStr +=  '<p class="clearfix fir"><b class="te-dot"></b><a href="'+(i['_source']['url']).encode('utf8')+'" target="_blank">'+(i['_source']['title']).encode('utf8')+'</a></p>'
+			
+		htmlStr += '''
           </div>
         </div>
       </div>
@@ -276,75 +285,17 @@ class CreateStaticPage():
         微博
       </div>
       <ul>
-      '''
-    weiboRes = self.searchES('web-articles','article','HADOOP 开源 JAVA 数据挖掘 商业分析',20,'addtime:desc')
-    for i in weiboRes['hits']['hits']:
-      htmlStr +=  '<li class="blog-list clearfix"> <div class="te-imgbox"><img src="./person.png"/></div> <div class="te-font1"> <span class="blog-title">'+(i['_source']['screen_name']).encode('utf8')+'</span>'+(i['_source']['content']).encode('utf8')+'<br/><span class="link-source"><a href="http://weibo.com/u/'+i['_source']['user_id']+'" target="_blank">来自新浪微博</a></span> </div> </li> '
-    
-    htmlStr += '''
+		'''
+		weiboRes = self.searchES('web-articles','weibo','HADOOP 开源 JAVA 数据挖掘 商业分析',10,'publishtime:desc')
+		for i in weiboRes['hits']['hits']:
+			htmlStr +=  '<li class="blog-list clearfix"> <div class="te-imgbox"><img src="http://udn.yyuap.com/uc_server/images/noavatar_middle.gif" style="width:90px;height:90px;"/></div> <div class="te-font1"> <span class="blog-title"><a href="http://weibo.com/u/'+str(i['_source']['user_id'])+'" target="_blank">'+(i['_source']['screen_name']).encode('utf8')+'</a></span>'+(i['_source']['content']).encode('utf8')+'<br/><span class="link-source">来自新浪微博</span> </div> </li> '
+
+		htmlStr += '''
       </ul>
       <p class="page-support">页面资讯由：用友舆情信息管理系统提供</p>
     </div>
   </body>
 </html>
-		'''
-
-		
-		htmlStr += '''
-									</ul>
-
-							 </div>
-						</div>
-			 </div>
-			 
-			 <!-- 移动专区静态展示 -->
-			 <!--
-			 <div class="line clearfix">
-						 <div class="l ltext part">
-							<p class="ttitle zero">简单&nbsp;快速&nbsp;高效</p>
-								<div class="ccontent">
-								<span>通过用友移动开发平台可以开发出完全媲美原生应用的App一次开发，多平台、多分辨率，多机型，自动全适配。</span>            <p class="clearfix down">
-								<a href="/forum.php?mod=viewthread&amp;tid=8142" class="load plugin" target="_blank"></a>
-								<a href="/forum.php?mod=viewthread&amp;tid=8165" class="load file" target="_blank"></a>
-								<a href="/forum.php?mod=viewthread&amp;tid=8164" class="load train" target="_blank"></a>
-								</p>
-								</div>
-								
-						 </div>
-						 <div class="r rimage part zero">
-						 </div>
-			 </div>
-			 -->
-			 
-		</div>
-		</div>
-
-		<div>
-		<div class="footer">
-		<div id="ft" class="wp" style="margin: 0 auto; position: relative; border-radius: 0; border-top: 2px solid #e8e8e8;">
-		<div style="text-align: center;">
-		<span>
-		<a href="http://www.yonyou.com">用友软件官网</a>
-		</span>
-		<span>
-		<a href="http://weibo.com/yongyou">用友集团官方微博</a>
-		</span>
-		<span>客户热线：010-62432134</span>
-		<span style="display: none;" id="returnmobile">
-		<a href="http://udn.yyuap.com/forum.php?mobile=2">手机触屏版</a>
-		</span>
-		</div>
-		<div>
-		<span>版权所有：用友软件股份有限公司82041</span>
-		<span><a target="_blank" href="http://www.beianbeian.com/beianxinxi/7000f338-b528-4ab1-bdf8-45fd65de852f.html">京ICP备05007539号-11<a></span>
-		<span>京公网网安备1101080209224</span>
-		<span>Powered by Discuz!</span>
-		</div>
-		</div>
-		</div>
-		</div>
-		</body>
-		</html>
 		'''
 
 		self.writeFile(htmlStr)
@@ -355,10 +306,24 @@ class CreateStaticPage():
 		fp.write(str)
 		fp.close()
 
+	def uploadFileToUDN(self):
+		print "Uploading file to UDN Server...."
+		client = ssh.SSHClient()
+		client.set_missing_host_key_policy(ssh.AutoAddPolicy())
+		client.connect(self.fileServer,self.port,self.userName,self.passWord)
+
+		sftp = client.open_sftp()
+		try:
+			sftp.put(self.filePath, 'daily/'+self.fileName)
+		except Exception,e:
+			print e
+		
+
 
 def main():
 	csp = CreateStaticPage("/root/sourcecode/information_crawler/web","yuqing.html")
 	csp.createPage()
+	csp.uploadFileToUDN()
 
 if __name__ == '__main__':
 	main()
