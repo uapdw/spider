@@ -75,8 +75,8 @@ a{
 		-->
 		<table width="90%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" style="border-bottom:1px solid #adadad;">
           <tr>
-            <td width="20%" heignt="27px" style="padding-top:10px;" ><div style="background-color:#c00000;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>技术动态</strong></div></td>
-            <td style="font-size: 14px; font-family: 微软雅黑; font-weight: bold; color: #656565;text-align:right;"></td>
+            <td width="17%" heignt="27px" style="padding-top:10px;" ><div style="background-color:#c00000;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>技术动态</strong></div></td>
+            <td>&nbsp;</td>
           </tr>
         </table>
 				<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
@@ -746,18 +746,25 @@ $(document).ready(function(){
 
 	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
 	  var query = '';
-		var orderStr = 'publishtime:desc';
+		var orderStr = 'publishtime:desc,addtime:desc';
+		var bodyStr = '{query:{match:{title:"'+ keyword +'"}}}'
 	  if(cateId == 'zmt-weibo'){
-	    query = 'content:'+keyword
+	    //query = 'content:'+keyword
+			bodyStr = '{query:{match:{content:"'+ keyword +'"}}}'
+			orderStr = 'publishtime:desc';
 	  }else if(cateId == 'yjbg-gartner'){
-			query = 'sitename:gartner'
+			//query = 'sitename:gartner'
+			bodyStr = '{query:{match:{sitename:"gartner"}}}'
 	  }else if(cateId == 'yjbg-idc'){
-			query = 'sitename:idc'
+			//query = 'sitename:idc'
+			bodyStr = '{query:{match:{sitename:"idc"}}}'
 	  }else if(cateId == 'zmt-blog'){
-	    query = 'title:'+keyword
+	    //query = 'title:'+keyword
+			bodyStr = '{query:{match:{title:"'+ keyword +'"}}}'
 			orderStr = 'addtime:desc'
 	  }else if(cateId == 'hyhd'){
-	    query = 'sitename:csdn'
+	    //query = 'sitename:csdn'
+			bodyStr = '{query:{match_all:{}}}'
 			orderStr = 'activityid:desc'
 	  }else{
 	    query = 'title:'+keyword
@@ -770,7 +777,8 @@ $(document).ready(function(){
 	      index:indexName,
 	      type:typeName,
 	      size:num,
-	      q:query,
+	      //q:query,
+				body:bodyStr,
 	      sort:orderStr
 	    }).then(function(json){
 	      $("#"+cateId+" tbody tr").remove();
@@ -874,7 +882,7 @@ $(document).ready(function(){
 		"_all"
 	)
 
-	var indexName = "test-articles";
+	var indexName = "web-articles";
 	var typeName = "";
 	for (var i = 0; i<arrCate.length; i++) {
 		console.log(arrCate[i] + "##" + arrKeywords[i]);

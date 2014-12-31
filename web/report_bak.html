@@ -698,11 +698,12 @@ $(document).ready(function(){
 
 	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
 	  var query = '';
-		var orderStr = 'addtime:desc';
+		var orderStr = 'publishtime:desc,addtime:desc';
 		var bodyStr = '{query:{match:{title:"'+ keyword +'"}}}'
 	  if(cateId == 'zmt-weibo'){
 	    //query = 'content:'+keyword
 			bodyStr = '{query:{match:{content:"'+ keyword +'"}}}'
+			orderStr = 'publishtime:desc';
 	  }else if(cateId == 'yjbg-gartner'){
 			//query = 'sitename:gartner'
 			bodyStr = '{query:{match:{sitename:"gartner"}}}'
