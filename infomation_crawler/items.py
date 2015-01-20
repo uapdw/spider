@@ -255,6 +255,20 @@ class WebActivityItem(Item):
   activityID = Field()
   siteName = Field()
   addTime = Field()
+class DianPing(Item):
+  shopid = Field()
+  level = Field()
+  consume = Field()
+  comment = Field()
+  taste = Field()
+  environment = Field()
+  service = Field()
+  #recommend = Field()
+  #rnumber = Field()
+  shopname = Field()
+  city = Field()
+  address = Field()
+  business = Field()
 
 class InfomationCrawlerItem(Item):
   pass
