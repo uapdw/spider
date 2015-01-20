@@ -322,3 +322,37 @@ class WebActivityPipeLine(object):
       mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
+class DianPingPipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.62"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+
+  def process_item(self, item, spider):
+    if spider.name not in ['Dianping']:
+      return item
+
+    print "enter WebArticlePipeLine...."
+    data = {'level':item['level'],'consume':item['consume'],'comment':item['comment'],'taste':item['taste'],'environment':item['environment'],'service':item['service'],'shopname':item['shopname'],'city':item['city'],'address':item['address'],'business':item['business']}
+    spider.tDazhongdp.update({'shopid':item['shopid']},{'$set':data},True)
+    #insert item into hbase
+    row = item['shopid']
+    mutations = []
+    mutations.append(Mutation(column='cloum_dianping:shopid',value=item['shopid'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:level',value=item['level'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:consume',value=item['consume'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:comment',value=item['comment'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:taste',value=item['taste'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:environment',value=item['environment']))
+    mutations.append(Mutation(column='cloum_dianping:service',value=item['service'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:shopname',value=item['shopname']))
+    mutations.append(Mutation(column='cloum_dianping:city',value=item['city'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:address',value=item['address'].encode("utf8")))
+    mutations.append(Mutation(column='cloum_dianping:business',value=item['business'].encode("utf8")))
+    self.client.mutateRow('info_dianping',row,mutations,None)
+    return item
