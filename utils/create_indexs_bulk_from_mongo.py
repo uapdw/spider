@@ -162,6 +162,7 @@ es.indices.put_mapping(
 
 
 actions = []
+'''
 print "Create baidu articles indexes...."
 listBaiduArticles = tBaiduArticles.find()
 for i in listBaiduArticles:
@@ -179,9 +180,10 @@ for i in listBaiduArticles:
 		}
 	}
 	actions.append(action)
-	if(len(actions) == 5000):
+	if(len(actions) == 500):
 		helpers.bulk(es,actions)
 		del actions[0:len(actions)]
+'''
 
 print "Create other articles indexes...."
 listWebArticles = tWebArticles.find()
@@ -204,7 +206,7 @@ for i in listWebArticles:
 			}
 		}
 		actions.append(action)
-		if(len(actions) == 5000):
+		if(len(actions) == 500):
 			helpers.bulk(es,actions)
 			del actions[0:len(actions)]
 	except Exception,e:
