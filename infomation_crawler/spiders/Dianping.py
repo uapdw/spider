@@ -75,7 +75,8 @@ class DianpingSpider(CrawlSpider):
         #i['recommend'] = len(recommend)>0 and recommend or ''
         #rnumber = sel.xpath('//div[@class="shop-tab-recommend J-panel"]/p/a/em/text()').extract()
         #i['rnumber'] = len(rnumber)>0 and rnumber[0].strip() or ''
-        return i
+	print i
+        #return i
 
 
 
