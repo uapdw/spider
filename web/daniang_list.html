@@ -62,9 +62,9 @@
 						<li ><a href="baidu.html">百度新闻列表</a></li>
 						-->
 						<li ><a href="report_list.html">报告列表</a></li>
-						<li class="active"><a href="blog_list.html">博客列表</a></li>
+						<li ><a href="blog_list.html">博客列表</a></li>
 						<li ><a href="report.html" target="_blank">UAP舆情报告</a></li>
-						<li class="">
+						<li class="active ">
 							<a href="#" >大娘水饺</a>
 							<ul class="">
 								<li ><a href="report_daniang.html" target="_blank">大娘水饺舆情报告</a></li>
@@ -77,7 +77,7 @@
 					</ul>
 				</div>
 				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-					<h2 class="sub-header">博客列表</h2>
+					<h2 class="sub-header">大娘水饺信息列表</h2>
 					<div class="table-responsive">
 						<form class="form-inline" id="frmSearch">
 							<div class="form-group">
@@ -133,26 +133,26 @@
 				});
 				
 				client.search({
-					index:'web-articles',
-					type:'blog',
+					index:'daniangshuijiao',
+					type:'article',
 					size:50,
 					body:{
 						query:{
 							match_all:{
 							}
 						},
-						sort:{
-							addtime:{
-								order:"desc"
-							}
-						}
+					  sort:{
+					    publishtime:{
+					      order:"desc"
+					    }
+					  }
 					}
 				}).then(function(json){
 					$.each(json.hits.hits,function(i,v){
 						data = v._source
 						var title = data.title
 						var sitename = data.sitename
-						var publishtime = (data.addtime).replace("T"," ")
+						var publishtime = data.publishtime
 						var url = data.url
 						var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
 							
@@ -166,8 +166,8 @@
 					}else{
 						keyword = $("#txtKeyword").val();
 						client.search({
-							index:'web-articles',
-							type:'blog',
+							index:'daniangshuijiao',
+							type:'article',
 							size:50,
 							body:{
 								query:{
@@ -176,7 +176,7 @@
 									}
 								},
 								sort:{
-									addtime:{
+									publishtime:{
 										order:"desc"
 									}
 								},
@@ -197,7 +197,7 @@
 									dataHighLight = v.highlight
 									var title = dataHighLight.title
 									var sitename = data.sitename
-									var publishtime = (data.addtime).replace("T"," ")
+									var publishtime = data.publishtime
 									var url = data.url
 									var newRow = "<tr><td><a href='"+url+"' target='_blank'>"+title+"</a></td><td>"+sitename+"</td><td>"+publishtime+"</td></tr>"
 										

@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>用友报告</title>
+<style type="text/css">
+body {
+	font-size:12pt; font-family:simsun,serif;
+}
+a{
+	text-decoration : none;
+}
+.STYLE5 {color: #FF0000}
+.STYLE6 {font-size: 9pt}
+.STYLE8 {color: #FF6600}
+</style>
+</head>
+
+<body style="BORDER-LEFT-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; padding: auto; LINE-HEIGHT: 1.3; BORDER-TOP-WIDTH: 0px;">
+<table width="100%" align="center">
+<tr>
+<td valign="top" >
+<table width="800" height="20" border="0" cellspacing="0" cellpadding="0" align="center" >
+  <tr>
+		<td>
+			<div align="right" class="STYLE6">如果您无法正常浏览邮件，请点击<span class="STYLE5"><a  style=" text-decoration: none; color: red;" href="">这里</a></span></div>
+		</td>
+  </tr>
+</table>
+<table width="800" height="180" border="0" cellspacing="0" cellpadding="0" align="center" >
+  <tr>
+		<td style="background-color:#7f7f7f;text-align:center" >
+			<div ><img src="/images/dnsj_word_cloud.png" width="800" height="300"/></div>
+		</td>
+  </tr>
+</table>
+<!--
+<table width="800" height="180" border="0" cellspacing="0" cellpadding="0" align="center" >
+  <tr>
+    <td><div><img src="/images/banner-daniang.png" /></div></td>
+  </tr>
+</table>
+-->
+<table width="800" height="1082" border="0" cellpadding="0" cellspacing="0" align="center" style="border-left:15px solid #e1e1e1;border-right:15px solid #e1e1e1;border-bottom:15px solid #e1e1e1;padding-bottom:20px;">
+  <tr>
+    <td valign="top"">
+			<table width="100%" align="center" border="0" cellspacing="0" cellpadding="6" style="margin-top:10px">
+          <tr>
+            <td width="30%"  style="padding-left:40px;vertical-align:top;"><div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span></div>
+							<!--
+              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">34个</span></div>
+							<div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">采集数据:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">总信息8477</span></div>
+						-->
+						</td>
+						<td style="padding-bottom:20px;">
+							<div style="color:#c00000;font-size:25px;line-height:27px;text-align:center;font-family:黑体;" ><strong>每&nbsp;周&nbsp;信&nbsp;息&nbsp;概&nbsp;览</strong></div>
+					 </td>
+					 <td style="text-align:right;padding-right:40px;width:200px;">
+						 <!--
+						 <div>
+							 <img src="/images/100x100.jpg" />
+						 </div>
+						 <div style="font-size: 14px; font-family: 微软雅黑; font-weight: bold; color: #656565;">
+								QQ:175616067
+						 </div>
+						 -->
+					 </td>
+          </tr>
+			</table>
+			<!--
+     <div style="height:100px;background-position: 632px 5px;  background-image:url('/images/100x100.jpg'); background-repeat: no-repeat;">
+      <table width="100%"  align="center" border="0" cellspacing="0" cellpadding="6" >
+          <tr>
+            <td width="76%"  style="padding-left:40px;"><div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span></div>
+              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">34个</span></div>
+	    <td    style="padding-bottom:20px;"> </td>
+          </tr>
+        </table>
+		<table width="85%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" >
+          <tr>
+            <td  heignt="27px" align="center" ><div style="color:#c00000;font-size:25px;line-height:27px;text-align:center;font-family:黑体;" ><strong>每&nbsp;日&nbsp;信&nbsp;息&nbsp;概&nbsp;览</strong></div></td>
+
+          </tr>
+        </table>
+    </div>
+		-->
+		<table width="90%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" style="border-bottom:1px solid #adadad;">
+          <tr>
+            <td width="17%" heignt="27px" style="padding-top:10px;" ><div style="background-color:#7f7f7f;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>集团动态</strong></div></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+				<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【官方消息】</span></td>
+          </tr>
+        </table>
+        <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="jtdt-gfxx">
+      		      	 	<tr>
+            	<td style="padding-left:40px; "><li><a href="http://news.feng.com/publish/content.php?id=219200&amp;Custom3=&amp;Custom4=?tn=gongxinjun.com">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">YouTube:Flash完全够用 HTML5存重大缺陷</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> </span></li>
+				</td>
+		 	</tr>
+		          </table>
+				<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【媒体推广】</span></td>
+          </tr>
+        </table>
+        <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="jtdt-mttg">
+      		      	 	<tr>
+            	<td style="padding-left:40px; "><li><a href="http://news.feng.com/publish/content.php?id=219200&amp;Custom3=&amp;Custom4=?tn=gongxinjun.com">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">YouTube:Flash完全够用 HTML5存重大缺陷</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> </span></li>
+				</td>
+		 	</tr>
+		          </table>
+      
+		<table width="90%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" style="border-bottom:1px solid #adadad;">
+          <tr>
+            <td width="17%" heignt="27px" style="padding-top:10px;"  ><div style="background-color:#7f7f7f;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>对手动态</strong></div></td>
+            <td >&nbsp;</td>
+          </tr>
+        </table>
+        		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【麦当劳】</span></td>
+          </tr>
+        </table>
+      	<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="dsdt-mdl">
+      	          <tr>
+            	<td style="padding-left:40px; "><li><a href="http://cio.zol.com.cn/479/4799379.html">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">最适合大数据应用的是SOA还是REST?</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> 中关村在线</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://esoft.ctocio.com.cn/170/13083170.shtml">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">基于SOA的移动办公平台解决方案研究</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> IT专家网</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://tech.xinmin.cn/2014/09/19/25428761.html">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">数据可视化应用：微数据创造大价值</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> 新民网</span></li>
+				</td>
+		 	</tr>
+		          </table>
+      		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【肯德基】</span></td>
+          </tr>
+        </table>
+      	<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="dsdt-kfc">
+      	          <tr>
+            	<td style="padding-left:40px; "><li><a href="http://esoft.ctocio.com.cn/141/13082141.shtml">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">管理软件如何规则业务可为BI添智能?</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> IT专家网</span></li>
+				</td>
+		 	</tr>
+		          </table>
+      		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【吉野家】</span></td>
+          </tr>
+        </table>
+      	<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="dsdt-jyj">
+      	          <tr>
+            	<td style="padding-left:40px; "><li><a href="http://esoft.ctocio.com.cn/141/13082141.shtml">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">管理软件如何规则业务可为BI添智能?</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> IT专家网</span></li>
+				</td>
+		 	</tr>
+		          </table>
+      		<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【永和大王】</span></td>
+          </tr>
+        </table>
+      	<table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="dsdt-yhdw">
+      	          <tr>
+            	<td style="padding-left:40px; "><li><a href="http://esoft.ctocio.com.cn/141/13082141.shtml">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">管理软件如何规则业务可为BI添智能?</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> IT专家网</span></li>
+				</td>
+		 	</tr>
+		          </table>
+      
+      	<table width="90%" heignt="27px" align="center"  cellspacing="0" cellpadding="0" style="border-bottom:1px solid #adadad;">
+          <tr>
+            <td width="17%" heignt="27px" style="padding-top:10px;"   ><div style="background-color:#7f7f7f;color:white;font-size:16px;line-height:27px;text-align:center;font-family:微软雅黑;" ><strong>社交媒体</strong></div></td>
+            <td >&nbsp;</td>
+          </tr>
+        </table>
+      <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【微博】</span></td>
+          </tr>
+        </table>
+        <div id="sjmt-weibo">
+              <table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  >
+          <tr>
+            <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://tp4.sinaimg.cn/3847741679/180/40060954240/1" width="54" height="54" /></td>
+            <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top">
+            <a style="color: #006A92;font-weight: bold;" href="http://www.weibo.com/3847741679/BnQsIa72g">数盟社区</a> <span>【基于Nutch+Hadoop+Hbase+ElasticSearch的网络爬虫及搜索引擎】网络爬虫架构在Nutch+Hadoop之上，是一个典型的分布式离线批量处理架构，有非常优异的吞吐量和抓取性能并提供了大量的配置定制选项。http://t.cn/RhC7qGr</span>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="left" style="color: #7195A7;font-size:11px; ">
+                      来自新浪微博</td>
+                    <td align="right" style="color: #7195A7;font-size:11px;">转发(0) | 评论(0) | 收藏(0)</td>
+                  </tr>
+              </table></td>
+          </tr>
+        </table>
+		      <table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  >
+          <tr>
+            <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://tp2.sinaimg.cn/5125111341/180/22885270349/1" width="54" height="54" /></td>
+            <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top">
+            <a style="color: #006A92;font-weight: bold;" href="http://www.weibo.com/5125111341/BnUQpfS8d">彡菜鸟彡</a> <span>发表了博文《简单斐波那契-java》斐波那契数列是一种非常有意思的数列，由0和1开始，之后的斐波那契系数就由之前的两数相加。用数学公式定义斐波那契数列则可以看成如下形式：F00F11FnFn-1http://t.cn/RhCnvy0</span>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="left" style="color: #7195A7;font-size:11px; ">
+                      来自新浪微博</td>
+                    <td align="right" style="color: #7195A7;font-size:11px;">转发(0) | 评论(0) | 收藏(0)</td>
+                  </tr>
+              </table></td>
+          </tr>
+        </table>
+		      <table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  >
+          <tr>
+            <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://img.t.sinajs.cn/t5/style/images/face/male_180.png" width="54" height="54" /></td>
+            <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top">
+            <a style="color: #006A92;font-weight: bold;" href="http://www.weibo.com/5207071090/BnUQoEefd">huayangdaos</a> <span>发表了一篇转载博文《[转载]JAVA中的动态代理机制实现AOP》http://t.cn/RhCnvzq</span>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="left" style="color: #7195A7;font-size:11px; ">
+                      来自新浪微博</td>
+                    <td align="right" style="color: #7195A7;font-size:11px;">转发(0) | 评论(0) | 收藏(0)</td>
+                  </tr>
+              </table></td>
+          </tr>
+        </table>
+		      <table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  >
+          <tr>
+            <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://img.t.sinajs.cn/t5/style/images/face/male_180.png" width="54" height="54" /></td>
+            <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top">
+            <a style="color: #006A92;font-weight: bold;" href="http://www.weibo.com/3984429335/BnUomhwvN">我叫田攀</a> <span>发表了博文《Java异常类总结》网上发现一张图和一句话，非常精辟，特此摘录，先看一张图：再看一句话：Exception在程序中必须使用try...catch进行捕获和处理。RuntimeExceptihttp://t.cn/RhCHYFb</span>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="left" style="color: #7195A7;font-size:11px; ">
+                      来自新浪微博</td>
+                    <td align="right" style="color: #7195A7;font-size:11px;">转发(0) | 评论(0) | 收藏(0)</td>
+                  </tr>
+              </table></td>
+          </tr>
+        </table>
+        </div>
+		      <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:red;font-family:微软雅黑;font-size:16px;padding-top:10px;"><span class="STYLE8">【微信】</span></td>
+          </tr>
+        </table>
+    
+      <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4" id="sjmt-weixin">
+                 <tr>
+            	<td style="padding-left:40px; "><li><a href="http://blog.sina.com.cn/u/ed7d91170102v2uw">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">Java异常类总结</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> 新浪博客</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://blog.sina.com.cn/u/7c9b607c0102v4t5">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">Java连接各种数据库写法</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> 新浪博客</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://blog.sina.com.cn/u/69d06d0c0102v3ay">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">（转）Java中的回调方法</span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> 新浪博客</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://www.iteye.com/blog/811631">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">Java实现文件拷贝的4种方法（转） </span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> www.iteye.com/blog/811631</span></li>
+				</td>
+		 	</tr>
+		            <tr>
+            	<td style="padding-left:40px; "><li><a href="http://www.iteye.com/blog/1237720">
+	            <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">开源软件中 几种经典的Hash算法的实现 </span></a>
+				<span style="color:#888888;font-size:11px;font-family:微软雅黑;"> www.iteye.com/blog/1237720</span></li>
+				</td>
+		 	</tr>
+		          </table>
+
+           <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="color:#c00000;font-family:微软雅黑;font-size:16px;padding-top:10px;border-top:1px solid #adadad;">关于用友UAP《技术情报站》</td>
+          </tr>
+        </table>
+      <table width="85%"align="center"  border="0" cellspacing="0" cellpadding="4">
+          <tr>
+            <td  "><span style="font-size:13px;font-family:微软雅黑;">面向用友集团UAP中心各类产品与技术研发人员，聚焦业内领先技术应用的搜集与数据分析，提供全面的定制化技术类与应用类资讯，支持。我们期望帮助您在互联网时代的产品研发与技术应用中，最快的感知变化，最快的获取支持，进而打造业内领先的企业信息化技术平台。
+</span></td>
+          </tr>
+        </table>
+      </td>
+  </tr>
+</table></td>
+</tr>
+</table>
+
+    </td>
+  </tr>
+</table>
+
+</td>
+</tr>
+</table>
+</td></tr></table>
+<table width="800" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+    <td width="45%"style="border-right:1px solid #adadad;padding-right:10px;" ><div align="right"><span style="font-size:13px;font-family:微软雅黑; "><a style=" text-decoration: none; color: #000;" href="mailto:uapdw@yonyou.com">意见反馈</a></span></div></td>
+		<!--
+    <td width="10%" style="border-right:1px solid #adadad;"><div align="center"><span style="font-size:13px;font-family:微软雅黑;"><a style=" text-decoration: none; color: #000;" href="http://www.yunger.com/">更多资讯</a></span></div></td>
+		-->
+    <td  style=" padding-left:10px;"><div align="left"><span style="font-size:13px;font-family:微软雅黑;"><a style=" text-decoration: none; color: #000;" href="mailto:wg@yonyou.com">申请订阅</a></span></div></td>
+  </tr>
+  <tr>
+    <td colspan="4" style="padding-top:10px; " ><div align="center"><span style="font-size:13px;font-family:微软雅黑; ">主办部门：用友集团UAP中心&nbsp;&nbsp;&nbsp;产品市场部 </span></div></td>
+  </tr>
+  <tr>
+    <td colspan="4" style=""><div align="center"><span style="font-size:13px;font-family:微软雅黑; ">技术服务：用友集团UAP中心&nbsp;&nbsp;&nbsp;AE产品部</span></div></td>
+  </tr>
+</table>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/elasticsearch-js/elasticsearch.jquery.min.js"></script>
+<script src="js/utils.js"></script>
+<script>
+$(document).ready(function(){
+  var objDate = new Date();
+	$("#spanDate").text(objDate.toLocaleDateString());
+
+	var client = $.es.Client({
+		hosts: '172.20.8.3:9200',
+		log: "trace"
+	});
+
+	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
+	  var query = '';
+		var orderStr = 'publishtime:desc';
+		var bodyStr = '{query:{match_all:{}}}'
+	  if(cateId == 'jtdt-gfxx'){
+			bodyStr = '{query:{match:{sitename:"cnddr"}}}'
+	  }else if(cateId == 'jtdt-mttg'){
+			bodyStr = '{query:{match:{sitename:"baidu"}}}'
+	  }else if(cateId == 'dsdt-mdl'){
+			bodyStr = '{query:{match:{sitename:"mcdonalds"}}}'
+	  }else if(cateId == 'dsdt-kfc'){
+			bodyStr = '{query:{match:{sitename:"kfc"}}}'
+	  }else if(cateId == 'dsdt-jyj'){
+			bodyStr = '{query:{match:{sitename:"yos"}}}'
+	  }else if(cateId == 'dsdt-yhdw'){
+			bodyStr = '{query:{match:{sitename:"yonghe"}}}'
+	  }else{
+			bodyStr = '{query:{match_all:{}}}'
+	  }
+
+	  if(keyword == ''){
+	    alert("请输入关键词！");	
+	  }else{
+	    client.search({
+	      index:indexName,
+	      type:typeName,
+	      size:num,
+	      //q:query,
+				body:bodyStr,
+	      sort:orderStr
+	    }).then(function(json){
+	      $("#"+cateId+" tbody tr").remove();
+	      if(json.hits.total == 0){
+		//alert('没有您要搜索的数据！');
+	      }else{
+		$.each(json.hits.hits,function(i,v){
+		  data = v._source
+		  dataHighLight = v.highlight
+		  if(cateId == 'sjmt-weibo'){
+		    var userUrl = data.user_url
+
+		    var screenName = data.screen_name
+		    var content = data.content
+		    var strNewRow = '<table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  > <tr> <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="'+data.avatarimg+'" width="54" height="54" /></td> <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top"> <a style="color: #006A92;font-weight: bold;" href="' + userUrl + '">' + screenName + '</a> <span>' + content + '</span> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="left" style="color: #7195A7;font-size:11px; "> 来自新浪微博</td> <td align="right" style="color: #7195A7;font-size:11px;"></td> </tr> </table></td> </tr> </table>'
+		    $("#"+cateId+"").append(strNewRow);
+			}else if(cateId == 'sjmt-weixin'){
+		    var title = data.title
+		    var sitename = '微信'
+		    var publishtime = data.publishtime
+		    var url = data.url
+		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+		    $("#"+cateId+" tbody").append(strNewRow);
+			}else if(cateId == 'hyhd'){
+		    var title = data.title
+		    var sitename = data.sitename
+		    var timeStr = data.time
+		    var url = data.url
+		    //var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+				var strNewRow = '<tr> <td style="padding-left:40px; "><li><a href="'+url+'"> <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+timeStr+'</span></li> </td> </tr>'
+		    $("#"+cateId+" tbody").append(strNewRow);
+		  }else{
+		    var title = data.title
+		    var sitename = data.sitename
+		    var publishtime = (data.publishtime).replace("T"," ")
+		    var url = data.url
+		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+		    $("#"+cateId+" tbody").append(strNewRow);
+		  }
+
+
+		});
+	      }
+	    }, function(err){
+	      console.trace(err.message);
+	    });
+	  }
+	};
+
+	arrCate = new Array(
+		"jtdt-gfxx",
+		"jtdt-mttg",
+		"dsdt-mdl",
+		"dsdt-kfc",
+		"dsdt-jyj",
+		"dsdt-yhdw",
+		"sjmt-weibo",
+		"sjmt-weixin"
+	);
+	arrKeywords = new Array(
+		"_all",
+		"_all",
+		"_all",
+		"_all",
+		"_all",
+		"_all",
+		"_all",
+		"_all"
+	)
+
+	var indexName = "daniangshuijiao";
+	var typeName = "";
+	for (var i = 0; i<arrCate.length; i++) {
+		console.log(arrCate[i] + "##" + arrKeywords[i]);
+		if (arrCate[i] == 'jtdt-gfxx' || arrCate[i] == 'jtdt-mttg' || arrCate[i] == 'dsdt-mdl' || arrCate[i] == 'dsdt-kfc' || arrCate[i] == 'dsdt-jyj' || arrCate[i] == 'dsdt-yhdw') {
+			typeName = 'article';
+		} else if (arrCate[i] == 'sjmt-weibo') {
+			typeName = 'weibo';
+		} else if (arrCate[i] == 'sjmt-weixin') {
+			typeName = 'weixin';
+		} else {
+			typeName = 'article';
+		};
+		searchKeywords(arrCate[i],arrKeywords[i],indexName,typeName,6);	
+		
+	};
+	
+	
+});
+</script>
+</body>
+</html>

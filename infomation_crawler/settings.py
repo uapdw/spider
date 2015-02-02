@@ -19,8 +19,12 @@ ITEM_PIPELINES = {
   'infomation_crawler.pipelines.WebBlogPipeLine':12,
   'infomation_crawler.pipelines.IndustryReportPipeLine':13,
   'infomation_crawler.pipelines.WebActivityPipeLine':14,
-  'infomation_crawler.pipelines.DianPingPipeLine':15,
-}
+  'infomation_crawler.pipelines.DianPingShopPipeLine':15,
+  'infomation_crawler.pipelines.DianPingDishPipeLine':16,
+	'infomation_crawler.pipelines.DaniangNewsPipeLine':17,
+	'infomation_crawler.pipelines.DaniangWeiBoPipeLine':18,
+	'infomation_crawler.pipelines.DaniangWeiXinPipeLine':19,
+	}
 USER_AGENT = fake.internet_explorer()
 
 '''
@@ -34,5 +38,5 @@ DOWNLOAD_DELAY = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
 CONCURRENT_REQUESTS = 1
 
-LOG_LEVEL = 'WARNING'
+LOG_LEVEL = 'DEBUG'
 #LOG_FILE = 'scrapy.log'
