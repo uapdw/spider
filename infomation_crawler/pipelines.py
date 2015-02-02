@@ -169,7 +169,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def __init__(self):
-    self.host = "172.20.6.62"
+    self.host = "172.20.6.61"
     self.port = 9090
     self.transport = TBufferedTransport(TSocket(self.host, self.port))
     self.transport.open()
@@ -209,7 +209,7 @@ class WebArticlePipeLine(object):
 
 class WebBlogPipeLine(object):
   def __init__(self):
-    self.host = "172.20.6.62"
+    self.host = "172.20.6.61"
     self.port = 9090
     self.transport = TBufferedTransport(TSocket(self.host, self.port))
     self.transport.open()
@@ -249,7 +249,7 @@ class WebBlogPipeLine(object):
 
 class IndustryReportPipeLine(object):
   def __init__(self):
-    self.host = "172.20.6.62"
+    self.host = "172.20.6.61"
     self.port = 9090
     self.transport = TBufferedTransport(TSocket(self.host, self.port))
     self.transport.open()
@@ -289,7 +289,7 @@ class IndustryReportPipeLine(object):
 
 class WebActivityPipeLine(object):
   def __init__(self):
-    self.host = "172.20.6.62"
+    self.host = "172.20.6.61"
     self.port = 9090
     self.transport = TBufferedTransport(TSocket(self.host, self.port))
     self.transport.open()
@@ -322,37 +322,201 @@ class WebActivityPipeLine(object):
       mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
-class DianPingPipeLine(object):
-  def __init__(self):
-    self.host = "172.20.6.62"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-  def __del__(self):
-    self.transport.close()
 
-  def process_item(self, item, spider):
-    if spider.name not in ['Dianping']:
-      return item
-
-    print "enter WebArticlePipeLine...."
+class DianPingShopPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['DianpingShop']:
+			return item
+		print "enter DianPingShopPipeLine...."
+		'''
     data = {'level':item['level'],'consume':item['consume'],'comment':item['comment'],'taste':item['taste'],'environment':item['environment'],'service':item['service'],'shopname':item['shopname'],'city':item['city'],'address':item['address'],'business':item['business']}
     spider.tDazhongdp.update({'shopid':item['shopid']},{'$set':data},True)
+		'''
     #insert item into hbase
-    row = item['shopid']
-    mutations = []
-    mutations.append(Mutation(column='cloum_dianping:shopid',value=item['shopid'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:level',value=item['level'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:consume',value=item['consume'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:comment',value=item['comment'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:taste',value=item['taste'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:environment',value=item['environment']))
-    mutations.append(Mutation(column='cloum_dianping:service',value=item['service'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:shopname',value=item['shopname']))
-    mutations.append(Mutation(column='cloum_dianping:city',value=item['city'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:address',value=item['address'].encode("utf8")))
-    mutations.append(Mutation(column='cloum_dianping:business',value=item['business'].encode("utf8")))
-    self.client.mutateRow('info_dianping',row,mutations,None)
-    return item
+		row = hashlib.new("md5",item['shopid']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:shopid',value=item['shopid'].encode("utf8")))
+		mutations.append(Mutation(column='column:shopname',value=item['shopname'].encode("utf8")))
+		mutations.append(Mutation(column='column:city',value=item['city'].encode("utf8")))
+		mutations.append(Mutation(column='column:address',value=item['address'].encode("utf8")))
+		mutations.append(Mutation(column='column:business',value=item['business'].encode("utf8")))
+		self.client.mutateRow('dianping_shop',row,mutations,None)
+		
+		mutations = []
+		mutations.append(Mutation(column='column:shopid',value=item['shopid'].encode("utf8")))
+		mutations.append(Mutation(column='column:level',value=item['level'].encode("utf8")))
+		mutations.append(Mutation(column='column:consume',value=item['consume'].encode("utf8")))
+		mutations.append(Mutation(column='column:comment',value=item['comment'].encode("utf8")))
+		mutations.append(Mutation(column='column:taste',value=item['taste'].encode("utf8")))
+		mutations.append(Mutation(column='column:environment',value=item['environment']))
+		mutations.append(Mutation(column='column:service',value=item['service'].encode("utf8")))
+		self.client.mutateRow('dianping_content',row,mutations,None)
+		return item
+
+class DianPingDishPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['DianpingDish']:
+			return item
+		print "enter DianPingDishPipeLine...."
+		'''
+    data = {'level':item['level'],'consume':item['consume'],'comment':item['comment'],'taste':item['taste'],'environment':item['environment'],'service':item['service'],'shopname':item['shopname'],'city':item['city'],'address':item['address'],'business':item['business']}
+    spider.tDazhongdp.update({'shopid':item['shopid']},{'$set':data},True)
+		'''
+    #insert item into hbase
+		j=0
+		mutations = []
+		if len(item['arrDish']) < 1:
+			raise DropItem('No Dianping Dish datas in %s' % item)
+		else:
+			for i in item['arrDish']:
+				if len(i) > 0:
+					arrDish = i.split(',')
+					row = item['shopid'] + "_" + str(j)
+					mutations.append(Mutation(column='column:shopid',value=item['shopid'].encode("utf8")))
+					mutations.append(Mutation(column='column:recommend',value=(arrDish[0]).encode("utf8")))
+					mutations.append(Mutation(column='column:rnumber',value=(arrDish[1]).encode("utf8")))
+					self.client.mutateRow('dianping_recommond',row,mutations,None)
+					j+=1
+		return item
+
+class DaniangNewsPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+		
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['Yonghe','Yos','DnsjBaiDu','Mcdonalds','KFC','Cnddr']:
+			return item
+		
+		print "enter DemoPipeLine...."
+		#print item['title']
+		if item['title'] == '':
+			raise DropItem("there is no activity item! @@@url=%s" % item['url'])
+		else:
+			data = {'title':item['title'],'time':item['time'],'siteName':item['siteName']}
+			spider.tDnsjNews.update({'url':item['url']},{'$set':data},True)
+			'''
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='activity:url',value=item['url']))
+      mutations.append(Mutation(column='activity:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='activity:trad',value=item['trad'].encode("utf8")))
+      mutations.append(Mutation(column='activity:time',value=item['time'].encode("utf8")))
+      mutations.append(Mutation(column='activity:location',value=item['location'].encode("utf8")))
+      mutations.append(Mutation(column='activity:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='activity:activityID',value=item['activityID']))
+      mutations.append(Mutation(column='activity:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('',row,mutations,None)
+			'''
+			return item
+
+class DaniangWeiBoPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+		
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['DnWeiBo']:
+			return item
+		
+		print "enter DemoPipeLine...."
+		#print item['userurl']
+		if item['time'] == '':
+			raise DropItem("there is no activity item! @@@url=%s" % item['weibourl'])
+		else:
+			data = {'username':item['username'],'userurl':item['userurl'],'image':item['image'],'content':item['content'],'source':item['source'],'time':item['time']}
+			spider.tDnsjWeiBo.update({'weibourl':item['weibourl']},{'$set':data},True)
+			'''
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='activity:url',value=item['url']))
+      mutations.append(Mutation(column='activity:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='activity:trad',value=item['trad'].encode("utf8")))
+      mutations.append(Mutation(column='activity:time',value=item['time'].encode("utf8")))
+      mutations.append(Mutation(column='activity:location',value=item['location'].encode("utf8")))
+      mutations.append(Mutation(column='activity:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='activity:activityID',value=item['activityID']))
+      mutations.append(Mutation(column='activity:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('',row,mutations,None)
+			'''
+			return item
+class DaniangWeiXinPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+		
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['DnsjWeiXin']:
+			return item
+		
+		print "enter WeiXinPipeLine...."
+		#print item['title']
+		if item['title'] == '':
+			raise DropItem("there is no activity item! @@@url=%s" % item['url'])
+		else:
+			data = {'title':item['title'],'time':item['time'],'content':item['content'],'source':item['source'],'image':item['image']}
+			spider.tDnsjWeiXin.update({'url':item['url']},{'$set':data},True)
+			'''
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='activity:url',value=item['url']))
+      mutations.append(Mutation(column='activity:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='activity:trad',value=item['trad'].encode("utf8")))
+      mutations.append(Mutation(column='activity:time',value=item['time'].encode("utf8")))
+      mutations.append(Mutation(column='activity:location',value=item['location'].encode("utf8")))
+      mutations.append(Mutation(column='activity:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='activity:activityID',value=item['activityID']))
+      mutations.append(Mutation(column='activity:siteName',value=item['siteName']))
+      mutations.append(Mutation(column='activity:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('',row,mutations,None)
+			'''
+			return item

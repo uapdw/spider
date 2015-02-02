@@ -7,7 +7,7 @@ from scrapy.contrib.spiders import CrawlSpider,Rule
 from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
-from scrapy import Spider,Request
+from scrapy.http import Request
 
 
 class Yesky(CrawlSpider):

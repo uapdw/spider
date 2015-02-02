@@ -255,7 +255,7 @@ class WebActivityItem(Item):
   activityID = Field()
   siteName = Field()
   addTime = Field()
-class DianPing(Item):
+class DianPingShopItem(Item):
   shopid = Field()
   level = Field()
   consume = Field()
@@ -270,5 +270,30 @@ class DianPing(Item):
   address = Field()
   business = Field()
 
+class DianPingDishItem(Item):
+	shopid = Field()
+	arrDish = Field()
+class DemoItem(Item):
+	title = Field()
+	url = Field()
+	time = Field()
+	siteName = Field()
+
+class WeiBoItem(Item):
+	image = Field()
+	username = Field()
+	content = Field()
+	source = Field()
+	time = Field()
+	weibourl = Field()
+	userurl = Field()
+
+class WeiXinItem(Item):
+	image = Field()
+	title = Field()
+	url = Field()
+	time = Field()
+	content = Field()
+	source = Field()
 class InfomationCrawlerItem(Item):
   pass
