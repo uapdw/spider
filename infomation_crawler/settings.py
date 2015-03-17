@@ -24,6 +24,7 @@ ITEM_PIPELINES = {
 	'infomation_crawler.pipelines.DaniangNewsPipeLine':17,
 	'infomation_crawler.pipelines.DaniangWeiBoPipeLine':18,
 	'infomation_crawler.pipelines.DaniangWeiXinPipeLine':19,
+	'infomation_crawler.pipelines.GovSubPipeLine':20,
 	}
 USER_AGENT = fake.internet_explorer()
 
