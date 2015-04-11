@@ -295,5 +295,16 @@ class WeiXinItem(Item):
 	time = Field()
 	content = Field()
 	source = Field()
+
+class GovSubItem(Item):
+	title = Field()
+	url = Field()
+	buyer = Field()
+	agent = Field()
+	abstract = Field()
+	keyWords = Field()
+	publishTime = Field()
+	content = Field()
+	source = Field()
 class InfomationCrawlerItem(Item):
   pass

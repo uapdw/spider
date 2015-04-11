@@ -24,6 +24,7 @@ ITEM_PIPELINES = {
 	'infomation_crawler.pipelines.DaniangNewsPipeLine':17,
 	'infomation_crawler.pipelines.DaniangWeiBoPipeLine':18,
 	'infomation_crawler.pipelines.DaniangWeiXinPipeLine':19,
+	'infomation_crawler.pipelines.GovSubPipeLine':20,
 	}
 USER_AGENT = fake.internet_explorer()
 
@@ -37,6 +38,7 @@ AUTOTHROTTLE_DEBUG = True
 DOWNLOAD_DELAY = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
 CONCURRENT_REQUESTS = 1
+DOWNLOAD_TIMEOUT = 10
 
 LOG_LEVEL = 'DEBUG'
 #LOG_FILE = 'scrapy.log'

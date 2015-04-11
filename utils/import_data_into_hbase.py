@@ -13,7 +13,7 @@ import hashlib
 
 class HBaseOperator():
 	def __init__(self):
-		self.host = "172.20.6.62"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -302,7 +302,7 @@ class HBaseOperator():
 
 	def importAllDatas(self):
 		#self.deleteInfoTables()
-		#self.createInfoTables()
+		self.createInfoTables()
 
 		self.importBaiduArticlesDatas()
 		self.importOtherArticlesDatas()
