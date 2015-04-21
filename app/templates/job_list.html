@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>joblist</title>
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <meta name="description" content="pyspider dashboard">
+    <meta name="author" content="binux">
+    <link href="{{url_for('static',filename='bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='bootstrap-editable.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='sortable-theme-bootstrap.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='index.css')}}" rel="stylesheet">
+
+    <script src="{{url_for('static',filename='jquery.min.js')}}"></script>
+  </head>
+
+  <body>
+    <h3>任务列表</h3>
+    <section>
+      <table class="table sortable-theme-bootstrap projects">
+        <thead>
+          <tr>
+            <th>job id</th>
+            <th>spider name</th>
+            <th>status</th>
+            <th>start time</th>
+            <th>end time</th>
+            <th data-type="num">actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--<tr >
+            <td colspan="6" class="project-name" style="text-align: center; background-color: #fcf8e3"><h5>等待中....</h5></td>
+          </tr>-->
+
+          {% for item in jobList.pending %}
+          <tr >
+            <td class="project-group"><span>{{item.id}}</span></td>
+            <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
+            <td class="project-status">
+              <span class="status-STOP" data-value="STOP">等待中</span>
+            </td>
+            <td class="project-progress progress-1d">{{item.start_time}}</td>
+            <td class="project-progress progress-1d">{{item.end_time}}</td>
+            <td class="project-actions" data-value="1427445585.1">
+              <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
+              <button class="project-cancel btn btn-default btn-xs">取消</button>
+            </td>
+          </tr>
+          {% endfor %}
+
+          {% for item in jobList.running %}
+          <tr >
+            <td class="project-group"><span>{{item.id}}</span></td>
+            <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
+            <td class="project-status">
+              <span class="status-RUNNING" data-value="RUNNING">运行中</span>
+            </td>
+            <td class="project-progress progress-1d">{{item.start_time}}</td>
+            <td class="project-progress progress-1d">{{item.end_time}}</td>
+            <td class="project-actions" data-value="1427445585.1">
+              <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
+              <button class="project-cancel btn btn-default btn-xs">取消</button>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{projectName}}/{{item.spider}}/{{item.id}}.log" target=_blank>Log</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{projectName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>Item</a>
+            </td>
+          </tr>
+          {% endfor %}
+
+          {% for item in jobList.finished %}
+          <tr >
+            <td class="project-group"><span>{{item.id}}</span></td>
+            <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
+            <td class="project-status">
+              <span class="status-STOP" data-value="STOP">已完成</span>
+            </td>
+            <td class="project-progress progress-1d">{{item.start_time}}</td>
+            <td class="project-progress progress-1d">{{item.end_time}}</td>
+            <td class="project-actions" data-value="1427445585.1">
+              <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{projectName}}/{{item.spider}}/{{item.id}}.log" target=_blank>日志</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{projectName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>结果</a>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      <div class="global-btn clearfix">
+        <!--<div class="pull-left">
+
+          <a class="btn btn-default btn-info" href='/tasks' target=_blank>Recent Active Tasks</a>
+
+        </div>
+        <div class="pull-right">
+          <button class="project-create btn btn-default btn-primary">Create</button>
+        </div>-->
+      </div>
+    </section>
+    <script src="{{url_for('static',filename='bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap-editable.min.js')}}"></script>
+    <script src="{{url_for('static',filename='sortable.min.js')}}"></script>
+    <script src="{{url_for('static',filename='index.js')}}"></script>
+  </body>
+</html>
+<!-- vim: set et sw=2 ts=2 sts=2 ff=unix fenc=utf8 syntax=htmldjango: -->
+

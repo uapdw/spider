@@ -7,3 +7,5 @@ dbs/
 eggs/
 items/
 logs/
+*.iml
+.idea/

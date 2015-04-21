@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>douban - Debugger - pyspider</title>
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <meta name="description" content="pyspider - debugger - douban">
+  <meta name="author" content="binux">
+
+  <link href="/static/codemirror.min.css" rel="stylesheet">
+  <link href="/static/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/dialog.min.css" rel="stylesheet">
+  <link href="/static/debug.css" rel="stylesheet">
+
+  <script src="/static/jquery.min.js"></script>
+  <script src="/static/codemirror.min.js"></script>
+  <script src="/static/xml.min.js"></script>
+  <script src="/static/css.min.js"></script>
+  <script src="/static/javascript.min.js"></script>
+  <script src="/static/htmlmixed.min.js"></script>
+  <script src="/static/python.min.js"></script>
+  <script src="/static/search.min.js"></script>
+  <script src="/static/searchcursor.min.js"></script>
+  <script src="/static/dialog.min.js"></script>
+  <script src="/static/active-line.min.js"></script>
+  <script src="/static/runmode.min.js"></script>
+  <script src="/static/formatting.min.js"></script>
+  <script src="/static/URI.min.js"></script>
+</head>
+
+<body>
+<section id="control">
+  <div class="title pull-left"><a href="/spiderlist">爬虫列表</a> &gt; {{spiderName}}</div>
+  <div class="pull-right">
+    <!--<a href="http://docs.pyspider.org/" target="_blank">Documentation</a>-->
+  </div>
+</section>
+<section id="editarea">
+  <!--<div id="left-area" class="debug-panel" style="right: 50%">
+    <div id="task-panel">
+      <div id="task-editor" class="editor">
+        <div id="run-task-btn">run</div>
+        <div id="undo-redo-btn-group">
+          <a href="javascript:;" id="undo-btn"> &lt; </a>|<a href="javascript:;" id="redo-btn">&gt; </a>
+        </div>
+      </div>
+      <div id="debug-tabs">
+        <div id="tab-web" class="tab" style="display: none;">
+          <div id="css-selector-helper">
+            <input class="copy-selector-input"></input>
+            <button class="btn copy-selector"><i class="fa fa-clipboard" title="copy css selector"></i></button>
+            <button class="btn add-to-editor"><i class="fa fa-arrow-right" title="add to editor"></i></button>
+          </div>
+          <div class="iframe-box"></div>
+        </div>
+        <div id="tab-html" class="tab" style="display: none;"><pre class="cm-s-default"></pre></div>
+        <div id="tab-follows" class="tab">
+
+        </div>
+        <div id="tab-messages" class="tab" style="display: none;">
+          <pre class="cm-s-default"></pre>
+        </div>
+      </div>
+    </div>
+    <ul id="tab-control">
+      <li data-id="tab-messages">messages<span class="num" style="display: none;"></span></li>
+      <li data-id="tab-follows">follows<span class="num" style="display: none;"></span></li>
+      <li data-id="tab-html">html</li>
+      <li data-id="tab-web" class="active">web</li>
+      <li id="J-enable-css-selector-helper">enable css selector helper</li>
+    </ul>
+    <div class="overlay" style="display: none;"></div>
+  </div>-->
+
+  <div id="right-area" class="debug-panel" style="left: 1%">
+    <div id="python-editor" class="editor focus">
+      <div id="save-task-btn">保存</div>
+      <input type="hidden" id="spiderName" value="{{spiderName}}">
+    </div>
+    <div id="python-log" style="display: none;">
+      <div id="python-log-show"></div>
+      <pre style="display: none;"></pre>
+    </div>
+    <div class="overlay" style="display: none;"></div>
+  </div>
+</section>
+
+<script>
+  var task_content = "{\"process\": {\"callback\": \"on_start\"}, \"project\": \"douban\", \"taskid\": \"data:,on_start\", \"url\": \"data:,on_start\"}";
+  var script_content = {{ script | tojson | safe }};
+
+  ;
+</script>
+<script src="/static/splitter.js"></script>
+<script src="/static/debug.js"></script>
+</body>
+</html>
+<!-- vim: set et sw=2 ts=2 sts=2 ff=unix fenc=utf8 syntax=htmldjango: -->
+
