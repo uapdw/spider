@@ -9,16 +9,16 @@
 
     <meta name="description" content="pyspider dashboard">
     <meta name="author" content="binux">
-    <link href="{{url_for('static',filename='bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static',filename='bootstrap-editable.css')}}" rel="stylesheet">
-    <link href="{{url_for('static',filename='sortable-theme-bootstrap.css')}}" rel="stylesheet">
-    <link href="{{url_for('static',filename='index.css')}}" rel="stylesheet">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+    <link href="/static/css/sortable-theme-bootstrap.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
 
-    <script src="{{url_for('static',filename='jquery.min.js')}}"></script>
+    <script src="/static/js/jquery.min.js"></script>
   </head>
 
   <body>
-    <h3>任务列表</h3>
+    <h3>{{groupName}}组的任务列表</h3>
     <section>
       <table class="table sortable-theme-bootstrap projects">
         <thead>
@@ -64,8 +64,8 @@
             <td class="project-actions" data-value="1427445585.1">
               <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
               <button class="project-cancel btn btn-default btn-xs">取消</button>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{projectName}}/{{item.spider}}/{{item.id}}.log" target=_blank>Log</a>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{projectName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>Item</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>Log</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>Item</a>
             </td>
           </tr>
           {% endfor %}
@@ -81,8 +81,8 @@
             <td class="project-progress progress-1d">{{item.end_time}}</td>
             <td class="project-actions" data-value="1427445585.1">
               <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{projectName}}/{{item.spider}}/{{item.id}}.log" target=_blank>日志</a>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{projectName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>结果</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>日志</a>
+              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>结果</a>
             </td>
           </tr>
           {% endfor %}
@@ -100,10 +100,10 @@
         </div>-->
       </div>
     </section>
-    <script src="{{url_for('static',filename='bootstrap.min.js')}}"></script>
-    <script src="{{url_for('static',filename='bootstrap-editable.min.js')}}"></script>
-    <script src="{{url_for('static',filename='sortable.min.js')}}"></script>
-    <script src="{{url_for('static',filename='index.js')}}"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-editable.min.js"></script>
+    <script src="/static/js/sortable.min.js"></script>
+    <script src="/static/js/index.js"></script>
   </body>
 </html>
 <!-- vim: set et sw=2 ts=2 sts=2 ff=unix fenc=utf8 syntax=htmldjango: -->

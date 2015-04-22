@@ -10,30 +10,30 @@
   <meta name="description" content="pyspider - debugger - douban">
   <meta name="author" content="binux">
 
-  <link href="/static/codemirror.min.css" rel="stylesheet">
-  <link href="/static/font-awesome.min.css" rel="stylesheet">
-  <link href="/static/dialog.min.css" rel="stylesheet">
-  <link href="/static/debug.css" rel="stylesheet">
+  <link href="/static/css/codemirror.min.css" rel="stylesheet">
+  <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/css/dialog.min.css" rel="stylesheet">
+  <link href="/static/css/debug.css" rel="stylesheet">
 
-  <script src="/static/jquery.min.js"></script>
-  <script src="/static/codemirror.min.js"></script>
-  <script src="/static/xml.min.js"></script>
-  <script src="/static/css.min.js"></script>
-  <script src="/static/javascript.min.js"></script>
-  <script src="/static/htmlmixed.min.js"></script>
-  <script src="/static/python.min.js"></script>
-  <script src="/static/search.min.js"></script>
-  <script src="/static/searchcursor.min.js"></script>
-  <script src="/static/dialog.min.js"></script>
-  <script src="/static/active-line.min.js"></script>
-  <script src="/static/runmode.min.js"></script>
-  <script src="/static/formatting.min.js"></script>
-  <script src="/static/URI.min.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/codemirror.min.js"></script>
+  <script src="/static/js/xml.min.js"></script>
+  <script src="/static/js/css.min.js"></script>
+  <script src="/static/js/javascript.min.js"></script>
+  <script src="/static/js/htmlmixed.min.js"></script>
+  <script src="/static/js/python.min.js"></script>
+  <script src="/static/js/search.min.js"></script>
+  <script src="/static/js/searchcursor.min.js"></script>
+  <script src="/static/js/dialog.min.js"></script>
+  <script src="/static/js/active-line.min.js"></script>
+  <script src="/static/js/runmode.min.js"></script>
+  <script src="/static/js/formatting.min.js"></script>
+  <script src="/static/js/URI.min.js"></script>
 </head>
 
 <body>
 <section id="control">
-  <div class="title pull-left"><a href="/spiderlist">爬虫列表</a> &gt; {{spiderName}}</div>
+  <div class="title pull-left"><a href="/spiderlist">爬虫列表</a> &gt; <a href="/spiderlist">{{groupName}}</a> &gt; {{spiderName}}</div>
   <div class="pull-right">
     <!--<a href="http://docs.pyspider.org/" target="_blank">Documentation</a>-->
   </div>
@@ -79,6 +79,7 @@
     <div id="python-editor" class="editor focus">
       <div id="save-task-btn">保存</div>
       <input type="hidden" id="spiderName" value="{{spiderName}}">
+      <input type="hidden" id="groupName" value="{{groupName}}">
     </div>
     <div id="python-log" style="display: none;">
       <div id="python-log-show"></div>
@@ -94,8 +95,8 @@
 
   ;
 </script>
-<script src="/static/splitter.js"></script>
-<script src="/static/debug.js"></script>
+<script src="/static/js/splitter.js"></script>
+<script src="/static/js/debug.js"></script>
 </body>
 </html>
 <!-- vim: set et sw=2 ts=2 sts=2 ff=unix fenc=utf8 syntax=htmldjango: -->

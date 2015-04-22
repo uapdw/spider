@@ -8,6 +8,8 @@ import StringIO
 import json
 import inspect
 import pymongo
+import datetime
+import subprocess
 import os
 from .libs import sample_handler
 # from infomation_crawler.spiders import *
@@ -24,11 +26,12 @@ def index():
   return render_template('index.html', spiderListUrl=url_for('spiderList'))
 
 
-@app.route('/edit/<spiderName>')
-def editSpider(spiderName):
-  filePath = os.path.join(os.path.dirname(__file__),'../infomation_crawler/spiders/'+spiderName+'.py')
+@app.route('/edit/<groupName>/<spiderName>')
+def editSpider(groupName,spiderName):
+  filePath = os.path.join(os.path.dirname(__file__),'../'+groupName+'/'+groupName+'/spiders/'+spiderName+'.py')
+
   if not os.path.exists(filePath):
-    script = (default_script.replace('__SPIDER_NAME__',spiderName))
+    script = (default_script.replace('__SPIDER_NAME__',spiderName).replace('__GROUP_NAME__',groupName))
   else:
     fileObj = open(filePath,'r')
     try:
@@ -36,27 +39,31 @@ def editSpider(spiderName):
     finally:
       fileObj.close()
 
-  return render_template('edit_spider.html', spiderName=spiderName, script=script)
+  return render_template('edit_spider.html', spiderName=spiderName, groupName=groupName, script=script)
+
+  # return default_script
 
 @app.route('/save', methods=['POST'])
 def saveSpider():
   spiderName = request.form['spiderName']
+  groupName = request.form['groupName']
   script = request.form['script']
 
   conn = pymongo.Connection('localhost',27017)
   spiderManagerDB = conn.spider_manager
   tSpiders = spiderManagerDB.spiders
 
-  data = {'script':script,'group':'default'}
+  data = {'script':script,'group':groupName, 'edittime':datetime.datetime.now()}
   tSpiders.update({'spiderName':spiderName},{'$set':data},True)
 
   conn.close()
 
-  filePath = os.path.join(os.path.dirname(__file__),'../infomation_crawler/spiders/'+spiderName+'.py')
+  filePath = os.path.join(os.path.dirname(__file__),'../'+groupName+'/'+groupName+'/spiders/'+spiderName+'.py')
   fileObj = open(filePath,'w')
-  fileObj.write(script)
-  fileObj.close()
-
+  try:
+    fileObj.write(script)
+  finally:
+    fileObj.close()
 
   return "spider saved: " + spiderName
 
@@ -79,10 +86,10 @@ def showSpider(spiderName):
   # return render_template('show_spider.html', spiderName=spiderName, script=script)
 
 
-@app.route('/joblist/<projectName>')
-def jobList(projectName):
+@app.route('/joblist/<groupName>')
+def jobList(groupName):
   c = pycurl.Curl()
-  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/listjobs.json?project='+projectName)
+  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/listjobs.json?project='+groupName)
 
   b = StringIO.StringIO()
   c.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -90,7 +97,18 @@ def jobList(projectName):
   jsonStr = b.getvalue()
   jobList = json.loads(jsonStr)
 
-  return render_template('job_list.html', jobList = jobList, projectName=projectName)
+  return render_template('job_list.html', jobList=jobList, groupName=groupName)
+
+@app.route('/deploy', methods=['POST'])
+def deployGroup():
+  groupName = request.form['groupName']
+  filePath = os.path.join(os.path.dirname(__file__),'../'+groupName)
+
+  # returnCode = subprocess.check_output('cd '+filePath+'; scrapyd-deploy office -p '+groupName)
+  returnCode = subprocess.check_output('cd '+filePath+'; scrapyd-deploy office -p '+groupName, shell=True)
+  return returnCode
+
+
 
 
 
@@ -121,6 +139,14 @@ def runSpider():
   # jobList = json.loads(jsonStr)
   return jsonStr
 
+
+@app.route('/resultslist/<resultsType>')
+def resultsList(resultsType):
+  return resultsType
+
+
+
+
 @app.route('/spiderlist')
 def spiderList():
   conn = pymongo.Connection('localhost',27017)
@@ -138,6 +164,8 @@ def spiderList():
   # spiderList = spiderList[:8]
   # return spiderList
   return render_template('spider_list.html',spiderList = spiderList)
+
+
 
 
 

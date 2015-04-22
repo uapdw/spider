@@ -4,7 +4,7 @@
 // Created on 2014-03-02 17:53:23
 
 $(function() {
-  $(".project-group>span").editable({
+  /*$(".project-group>span").editable({
     name: 'group',
     pk: function(e) {
       return $(this).parents('tr').data("name");
@@ -12,7 +12,7 @@ $(function() {
     emptytext: '[group]',
     placement: 'right',
     url: "/update"
-  });
+  });*/
 
   $(".project-status>span").editable({
     type: 'select',
@@ -54,11 +54,15 @@ $(function() {
   });
 
   $('.project-create').on('click', function() {
-    var result = prompt('请输入爬虫名称（只允许使用英文字母、数字和下划线）:');
-    if (result && result.search(/[^\w]/) == -1) {
-      location.href = "/edit/"+result;
+    //var result = prompt('请输入爬虫名称（只允许使用英文字母、数字和下划线）:');
+    var spiderName = $('#cs_spiderName').val();
+    var groupName = $('#cs_groupName').val();
+    //alert(spiderName + ' ### ' + groupName);
+
+    if (spiderName && spiderName.search(/[^\w]/) == -1) {
+      location.href = "/edit/"+groupName+"/"+spiderName;
     } else {
-      alert('project name not allowed!');
+      alert('爬虫名称格式不正确！');
     }
   });
 
@@ -85,6 +89,48 @@ $(function() {
         $(_this).removeClass("btn-warning").addClass("btn-danger");
       }
     });
+  });
+
+  $('#btnGotoJobList').on('click', function(){
+    groupName = $('#job_groupName').val()
+    location.href = '/joblist/'+groupName
+
+  });
+
+  $('#btnDeploySpider').on('click', function(){
+    groupName = $('#deploy_groupName').val()
+    //alert(groupName);
+    //location.href = '/joblist/'+groupName
+    $.ajax({
+      type: "POST",
+      url: '/deploy',
+      data: {
+        groupName: groupName
+      },
+      success: function(data) {
+        console.log(data);
+        var jsonObj = eval('(' + data + ')');
+        //alert(jsonObj.status);
+        if(jsonObj.status == 'ok'){
+          alert('成功部署分组：'+groupName + '！');
+        }else{
+          alert("部署分组："+groupName+"失败，scrapyd服务出现问题！");
+        }
+
+        $('#deploySpiderModal').modal('toggle');
+        //alert("deploy finished!");
+      },
+      error: function() {
+        console.log('部署分组："+groupName+"失败，未能成功提交数据！');
+      }
+    });
+
+  });
+
+  $('#btnShowResult').on('click', function(){
+    resultsType = $('#resultsType').val()
+    location.href = '/resultslist/'+resultsType
+
   });
 
   // onload

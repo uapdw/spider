@@ -26,21 +26,23 @@
       <div class="global-btn clearfix">
         <div class="pull-left">
 
-          <a class="btn btn-default btn-info" href='/joblist' target=_blank>任务列表</a>
-
+          <!--<a class="btn btn-default btn-info" href='/joblist' target=_blank>任务列表</a>-->
+          <button class="btn btn-default btn-info" data-toggle="modal" data-target="#jobListModal">任务列表</button>
+          <button class="btn btn-default btn-info" data-toggle="modal" data-target="#deploySpiderModal">部署爬虫</button>
+          <button class="btn btn-default btn-info" data-toggle="modal" data-target="#showResultsModal">查看采集结果</button>
         </div>
         <div class="pull-right">
           <!--<button class="project-create btn btn-default btn-primary">创建爬虫</button>-->
-          <button class="btn btn-default btn-primary" data-toggle="modal" data-target="#myModal">创建爬虫</button>
+          <button class="btn btn-default btn-info" data-toggle="modal" data-target="#addSpiderModal">创建爬虫</button>
         </div>
       </div>
       <table class="table sortable-theme-bootstrap projects">
         <thead>
           <tr>
-            <th>ID</th>
             <th>分组</th>
+            <th>ID</th>
             <th>爬虫名称</th>
-            <th>状态</th>
+            <th>上次编辑时间</th>
             <th data-type="num">操作</th>
           </tr>
         </thead>
@@ -48,16 +50,14 @@
           {% for item in spiderList %}
 
           <tr data-name="{{spiderName}}">
-            <td class="project-id"><span>{{item._id}}</span></td>
             <td class="project-group"><span>{{item.group}}</span></td>
-            <td class="project-name"><a href="/edit/{{item.spiderName}}">{{item.spiderName}}</a></td>
-            <td class="project-status">
-              <span class="status-TODO" data-value="TODO">TODO</span>
-            </td>
+            <td class="project-id"><span>{{item._id}}</span></td>
+            <td class="project-name"><a href="/edit/{{item.group}}/{{item.spiderName}}">{{item.spiderName}}</a></td>
+            <td class="project-time">{{item.edittime}}</td>
             <td class="project-actions" data-value="1427445585.1">
               <button class="project-run btn btn-default btn-xs">运行</button>
               <!--<a class="btn btn-default btn-xs" href="/run/{{spiderName}}" target=_blank>Run</a>-->
-              <a class="btn btn-default btn-xs" href="/results?spiderName={{item.spiderName}}" target=_blank>查看结果</a>
+              <!--<a class="btn btn-default btn-xs" href="/results?spiderName={{item.spiderName}}" target=_blank>查看结果</a>-->
             </td>
           </tr>
           {% endfor %}
@@ -66,22 +66,22 @@
       </table>
 
     </section>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addSpiderModal" tabindex="-1" role="dialog" aria-labelledby="addSpiderLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">创建爬虫</h4>
+            <h4 class="modal-title" id="addSpiderLabel">创建爬虫</h4>
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group ">
                 <label>爬虫名称：</label>
-                <input type="text" class="form-control" id="spiderName" placeholder="只允许使用英文字母、数字和下划线" />
+                <input type="text" class="form-control" id="cs_spiderName" placeholder="只允许使用英文字母、数字和下划线" />
               </div>
               <div class="form-group">
                 <label>所属分组：</label>
-                <select class="form-control" id="groupName">
+                <select class="form-control" id="cs_groupName">
                   <option value="infomation_crawler">infomation_crawler</option>
                   <option value="group2">group2</option>
                   <option value="group3">group3</option>
@@ -90,7 +90,82 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary project-create">确定</button>
+            <button type="button" class="btn btn-info project-create">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="jobListModal" tabindex="-1" role="dialog" aria-labelledby="jobListLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="jobListLabel">请选择爬虫所属分组</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label>所属分组：</label>
+                <select class="form-control" id="job_groupName">
+                  <option value="infomation_crawler">infomation_crawler</option>
+                  <option value="group2">group2</option>
+                  <option value="group3">group3</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" id="btnGotoJobList">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="deploySpiderModal" tabindex="-1" role="dialog" aria-labelledby="deploySpiderLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="deploySpiderLabel">部署爬虫</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label>所属分组：</label>
+                <select class="form-control" id="deploy_groupName">
+                  <option value="infomation_crawler">infomation_crawler</option>
+                  <option value="group2">group2</option>
+                  <option value="group3">group3</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" id="btnDeploySpider">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="showResultsModal" tabindex="-1" role="dialog" aria-labelledby="showResultsLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="deploySpiderLabel">请选择要查看的数据类型</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label>数据类型：</label>
+                <select class="form-control" id="resultsType">
+                  <option value="article">新闻</option>
+                  <option value="blog">博客</option>
+                  <option value="weibo">微博</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" id="btnShowResult">确定</button>
           </div>
         </div>
       </div>

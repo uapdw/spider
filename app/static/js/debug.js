@@ -366,13 +366,17 @@ window.Debugger = (function() {
         var script = _this.python_editor.getDoc().getValue();
         $('#right-area .overlay').show();
 
-        spiderName = $('#spiderName').attr('value');
+        spiderName = $('#spiderName').val();
+        groupName = $('#groupName').val();
+
+        //alert(spiderName + ' #### ' + groupName);
         $.ajax({
           type: "POST",
           url: '/save',
           data: {
             script: script,
-            spiderName: spiderName
+            spiderName: spiderName,
+            groupName: groupName
           },
           success: function(data) {
             console.log(data);
