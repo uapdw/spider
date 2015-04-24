@@ -49,7 +49,7 @@
         <tbody>
           {% for item in spiderList %}
 
-          <tr data-name="{{spiderName}}">
+          <tr data-name="{{item.spiderName}}" data-group="{{item.group}}">
             <td class="project-group"><span>{{item.group}}</span></td>
             <td class="project-id"><span>{{item._id}}</span></td>
             <td class="project-name"><a href="/edit/{{item.group}}/{{item.spiderName}}">{{item.spiderName}}</a></td>
@@ -157,8 +157,10 @@
               <div class="form-group">
                 <label>数据类型：</label>
                 <select class="form-control" id="resultsType">
-                  <option value="article">新闻</option>
+                  <option value="other_articles">新闻</option>
                   <option value="blog">博客</option>
+                  <option value="report">报告</option>
+                  <option value="activity">会议</option>
                   <option value="weibo">微博</option>
                 </select>
               </div>

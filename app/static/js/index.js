@@ -14,7 +14,7 @@ $(function() {
     url: "/update"
   });*/
 
-  $(".project-status>span").editable({
+  /*$(".project-status>span").editable({
     type: 'select',
     name: 'status',
     source: [
@@ -33,7 +33,7 @@ $(function() {
     success: function(response, value) {
       $(this).removeClass('status-'+$(this).attr('data-value')).addClass('status-'+value).attr('data-value', value).attr('style', '');
     }
-  });
+  });*/
 
   $(".project-rate>span").editable({
     name: 'rate',
@@ -68,21 +68,59 @@ $(function() {
 
   $('.project-run').on('click', function() {
     var spiderName = $(this).parents('tr').data("name");
+    var groupName = $(this).parents('tr').data('group');
+    //alert(spiderName + ' ### ' + groupName);
     var _this = this;
-    $(this).addClass("btn-warning");
+    //$(this).addClass("btn-warning");
     $.ajax({
       type: "POST",
       url: '/run',
       data: {
-        spiderName: spiderName
+        spiderName: spiderName,
+        groupName: groupName
       },
       success: function(data) {
         console.log(data);
+        var jsonObj = eval('(' + data + ')');
         $(_this).removeClass("btn-warning");
-        if (data.status != 'ok') {
+        if (jsonObj.status != 'ok') {
           $(_this).addClass("btn-danger");
+          alert(groupName+'分组的爬虫'+spiderName+'运行失败，请查看scrapyd服务的状态！');
         }else{
-          alert(data.jobid);
+          $(_this).addClass("btn-success");
+          alert(groupName+'分组的爬虫'+spiderName+'已开始运行，请到任务列表中查看运行状态！');
+        }
+      },
+      error: function() {
+        $(_this).removeClass("btn-warning").addClass("btn-danger");
+      }
+    });
+  });
+
+
+  $('.project-cancel').on('click', function() {
+    var jobId = $(this).parents('tr').data("id");
+    var groupName = $(this).parents('tr').data('group');
+    //alert(jobId + ' ### ' + groupName);
+    var _this = this;
+    //$(this).addClass("btn-warning");
+    $.ajax({
+      type: "POST",
+      url: '/cancel',
+      data: {
+        jobId: jobId,
+        groupName: groupName
+      },
+      success: function(data) {
+        console.log(data);
+        var jsonObj = eval('(' + data + ')');
+        $(_this).removeClass("btn-warning");
+        if (jsonObj.status != 'ok') {
+          $(_this).addClass("btn-danger");
+          alert(groupName+'分组中ID为'+jobId+'的爬虫取消失败，请查看scrapyd服务的状态！');
+        }else{
+          $(_this).addClass("btn-success");
+          alert(groupName+'分组中ID为'+jobId+'的爬虫已取消！');
         }
       },
       error: function() {
@@ -131,6 +169,10 @@ $(function() {
     resultsType = $('#resultsType').val()
     location.href = '/resultslist/'+resultsType
 
+  });
+
+  $('.btn-returnSpiderList').on('click', function(){
+    location.href='/spiderlist'
   });
 
   // onload

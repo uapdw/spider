@@ -12,7 +12,13 @@ import datetime
 import subprocess
 import os
 from .libs import sample_handler
-# from infomation_crawler.spiders import *
+from .libs.hbase import Hbase
+from .libs.hbase.ttypes import *
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+
+
 
 default_script = inspect.getsource(sample_handler)
 
@@ -128,9 +134,10 @@ def runSpider():
   reactor.run()
   '''
   spiderName = request.form['spiderName']
+  groupName = request.form['groupName']
   c = pycurl.Curl()
   c.setopt(pycurl.URL, 'http://172.20.8.3:6800/schedule.json')
-  c.setopt(c.POSTFIELDS, 'project=infomation_crawler&spider=%s' % spiderName)
+  c.setopt(c.POSTFIELDS, 'project=%s&spider=%s' % (groupName,spiderName))
 
   b = StringIO.StringIO()
   c.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -139,10 +146,40 @@ def runSpider():
   # jobList = json.loads(jsonStr)
   return jsonStr
 
+@app.route('/cancel', methods=['POST'])
+def cancelSpider():
+  jobId = request.form['jobId']
+  groupName = request.form['groupName']
+  c = pycurl.Curl()
+  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/cancel.json')
+  c.setopt(c.POSTFIELDS, 'project=%s&job=%s' % (groupName,jobId))
+
+  b = StringIO.StringIO()
+  c.setopt(pycurl.WRITEFUNCTION, b.write)
+  c.perform()
+  jsonStr = b.getvalue()
+
+  return jsonStr
 
 @app.route('/resultslist/<resultsType>')
 def resultsList(resultsType):
-  return resultsType
+  host = "172.20.6.61"
+  port = 9090
+  transport = TBufferedTransport(TSocket(host, port))
+  transport.open()
+  protocol = TBinaryProtocol.TBinaryProtocol(transport)
+  client = Hbase.Client(protocol)
+
+  scannerId = client.scannerOpen('info_public_monitor','',[resultsType],None)
+  res = client.scannerGetList(scannerId,50)
+
+  transport.close()
+
+
+  # return tableList
+
+
+  return render_template('list_'+resultsType+'.html',resultsType = resultsType, itemList=res)
 
 
 

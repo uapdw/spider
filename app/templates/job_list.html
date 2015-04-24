@@ -18,8 +18,16 @@
   </head>
 
   <body>
-    <h3>{{groupName}}组的任务列表</h3>
+
     <section>
+      <div class="global-btn clearfix">
+        <h3>{{groupName}}组的任务列表</h3>
+        <div class="pull-left">
+          <button class="btn btn-default btn-info btn-returnSpiderList" >返回爬虫列表</button>
+        </div>
+        <div class="pull-right">
+        </div>
+      </div>
       <table class="table sortable-theme-bootstrap projects">
         <thead>
           <tr>
@@ -37,7 +45,7 @@
           </tr>-->
 
           {% for item in jobList.pending %}
-          <tr >
+          <tr data-id="{{item.id}}" data-group="{{groupName}}">
             <td class="project-group"><span>{{item.id}}</span></td>
             <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
             <td class="project-status">
@@ -53,7 +61,7 @@
           {% endfor %}
 
           {% for item in jobList.running %}
-          <tr >
+          <tr data-id="{{item.id}}" data-group="{{groupName}}">
             <td class="project-group"><span>{{item.id}}</span></td>
             <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
             <td class="project-status">
@@ -71,7 +79,7 @@
           {% endfor %}
 
           {% for item in jobList.finished %}
-          <tr >
+          <tr data-id="{{item.id}}" data-group="{{groupName}}">
             <td class="project-group"><span>{{item.id}}</span></td>
             <td class="project-name"><a href="/edit/{{item.spider}}">{{item.spider}}</a></td>
             <td class="project-status">

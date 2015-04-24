@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>采集结果列表</title>
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <meta name="description" content="pyspider dashboard">
+    <meta name="author" content="binux">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+    <link href="/static/css/sortable-theme-bootstrap.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+
+    <script src="/static/js/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+
+    <section>
+
+      <div class="global-btn clearfix">
+        <h3>微博列表</h3>
+        <div class="pull-left">
+          <button class="btn btn-default btn-info btn-returnSpiderList" >返回爬虫列表</button>
+        </div>
+        <div class="pull-right">
+        </div>
+      </div>
+      <table class="table sortable-theme-bootstrap projects">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>微博内容</th>
+            <th>发布时间</th>
+            <th>评论数量</th>
+            <th>转发数量</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--<tr >
+            <td colspan="6" class="project-name" style="text-align: center; background-color: #fcf8e3"><h5>等待中....</h5></td>
+          </tr>-->
+
+
+          {% for item in itemList %}
+          <tr >
+            <td>{{item.row}}</td>
+            <td class="project-name">{{item.columns.get('weibo:screen_name').value.decode('utf8')}}</td>
+            <td class="project-status">{{item.columns.get('weibo:content').value.decode('utf8')}}</td>
+            <td class="project-status">{{item.columns.get('weibo:created_at').value.decode('utf8')}}</td>
+            <td class="project-status">{{item.columns.get('weibo:comments_count').value.decode('utf8')}}</td>
+            <td class="project-status">{{item.columns.get('weibo:reposts_count').value.decode('utf8')}}</td>
+
+
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      <div class="global-btn clearfix">
+        <!--<div class="pull-left">
+
+          <a class="btn btn-default btn-info" href='/tasks' target=_blank>Recent Active Tasks</a>
+
+        </div>
+        <div class="pull-right">
+          <button class="project-create btn btn-default btn-primary">Create</button>
+        </div>-->
+      </div>
+    </section>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-editable.min.js"></script>
+    <script src="/static/js/sortable.min.js"></script>
+    <script src="/static/js/index.js"></script>
+  </body>
+</html>
+<!-- vim: set et sw=2 ts=2 sts=2 ff=unix fenc=utf8 syntax=htmldjango: -->
+
