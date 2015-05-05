@@ -59,7 +59,7 @@ def editSpider(groupName,spiderName):
 def saveSpider():
   spiderName = request.form['spiderName']
   groupName = request.form['groupName']
-  script = request.form['script']
+  script = request.form['script'].encode('utf8')
 
   conn = pymongo.Connection('localhost',27017)
   spiderManagerDB = conn.spider_manager
