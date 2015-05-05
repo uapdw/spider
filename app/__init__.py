@@ -73,7 +73,7 @@ def saveSpider():
   filePath = os.path.join(os.path.dirname(__file__),'../'+groupName+'/'+groupName+'/spiders/'+spiderName+'.py')
   fileObj = open(filePath,'w')
   try:
-    fileObj.write(script)
+    fileObj.write(u'%s' % script)
   finally:
     fileObj.close()
 
