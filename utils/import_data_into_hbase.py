@@ -13,14 +13,16 @@ import hashlib
 
 class HBaseOperator():
 	def __init__(self):
-		self.host = "172.20.6.61"
+		#self.host = "172.20.6.61"
+		#self.port = 9090
+		self.host = "172.20.8.69"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
 		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 		self.client = Hbase.Client(self.protocol)
 
-		conn = pymongo.Connection('localhost',27017)
+		conn = pymongo.Connection('172.20.8.3',27017)
 		self.infoDB = conn.info
 
 	def __del__(self):
@@ -97,12 +99,18 @@ class HBaseOperator():
 			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
 			mutations.append(Mutation(column='other_articles:siteName',value=(i['siteName']).encode('utf-8')))
+			'''
 			if type(i['publishTime']) == "unicode":
 				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).encode('utf-8')))
 			elif type(i['publishTime']) == "datetime.datetime":
 				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			else:
 				mutations.append(Mutation(column='other_articles:publishTime',value=''))
+			'''
+			if type(i['publishTime']) == "datetime.datetime":
+				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
+			else:
+				mutations.append(Mutation(column='other_articles:publishTime',value='2015-05-05 16:30:00'))
 			mutations.append(Mutation(column='other_articles:url',value=i['url']))
 			mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
 			mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
