@@ -26,9 +26,6 @@ class BaiduNewsSpider(Spider):
 
   start_urls = urls
 
-  # start_urls = [
-  #   "http://news.baidu.com/ns?ct=0&rn=100&ie=utf-8&bs=大数据&rsv_bp=1&sr=0&cl=2&f=8&prevct=1&word=大数据&tn=newstitle&inputT=0"
-  # ]
 
   def parse(self, response):
     sel = Selector(response)

@@ -15,7 +15,6 @@ class DnsjWeiBoSpider(CrawlSpider):
 	infoDB = conn.info
 	tDnsjWeiBo = infoDB.dnsj_weibo
 	
-	#start_urls = ['http://m.zhongsou.com/weibo#page_weibo_search_blog?w=大娘水饺']
 	def start_requests(self):
 		return [Request(url='http://t.zhongsou.com/wb?w=%B4%F3%C4%EF%CB%AE%BD%C8',method='GET',encoding='gb2312',callback=self.parse)]
 

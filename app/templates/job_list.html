@@ -72,8 +72,8 @@
             <td class="project-actions" data-value="1427445585.1">
               <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
               <button class="project-cancel btn btn-default btn-xs">取消</button>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>Log</a>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>Item</a>
+              <a class="btn btn-default btn-xs" href="http://{{serverAddress}}:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>Log</a>
+              <a class="btn btn-default btn-xs" href="http://{{serverAddress}}:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>Item</a>
             </td>
           </tr>
           {% endfor %}
@@ -89,8 +89,8 @@
             <td class="project-progress progress-1d">{{item.end_time}}</td>
             <td class="project-actions" data-value="1427445585.1">
               <!--<button class="project-run btn btn-default btn-xs">Run</button>-->
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>日志</a>
-              <a class="btn btn-default btn-xs" href="http://172.20.8.3:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>结果</a>
+              <a class="btn btn-default btn-xs" href="http://{{serverAddress}}:6800/logs/{{groupName}}/{{item.spider}}/{{item.id}}.log" target=_blank>日志</a>
+              <a class="btn btn-default btn-xs" href="http://{{serverAddress}}:6800/items/{{groupName}}/{{item.spider}}/{{item.id}}.jl" target=_blank>结果</a>
             </td>
           </tr>
           {% endfor %}

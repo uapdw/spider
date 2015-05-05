@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, url_for, request
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
@@ -27,9 +28,11 @@ default_script = inspect.getsource(sample_handler)
 app = Flask(__name__)
 projectName = 'infomation_crawler'
 
+'''
 @app.route('/')
 def index():
   return render_template('index.html', spiderListUrl=url_for('spiderList'))
+'''
 
 
 @app.route('/edit/<groupName>/<spiderName>')
@@ -95,7 +98,13 @@ def showSpider(spiderName):
 @app.route('/joblist/<groupName>')
 def jobList(groupName):
   c = pycurl.Curl()
-  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/listjobs.json?project='+groupName)
+  serverAddress = '172.20.8.162'
+  if groupName == 'infomation_crawler':
+    serverAddress = '172.20.8.162'
+  else:
+    serverAddress = '172.20.8.163'
+    
+  c.setopt(pycurl.URL, 'http://'+serverAddress+':6800/listjobs.json?project='+groupName)
 
   b = StringIO.StringIO()
   c.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -103,7 +112,7 @@ def jobList(groupName):
   jsonStr = b.getvalue()
   jobList = json.loads(jsonStr)
 
-  return render_template('job_list.html', jobList=jobList, groupName=groupName)
+  return render_template('job_list.html', jobList=jobList, groupName=groupName, serverAddress=serverAddress)
 
 @app.route('/deploy', methods=['POST'])
 def deployGroup():
@@ -136,7 +145,12 @@ def runSpider():
   spiderName = request.form['spiderName']
   groupName = request.form['groupName']
   c = pycurl.Curl()
-  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/schedule.json')
+  serverAddress = '172.20.8.162'
+  if groupName == 'infomation_crawler':
+    serverAddress = '172.20.8.162'
+  else:
+    serverAddress = '172.20.8.163'
+  c.setopt(pycurl.URL, 'http://'+serverAddress+':6800/schedule.json')
   c.setopt(c.POSTFIELDS, 'project=%s&spider=%s' % (groupName,spiderName))
 
   b = StringIO.StringIO()
@@ -151,7 +165,12 @@ def cancelSpider():
   jobId = request.form['jobId']
   groupName = request.form['groupName']
   c = pycurl.Curl()
-  c.setopt(pycurl.URL, 'http://172.20.8.3:6800/cancel.json')
+  serverAddress = '172.20.8.162'
+  if groupName == 'infomation_crawler':
+    serverAddress = '172.20.8.162'
+  else:
+    serverAddress = '172.20.8.163'
+  c.setopt(pycurl.URL, 'http://'+serverAddress+':6800/cancel.json')
   c.setopt(c.POSTFIELDS, 'project=%s&job=%s' % (groupName,jobId))
 
   b = StringIO.StringIO()
@@ -184,6 +203,7 @@ def resultsList(resultsType):
 
 
 
+@app.route('/')
 @app.route('/spiderlist')
 def spiderList():
   conn = pymongo.Connection('localhost',27017)
