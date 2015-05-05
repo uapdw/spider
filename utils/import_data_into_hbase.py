@@ -111,6 +111,7 @@ class HBaseOperator():
 				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			else:
 				mutations.append(Mutation(column='other_articles:publishTime',value='2015-05-05 16:30:00'))
+
 			mutations.append(Mutation(column='other_articles:url',value=i['url']))
 			mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
 			mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))

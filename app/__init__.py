@@ -122,14 +122,10 @@ def deployGroup():
   groupName = request.form['groupName']
   filePath = os.path.join(os.path.dirname(__file__),'../'+groupName)
 
+
   # returnCode = subprocess.check_output('cd '+filePath+'; scrapyd-deploy office -p '+groupName)
   returnCode = subprocess.check_output('cd '+filePath+'; scrapyd-deploy office -p '+groupName, shell=True)
   return returnCode
-
-
-
-
-
 
 
 @app.route('/run', methods=['POST'])
