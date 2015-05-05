@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from flask import Flask, render_template, url_for, request
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
