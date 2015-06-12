@@ -12,7 +12,7 @@ class CbinewsSpider(CrawlSpider):
   allowed_domains = ['cbinews.com']
   start_urls = ['http://www.cbinews.com/cloud/list.html?id=665','http://www.cbinews.com/bigdata/list.html?id=669','http://www.cbinews.com/software/list.html?id=136']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

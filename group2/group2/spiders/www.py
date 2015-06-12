@@ -1,17 +1,17 @@
 from scrapy.selector import Selector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from infomation_crawler.items import WebArticleItem
+from group2.items import WebArticleItem
 from scrapy.http import Request
 import datetime
 import pymongo
 
-class testSpider(CrawlSpider):
-    name = 'test'
+class wwwSpider(CrawlSpider):
+    name = 'www'
     allowed_domains = ['ccidnet.com']
     start_urls = ['http://news.ccidnet.com/col/1032/1032.html']
 
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
 

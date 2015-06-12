@@ -11,7 +11,7 @@ class SinaSpider(CrawlSpider):
   allowed_domains = ['sina.com.cn']
   start_urls = ['http://tech.sina.com.cn/']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

@@ -11,7 +11,7 @@ class BaiduNewsSpider(Spider):
   name = "baidunews"
   allowed_domains = ['baidu.com']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tKeywords = infoDB.keywords
   tArticles = infoDB.baidu_articles

@@ -9,7 +9,7 @@ import re
 class YongheSpider(CrawlSpider):
 	name = 'yonghe'
 	allowed_domains = ['yonghe.com.cn']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tDnsjNews = infoDB.dnsj_news
 	

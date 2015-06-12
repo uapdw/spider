@@ -9,7 +9,7 @@ class StockinfoSpider(Spider):
   name = "stockinfo"
   allowed_domains = ['cninfo.com.cn']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tCompanyInfo = infoDB.stock_companyinfo
 

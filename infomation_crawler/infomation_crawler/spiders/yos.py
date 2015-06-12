@@ -9,7 +9,7 @@ import re
 class YosSpider(CrawlSpider):
 	name = 'yos'
 	allowed_domains = ['yos.com.cn']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tDnsjNews = infoDB.dnsj_news
 	start_urls = ['http://www.yos.com.cn/xwzx/qydt/']

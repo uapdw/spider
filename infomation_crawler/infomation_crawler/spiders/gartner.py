@@ -19,7 +19,7 @@ class GartnerSpider(CrawlSpider):
     if(cmp(crawl, 'all')==0):
       GartnerSpider.SCROLLCOUNT=5
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tIndustryReport = infoDB.IndustryReport
 

@@ -17,7 +17,7 @@ class CctimeSpider(CrawlSpider):
         url = 'http://www.cctime.com/scroll/default.asp?kpage='+ str(i)
         urls.append(url)
     start_urls= urls
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     #rules = [

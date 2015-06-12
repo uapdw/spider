@@ -21,7 +21,7 @@ class DianpingShopSpider(CrawlSpider):
 				'http://www.dianping.com/search/keyword/%s/' % i + temp
 				)
 	start_urls = urls
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tDazhongdp = infoDB.dazhongdp
 	rules = [

@@ -12,7 +12,7 @@ class StatsdataSpider(Spider):
   ts = str(int(time()))
   urls = []
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tMacroIndex = infoDB.bm_macro_index
   tMacroData = infoDB.bm_macro_data

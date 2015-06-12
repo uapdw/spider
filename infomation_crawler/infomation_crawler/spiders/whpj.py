@@ -10,7 +10,7 @@ class WhpjSpider(Spider):
     name = "whpj"
     allowed_domains = ["boc.cn"]
 
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWhpjRate = infoDB.bm_rate
 

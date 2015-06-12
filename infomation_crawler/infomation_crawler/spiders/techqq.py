@@ -11,7 +11,7 @@ class TechqqSpider(CrawlSpider):
   allowed_domains = ['qq.com']
   start_urls = ['http://tech.qq.com/hlwxw.htm']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
  

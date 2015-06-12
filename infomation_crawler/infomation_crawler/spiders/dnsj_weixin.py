@@ -9,7 +9,7 @@ import re
 class DnsjWeiXinSpider(CrawlSpider):
 	name = 'dnsj_weixin'
 	allowed_domains = ['sogou.com','mp.weixin.qq.com']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tDnsjWeiXin = infoDB.dnsj_weixin
 	

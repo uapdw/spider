@@ -10,7 +10,7 @@ class ItpubSpider(CrawlSpider):
   allowed_domains = ['itpub.net']
   start_urls = ['http://www.itpub.net/forum.php']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebBlogs = infoDB.web_blogs
 

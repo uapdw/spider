@@ -13,7 +13,7 @@ class QuDongSpider(CrawlSpider):
     name = 'qudong'
     allowed_domain = ['qudong.com']
     start_urls= ['http://news.qudong.com/']
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     #rules = [

@@ -9,7 +9,7 @@ import re
 class DnsjWeiBoSpider(CrawlSpider):
 	name = 'dnsj_weibo'
 	allowed_domains = ['zhongsou.com']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tDnsjNews = infoDB.dnsj_news
 	

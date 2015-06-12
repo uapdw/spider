@@ -11,7 +11,7 @@ class StatsindexSpider(Spider):
   allowed_domains = ["stats.gov.cn"]
   ts = str(int(time()))
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tMacroIndex = infoDB.bm_macro_index
 

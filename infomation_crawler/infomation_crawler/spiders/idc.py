@@ -23,7 +23,7 @@ class IDCSpider(CrawlSpider):
 		else:
 			self.start_urls = ['http://idc.com.cn/about/index.jsp?page=1&thisy=2015']
 			
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tIndustryReport = infoDB.IndustryReport
 	

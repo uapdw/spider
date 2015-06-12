@@ -9,6 +9,8 @@ from hbase import Hbase
 from hbase.ttypes import *
 import pymongo
 import hashlib
+import time
+from datetime import datetime
 
 
 class HBaseOperator():
@@ -79,10 +81,42 @@ class HBaseOperator():
 		listBaiduArticles = tBaiduArticles.find()
 		
 		for i in listBaiduArticles:
-			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
+			if not i.has_key('url'):
+				continue
+			else:
+				if i.has_key('publishTime'):
+					if isinstance(i['publishTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['publishTime']) <= 10:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['publishTime']
+							continue
+
+						publishTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['publishTime'],datetime):
+						print 'enter datetime...'
+						publishTime = (i['publishTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						publishTime = '2015-05-05T00:00:00Z'
+				else:
+					publishTime = '2015-05-05T00:00:00Z'
+				
+				mutations.append(Mutation(column='baidu_articles:publishTime',value=publishTime))
+				rowKey = hashlib.new('md5',i['url']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('publishTime'):
+					print '%s ## %s' % (i['publishTime'],publishTime)
+				else:
+					print '%s ## %s' % ('no key:publishTime',publishTime)
+
 			mutations.append(Mutation(column='baidu_articles:siteName',value=(i['siteName']).encode('utf-8')))
-			mutations.append(Mutation(column='baidu_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
+			#mutations.append(Mutation(column='baidu_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			mutations.append(Mutation(column='baidu_articles:url',value=i['url']))
 			mutations.append(Mutation(column='baidu_articles:title',value=(i['title']).encode('utf-8')))
 			mutations.append(Mutation(column='baidu_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
@@ -96,27 +130,67 @@ class HBaseOperator():
 		listWebArticles = tWebArticles.find()
 		
 		for i in listWebArticles:
-			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
-			mutations.append(Mutation(column='other_articles:siteName',value=(i['siteName']).encode('utf-8')))
-			'''
-			if type(i['publishTime']) == "unicode":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).encode('utf-8')))
-			elif type(i['publishTime']) == "datetime.datetime":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
+			if not i.has_key('url'):
+				continue
 			else:
-				mutations.append(Mutation(column='other_articles:publishTime',value=''))
-			'''
-			if type(i['publishTime']) == "datetime.datetime":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
-			else:
-				mutations.append(Mutation(column='other_articles:publishTime',value='2015-05-05 16:30:00'))
-			mutations.append(Mutation(column='other_articles:url',value=i['url']))
-			mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:content',value=(i['content']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
-			self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
+				if i.has_key('publishTime'):
+					if isinstance(i['publishTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['publishTime']) <= 10:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['publishTime']
+							continue
+
+						publishTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['publishTime'],datetime):
+						print 'enter datetime...'
+						publishTime = (i['publishTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						publishTime = '2015-05-05T00:00:00Z'
+				else:
+					publishTime = '2015-05-05T00:00:00Z'
+				
+				mutations.append(Mutation(column='other_articles:publishTime',value=publishTime))
+				rowKey = hashlib.new('md5',i['url']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('publishTime'):
+					print '%s ## %s' % (i['publishTime'],publishTime)
+				else:
+					print '%s ## %s' % ('no key:publishTime',publishTime)
+
+				mutations.append(Mutation(column='other_articles:siteName',value=(i['siteName']).encode('utf-8')))
+				'''
+				if type(i['publishTime']) == "unicode":
+					mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).encode('utf-8')))
+				elif type(i['publishTime']) == "datetime.datetime":
+					mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
+				else:
+					mutations.append(Mutation(column='other_articles:publishTime',value=''))
+				'''
+				mutations.append(Mutation(column='other_articles:url',value=i['url']))
+				mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:content',value=(i['content']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
+				if i.has_key('abstract'):
+					mutations.append(Mutation(column='other_articles:abstract',value=(i['abstract']).encode('utf-8')))
+				else:
+					mutations.append(Mutation(column='other_articles:abstract',value=''))
+				if i.has_key('author'):
+					mutations.append(Mutation(column='other_articles:author',value=(i['author']).encode('utf-8')))
+				else:
+					mutations.append(Mutation(column='other_articles:author',value=''))
+				if i.has_key('source'):
+					mutations.append(Mutation(column='other_articles:source',value=(i['source']).encode('utf-8')))
+				else:
+					mutations.append(Mutation(column='other_articles:source',value=''))
+				self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
 
 	def importBlogDatas(self):
 		print "Start import blog data...."
@@ -124,14 +198,60 @@ class HBaseOperator():
 		listWebBlogs = tWebBlogs.find()
 		
 		for i in listWebBlogs:
-			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
+			if not i.has_key('url'):
+				continue
+			else:
+				if i.has_key('addTime'):
+					if isinstance(i['addTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['addTime']) <= 10:
+								arrTime = time.strptime(i['addTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['addTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['addTime']
+							continue
+
+						addTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['addTime'],datetime):
+						print 'enter datetime...'
+						addTime = (i['addTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						addTime = '2015-05-05T00:00:00Z'
+				else:
+					addTime = '2015-05-05T00:00:00Z'
+				
+				mutations.append(Mutation(column='blog:addTime',value=addTime))
+				rowKey = hashlib.new('md5',i['url']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('addTime'):
+					print '%s ## %s' % (i['addTime'],addTime)
+				else:
+					print '%s ## %s' % ('no key:addTime',addTime)
 			mutations.append(Mutation(column='blog:siteName',value=(i['siteName']).encode('utf-8')))
 			mutations.append(Mutation(column='blog:url',value=i['url']))
 			mutations.append(Mutation(column='blog:title',value=(i['title']).encode('utf-8')))
 			mutations.append(Mutation(column='blog:content',value=(i['content']).encode('utf-8')))
-			mutations.append(Mutation(column='blog:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
+			#mutations.append(Mutation(column='blog:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			mutations.append(Mutation(column='blog:author',value=(i['author']).encode('utf-8')))
+			if i.has_key('abstract'):
+				mutations.append(Mutation(column='other_articles:abstract',value=(i['abstract']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='other_articles:abstract',value=''))
+
+			if i.has_key('author'):
+				mutations.append(Mutation(column='other_articles:author',value=(i['author']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='other_articles:author',value=''))
+
+			if i.has_key('source'):
+				mutations.append(Mutation(column='other_articles:source',value=(i['source']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='other_articles:source',value=''))
+
 			self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
 
 	def importActivityDatas(self):
@@ -140,10 +260,41 @@ class HBaseOperator():
 		listActivity = tActivity.find()
 		
 		for i in listActivity:
-			rowKey = hashlib.new('md5','activity_'+i['activityID']).hexdigest()
 			mutations = []
+			if not i.has_key('url'):
+				continue
+			else:
+				if i.has_key('addTime'):
+					if isinstance(i['addTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['addTime']) <= 10:
+								arrTime = time.strptime(i['addTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['addTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['addTime']
+							continue
+
+						addTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['addTime'],datetime):
+						print 'enter datetime...'
+						addTime = (i['addTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						addTime = '2015-05-05T00:00:00Z'
+				else:
+					addTime = '2015-05-05T00:00:00Z'
+				
+				mutations.append(Mutation(column='activity:addTime',value=addTime))
+				rowKey = hashlib.new('md5','activity_'+i['activityID']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('addTime'):
+					print '%s ## %s' % (i['addTime'],addTime)
+				else:
+					print '%s ## %s' % ('no key:addTime',addTime)
 			mutations.append(Mutation(column='activity:activityID',value=i['activityID']))
-			mutations.append(Mutation(column='activity:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
+			#mutations.append(Mutation(column='activity:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			mutations.append(Mutation(column='activity:keyWords',value=(i['keyWords']).encode('utf-8')))
 			mutations.append(Mutation(column='activity:location',value=(i['location']).encode('utf-8')))
 			mutations.append(Mutation(column='activity:siteName',value=i['siteName']))
@@ -159,20 +310,71 @@ class HBaseOperator():
 		listInfReport = tInfReport.find()
 		
 		for i in listInfReport:
-			rowKey = hashlib.new('md5',i['url']).hexdigest()
+			#rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
+			if not i.has_key('url'):
+				continue
+			else:
+				if i.has_key('publishTime'):
+					if isinstance(i['publishTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['publishTime']) <= 10:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['publishTime']
+							continue
+
+						publishTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['publishTime'],datetime):
+						print 'enter datetime...'
+						publishTime = (i['publishTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						publishTime = '2015-05-05T00:00:00Z'
+				else:
+					publishTime = '2015-05-05T00:00:00Z'
+				
+				mutations.append(Mutation(column='report:publishTime',value=publishTime))
+				rowKey = hashlib.new('md5',i['url']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('publishTime'):
+					print '%s ## %s' % (i['publishTime'],publishTime)
+				else:
+					print '%s ## %s' % ('no key:publishTime',publishTime)
 			mutations.append(Mutation(column='report:siteName',value=(i['siteName']).encode('utf-8')))
 			mutations.append(Mutation(column='report:url',value=i['url']))
 			mutations.append(Mutation(column='report:title',value=(i['title']).encode('utf-8')))
 			mutations.append(Mutation(column='report:source',value=(i['source']).encode('utf-8')))
 			mutations.append(Mutation(column='report:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
+
+			if i.has_key('abstract'):
+				mutations.append(Mutation(column='report:abstract',value=(i['abstract']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='report:abstract',value=''))
+			if i.has_key('author'):
+				mutations.append(Mutation(column='report:author',value=(i['author']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='report:author',value=''))
+			if i.has_key('content'):
+				mutations.append(Mutation(column='report:content',value=(i['content']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='report:content',value=''))
+			if i.has_key('keyWords'):
+				mutations.append(Mutation(column='report:keyWords',value=(i['keyWords']).encode('utf-8')))
+			else:
+				mutations.append(Mutation(column='report:keyWords',value=''))
+
+			'''
 			if type(i['publishTime']) == "unicode":
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).encode('utf-8')))
 			elif type(i['publishTime']) == "datetime.datetime": 
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			else:
 				mutations.append(Mutation(column='report:publishTime',value=i['publishTime']))
-
+			'''
 			self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
 
 	def importWeiboDatas(self):
@@ -183,12 +385,40 @@ class HBaseOperator():
 		for i in listWeiboContent:
 			rowKey = hashlib.new('md5',i['mid']).hexdigest()
 			mutations = []
+			if i.has_key('created_at'):
+				if isinstance(i['created_at'],basestring):
+					print 'enter basestring...'
+					try:
+						if len(i['created_at']) <= 10:
+							arrTime = time.strptime(i['created_at'],'%Y-%m-%d')
+						else:
+							arrTime = time.strptime(i['created_at'],'%Y-%m-%d %H:%M:%S')
+					except:
+						print "!!!!time format error: %s" % i['created_at']
+						continue
+
+					created_at = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+				elif isinstance(i['created_at'],datetime):
+					print 'enter datetime...'
+					created_at = (i['created_at']).strftime('%Y-%m-%dT%H:%M:%SZ')
+				else:
+					print 'enter else....'
+					created_at = '2015-05-05T00:00:00Z'
+			else:
+				created_at = '2015-05-05T00:00:00Z'
+				
+			mutations.append(Mutation(column='weibo:created_at',value=created_at))
+			print '%s ## %s' % (i['mid'],rowKey)
+			if i.has_key('created_at'):
+				print '%s ## %s' % (i['created_at'],created_at)
+			else:
+				print '%s ## %s' % ('no key:created_at',created_at)
 			mutations.append(Mutation(column='weibo:user_id',value=str(i['user_id'])))
 			mutations.append(Mutation(column='weibo:content',value=(i['text']).encode('utf-8')))
 			mutations.append(Mutation(column='weibo:screen_name',value=(i['screen_name']).encode('utf-8')))
 			mutations.append(Mutation(column='weibo:comments_count',value=str(i['comments_count'])))
 			mutations.append(Mutation(column='weibo:reposts_count',value=str(i['reposts_count'])))
-			mutations.append(Mutation(column='weibo:created_at',value=(i['created_at']).strftime('%Y-%m-%d %H:%M:%S')))
+			#mutations.append(Mutation(column='weibo:created_at',value=(i['created_at']).strftime('%Y-%m-%d %H:%M:%S')))
 			self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
 
 	def importMacroData(self):
@@ -309,7 +539,7 @@ class HBaseOperator():
 			self.client.mutateRow('info_data',rowKey,mutations,None)
 
 	def importAllDatas(self):
-		#self.deleteInfoTables()
+		self.deleteInfoTables()
 		self.createInfoTables()
 
 		self.importBaiduArticlesDatas()
