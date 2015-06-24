@@ -9,6 +9,8 @@ from hbase import Hbase
 from hbase.ttypes import *
 import pymongo
 import hashlib
+import time
+from datetime import datetime
 
 
 class HBaseOperator():
@@ -77,7 +79,7 @@ class HBaseOperator():
 		print "Start import baidu articles data...."
 		tBaiduArticles = self.infoDB.baidu_articles
 		listBaiduArticles = tBaiduArticles.find()
-		
+
 		for i in listBaiduArticles:
 			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
@@ -94,36 +96,63 @@ class HBaseOperator():
 		print "Start import other articles data...."
 		tWebArticles = self.infoDB.web_articles
 		listWebArticles = tWebArticles.find()
-		
-		for i in listWebArticles:
-			rowKey = hashlib.new('md5',i['url']).hexdigest()
-			mutations = []
-			mutations.append(Mutation(column='other_articles:siteName',value=(i['siteName']).encode('utf-8')))
-			'''
-			if type(i['publishTime']) == "unicode":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).encode('utf-8')))
-			elif type(i['publishTime']) == "datetime.datetime":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
-			else:
-				mutations.append(Mutation(column='other_articles:publishTime',value=''))
-			'''
-			if type(i['publishTime']) == "datetime.datetime":
-				mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
-			else:
-				mutations.append(Mutation(column='other_articles:publishTime',value='2015-05-05 16:30:00'))
 
-			mutations.append(Mutation(column='other_articles:url',value=i['url']))
-			mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:content',value=(i['content']).encode('utf-8')))
-			mutations.append(Mutation(column='other_articles:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
-			self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
+		for i in listWebArticles:
+			mutations = []
+			if not i.has_key('url'):
+				continue
+			else:
+				if i.has_key('publishTime'):
+					if isinstance(i['publishTime'],basestring):
+						print 'enter basestring...'
+						try:
+							if len(i['publishTime']) <= 10:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d')
+							else:
+								arrTime = time.strptime(i['publishTime'],'%Y-%m-%d %H:%M:%S')
+						except:
+							print "!!!!time format error: %s" % i['publishTime']
+							continue
+
+						publishTime = time.strftime('%Y-%m-%dT%H:%M:%SZ',arrTime)
+					elif isinstance(i['publishTime'],datetime):
+						print 'enter datetime...'
+						publishTime = (i['publishTime']).strftime('%Y-%m-%dT%H:%M:%SZ')
+					else:
+						print 'enter else....'
+						publishTime = '2015-05-05T00:00:00Z'
+				else:
+					publishTime = '2015-05-05T00:00:00Z'
+
+				mutations.append(Mutation(column='other_articles:publishTime',value=publishTime))
+				rowKey = hashlib.new('md5',i['url']).hexdigest()
+				print '%s ## %s' % (i['url'],rowKey)
+				if i.has_key('publishTime'):
+					print '%s ## %s' % (i['publishTime'],publishTime)
+				else:
+					print '%s ## %s' % ('no key:publishTime',publishTime)
+
+				mutations.append(Mutation(column='other_articles:siteName',value=(i['siteName']).encode('utf-8')))
+				'''
+				if type(i['publishTime']) == "unicode":
+					mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).encode('utf-8')))
+				elif type(i['publishTime']) == "datetime.datetime":
+					mutations.append(Mutation(column='other_articles:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
+				else:
+					mutations.append(Mutation(column='other_articles:publishTime',value=''))
+				'''
+				mutations.append(Mutation(column='other_articles:url',value=i['url']))
+				mutations.append(Mutation(column='other_articles:title',value=(i['title']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:keyWords',value=(i['keyWords']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:content',value=(i['content']).encode('utf-8')))
+				mutations.append(Mutation(column='other_articles:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
+				self.client.mutateRow('info_public_monitor',rowKey,mutations,None)
 
 	def importBlogDatas(self):
 		print "Start import blog data...."
 		tWebBlogs = self.infoDB.web_blogs
 		listWebBlogs = tWebBlogs.find()
-		
+
 		for i in listWebBlogs:
 			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
@@ -139,7 +168,7 @@ class HBaseOperator():
 		print "Start import activity data...."
 		tActivity = self.infoDB.web_activity
 		listActivity = tActivity.find()
-		
+
 		for i in listActivity:
 			rowKey = hashlib.new('md5','activity_'+i['activityID']).hexdigest()
 			mutations = []
@@ -158,7 +187,7 @@ class HBaseOperator():
 		print "Start import report data...."
 		tInfReport = self.infoDB.IndustryReport
 		listInfReport = tInfReport.find()
-		
+
 		for i in listInfReport:
 			rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
@@ -169,7 +198,7 @@ class HBaseOperator():
 			mutations.append(Mutation(column='report:addTime',value=(i['addTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			if type(i['publishTime']) == "unicode":
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).encode('utf-8')))
-			elif type(i['publishTime']) == "datetime.datetime": 
+			elif type(i['publishTime']) == "datetime.datetime":
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			else:
 				mutations.append(Mutation(column='report:publishTime',value=i['publishTime']))
@@ -180,7 +209,7 @@ class HBaseOperator():
 		print "Start import weibo data...."
 		tWeiboContent = self.infoDB.wb_content
 		listWeiboContent = tWeiboContent.find()
-		
+
 		for i in listWeiboContent:
 			rowKey = hashlib.new('md5',i['mid']).hexdigest()
 			mutations = []
@@ -196,7 +225,7 @@ class HBaseOperator():
 		print "Start import macro data...."
 		tMacroData = self.infoDB.bm_macro_data
 		listMacroData = tMacroData.find()
-		
+
 		for i in listMacroData:
 			rowKey = hashlib.new('md5',i['key']).hexdigest()
 			mutations = []
@@ -215,7 +244,7 @@ class HBaseOperator():
 		print "Start import macro index data...."
 		tMacroIndex = self.infoDB.bm_macro_index
 		listMacroIndex = tMacroIndex.find()
-		
+
 		for i in listMacroIndex:
 			rowKey = hashlib.new('md5',i['code']).hexdigest()
 			mutations = []
@@ -237,7 +266,7 @@ class HBaseOperator():
 		print "Start import rate data...."
 		tRate = self.infoDB.bm_rate
 		listRate = tRate.find()
-		
+
 		for i in listRate:
 			rowKey = hashlib.new('md5',i['key']).hexdigest()
 			mutations = []
@@ -257,7 +286,7 @@ class HBaseOperator():
 		print "Start import stock balance sheet ...."
 		tStockBalanceSheet = self.infoDB.stock_balancesheet
 		listStockBalanceSheet = tStockBalanceSheet.find()
-		
+
 		for i in listStockBalanceSheet:
 			mutations = []
 			rowKey = hashlib.new('md5','balancesheet_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -271,7 +300,7 @@ class HBaseOperator():
 		print "Start import stock cash flow ...."
 		tStockCashFlow = self.infoDB.stock_cashflow
 		listStockCashFlow = tStockCashFlow.find()
-		
+
 		for i in listStockCashFlow:
 			mutations = []
 			rowKey = hashlib.new('md5','cashflow_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -285,7 +314,7 @@ class HBaseOperator():
 		print "Start import stock income statements...."
 		tStockIncomeStatements = self.infoDB.stock_incomestatements
 		listStockIncomeStatements = tStockIncomeStatements.find()
-		
+
 		for i in listStockIncomeStatements:
 			mutations = []
 			rowKey = hashlib.new('md5','income_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -299,7 +328,7 @@ class HBaseOperator():
 		print "Start import stock company info...."
 		tStockCompanyInfo = self.infoDB.stock_companyinfo
 		listStockCompanyInfo = tStockCompanyInfo.find()
-		
+
 		for i in listStockCompanyInfo:
 			mutations = []
 			rowKey = hashlib.new('md5','companyinfo_'+i['stockCode']).hexdigest()
@@ -310,25 +339,25 @@ class HBaseOperator():
 			self.client.mutateRow('info_data',rowKey,mutations,None)
 
 	def importAllDatas(self):
-		#self.deleteInfoTables()
+		self.deleteInfoTables()
 		self.createInfoTables()
 
-		self.importBaiduArticlesDatas()
+		#self.importBaiduArticlesDatas()
 		self.importOtherArticlesDatas()
-		self.importBlogDatas()
-		self.importReportDatas()
-		self.importWeiboDatas()
-		self.importActivityDatas()
-		self.importMacroData()
-		self.importMacroIndexData()
-		self.importRateDatas()
-		self.importStockBalanceSheet()
-		self.importStockCashFlow()
-		self.importStockIncomeStatements()
-		self.importStockCompanyInfo()
+		#self.importBlogDatas()
+		#self.importReportDatas()
+		#self.importWeiboDatas()
+		#self.importActivityDatas()
+		#self.importMacroData()
+		#self.importMacroIndexData()
+		#self.importRateDatas()
+		#self.importStockBalanceSheet()
+		#self.importStockCashFlow()
+		#self.importStockIncomeStatements()
+		#self.importStockCompanyInfo()
 
-			
-		
+
+
 def main():
 	ho = HBaseOperator()
 	ho.importAllDatas()

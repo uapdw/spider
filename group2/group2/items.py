@@ -306,5 +306,24 @@ class GovSubItem(Item):
 	publishTime = Field()
 	content = Field()
 	source = Field()
+
+class HrJobItem(Item):
+  jobName = Field()
+  companyName = Field()
+  companySize = Field()
+  companyNature = Field()
+  companyIndustry = Field()
+  workExp = Field()
+  pubDate = Field()
+  workNature = Field()
+  miniEdu = Field()
+  salary = Field()
+  num = Field()
+  position = Field()
+  jobCategory = Field()
+  jobDetail = Field()
+
+
+
 class InfomationCrawlerItem(Item):
   pass
