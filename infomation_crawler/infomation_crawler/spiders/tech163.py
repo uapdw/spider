@@ -11,7 +11,7 @@ class tech163Spider(CrawlSpider):
   allowed_domains = ['163.com']
   start_urls = ['http://tech.163.com/']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

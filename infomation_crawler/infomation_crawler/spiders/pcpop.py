@@ -22,7 +22,7 @@ class PcpopSpider(CrawlSpider):
                   'http://news.pcpop.com/nb/PackageTmp/ReadTxt.ashx?r=40&channelId=23&propertyId=0&categoryId=006000053',
                   'http://news.pcpop.com/nb/PackageTmp/ReadTxt.ashx?r=57&channelId=23&propertyId=0&categoryId=005000080'
     ]
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     #rules = [

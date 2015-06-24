@@ -12,7 +12,7 @@ class CtocioSpider(CrawlSpider):
   allowed_domains = ['ctocio.com']
   start_urls = ['http://www.ctocio.com/category/cloud','http://www.ctocio.com/category/bigdata','http://www.ctocio.com/category/security','http://www.ctocio.com/category/hotnews','http://www.ctocio.com/category/ccnews']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

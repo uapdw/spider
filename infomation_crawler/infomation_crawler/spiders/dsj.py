@@ -11,7 +11,7 @@ class dsjSpider(CrawlSpider):
   allowed_domains = ['36dsj.com']
   start_urls = ['http://www.36dsj.com/archives/category/big-data-investment', 'http://www.36dsj.com/archives/category/bigdata']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

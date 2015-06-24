@@ -14,7 +14,7 @@ class StockincomeSpider(Spider):
   allowed_domains = ["cninfo.com.cn"]
   monthList = ['-03-31','-06-30','-09-30','-12-31']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tIncome = infoDB.stock_incomestatements
 

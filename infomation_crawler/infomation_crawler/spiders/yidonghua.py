@@ -12,7 +12,7 @@ class YidonghuaSpider(CrawlSpider):
   allowed_domains = ['yidonghua.com']
   start_urls = ['http://www.yidonghua.com/mobilepoint','http://www.yidonghua.com/mobiledynamics']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

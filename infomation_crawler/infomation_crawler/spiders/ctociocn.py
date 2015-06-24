@@ -14,7 +14,7 @@ class CtocioCNSpider(CrawlSpider):
 			'http://database.ctocio.com.cn/','http://esoft.ctocio.com.cn/','http://networking.ctocio.com.cn/',
 			'http://security.ctocio.com.cn/','http://os.ctocio.com.cn/','http://cio.ctocio.com.cn/','http://virtualization.ctocio.com.cn/']
 	
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tWebArticles = infoDB.web_articles
 	rules = (

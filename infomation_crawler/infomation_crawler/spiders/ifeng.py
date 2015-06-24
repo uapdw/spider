@@ -11,7 +11,7 @@ class IfengSpider(CrawlSpider):
   allowed_domains = ['ifeng.com']
   start_urls = ['http://tech.ifeng.com/listpage/6529/1/list.shtml']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

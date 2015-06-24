@@ -11,7 +11,7 @@ class CiotimesSpider(CrawlSpider):
   allowed_domains = ['ciotimes.com']
   start_urls = ['http://www.ciotimes.com/cio_chanel/rwsc/','http://www.ciotimes.com/100j/jbft/']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

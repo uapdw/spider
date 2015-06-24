@@ -11,7 +11,7 @@ class IteyeSpider(CrawlSpider):
   allowed_domains = ['iteye.com']
   start_urls = ['http://wwwa.iteye.com/blogs', 'http://www.iteye.com/blogs?page=2', 'http://www.iteye.com/blogs?page=3']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebBlogs = infoDB.web_blogs
 

@@ -11,7 +11,7 @@ class chinaCloudSpider(CrawlSpider):
   allowed_domains = ['china-cloud.com']
   start_urls = ['http://www.china-cloud.com/yunzixun/list_3_1.html','http://www.china-cloud.com/yunzixun/list_3_2.html','http://www.china-cloud.com/yunzixun/list_3_3.html']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

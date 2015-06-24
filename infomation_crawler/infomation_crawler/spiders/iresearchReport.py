@@ -11,7 +11,7 @@ class IresearchReportSpider(CrawlSpider):
   allowed_domains = ['iresearch.cn']
   start_urls = ['http://report.iresearch.cn/research/','http://report.iresearch.cn/reports/com-iResearch/','http://report.iresearch.cn/data/com-iResearch/']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tIndustryReport = infoDB.IndustryReport
   

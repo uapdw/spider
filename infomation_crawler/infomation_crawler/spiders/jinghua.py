@@ -15,7 +15,7 @@ class JingHSpider(CrawlSpider):
     name = 'jinghua'
     allowed_domain = ['jinghua.cn']
     start_urls = ['http://news.jinghua.cn/']
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     #rules = [

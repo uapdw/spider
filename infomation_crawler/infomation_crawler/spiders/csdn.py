@@ -12,7 +12,7 @@ class CsdnSpider(CrawlSpider):
   allowed_domains = ['csdn.net']
   start_urls = ['http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE/news', 'http://www.csdn.net/tag/%E5%AE%89%E5%85%A8/news', 'http://www.csdn.net/tag/%E7%A7%BB%E5%8A%A8/news', 'http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97/news', 'http://www.csdn.net/tag/%E9%9B%86%E6%88%90/news', 'http://www.csdn.net/tag/%E5%95%86%E4%B8%9A%E5%88%86%E6%9E%90/news', 'http://www.csdn.net/tag/%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0/news']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
   

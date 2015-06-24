@@ -11,7 +11,7 @@ class CcidnetSpider(CrawlSpider):
   allowed_domains = ['ccidnet.com']
   start_urls = ['http://news.ccidnet.com/col/1032/1032.html']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

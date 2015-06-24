@@ -12,7 +12,7 @@ class YnetSpider(CrawlSpider):
     name = 'ynet'
     allowed_domain = ['news.ynet.com']
     start_urls= ['http://news.ynet.com/']
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     rules = (

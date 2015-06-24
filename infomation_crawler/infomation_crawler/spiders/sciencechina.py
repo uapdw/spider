@@ -13,7 +13,7 @@ class ScienceChinaSpider(CrawlSpider):
     name = 'sciencechina'
     allowed_domain = ['science.china.com.cn']
     start_urls= ['http://science.china.com.cn/']
-    conn = pymongo.Connection('localhost',27017)
+    conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
     rules = (

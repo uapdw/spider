@@ -11,7 +11,7 @@ class ChinaByteSpider(CrawlSpider):
   allowed_domains = ['chinabyte.com']
   start_urls = ['http://info.chinabyte.com/','http://cloud.chinabyte.com/']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
 

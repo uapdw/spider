@@ -12,7 +12,7 @@ class CsdnActivitySpider(CrawlSpider):
   allowed_domains = ['csdn.net']
   start_urls = ['http://huiyi.csdn.net/activity/home?&page=1','http://huiyi.csdn.net/activity/home?&page=2','http://huiyi.csdn.net/activity/home?&page=3','http://huiyi.csdn.net/activity/home?&page=4','http://huiyi.csdn.net/activity/home?&page=5']
 
-  conn = pymongo.Connection('localhost',27017)
+  conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebActivity = infoDB.web_activity
   
