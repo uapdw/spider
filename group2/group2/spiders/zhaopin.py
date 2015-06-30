@@ -1,20 +1,23 @@
 from scrapy.selector import Selector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from group3.items import WebArticleItem
+from group2.items import HrJobItem
 from scrapy.http import Request
 import datetime
 import pymongo
 
-class testSpider(CrawlSpider):
-    name = 'test'
-    allowed_domains = ['ccidnet.com']
-    start_urls = ['http://news.ccidnet.com/col/1032/1032.html']
+class zhaopinSpider(CrawlSpider):
+    name = 'zhaopin'
+    allowed_domains = ['zhaopin.com']
+    start_urls = ['http://jobs.zhaopin.com/p1']
 
+    '''
     conn = pymongo.Connection('172.20.8.3',27017)
     infoDB = conn.info
     tWebArticles = infoDB.web_articles
+    '''
 
+    '''
     def parse_item(self, response):
         sel = Selector(response)
         i = response.meta['item']
@@ -35,6 +38,7 @@ class testSpider(CrawlSpider):
         i['keyWords'] = ''
 
         return i
+    '''
 
     def parse(self, response):
         print "enter ccidnet_parse_item...."
@@ -42,7 +46,7 @@ class testSpider(CrawlSpider):
         items = []
         newsLists = sel.xpath('//div[@class="cont-left-div-1"]/table/tr/td/table/tr')[0:]
         for news in newsLists:
-            i = WebArticleItem()
+            i = HrJobItem()
             i['url'] = 'http://news.ccidnet.com'+news.xpath('td[2]/a/@href').extract()[0]
 
             title = news.xpath('td[2]/a/text()').extract()

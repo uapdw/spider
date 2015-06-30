@@ -79,7 +79,7 @@ class HBaseOperator():
 		print "Start import baidu articles data...."
 		tBaiduArticles = self.infoDB.baidu_articles
 		listBaiduArticles = tBaiduArticles.find()
-		
+
 		for i in listBaiduArticles:
 			mutations = []
 			if not i.has_key('url'):
@@ -128,7 +128,7 @@ class HBaseOperator():
 		print "Start import other articles data...."
 		tWebArticles = self.infoDB.web_articles
 		listWebArticles = tWebArticles.find()
-		
+
 		for i in listWebArticles:
 			mutations = []
 			if not i.has_key('url'):
@@ -155,7 +155,7 @@ class HBaseOperator():
 						publishTime = '2015-05-05T00:00:00Z'
 				else:
 					publishTime = '2015-05-05T00:00:00Z'
-				
+
 				mutations.append(Mutation(column='other_articles:publishTime',value=publishTime))
 				rowKey = hashlib.new('md5',i['url']).hexdigest()
 				print '%s ## %s' % (i['url'],rowKey)
@@ -196,7 +196,7 @@ class HBaseOperator():
 		print "Start import blog data...."
 		tWebBlogs = self.infoDB.web_blogs
 		listWebBlogs = tWebBlogs.find()
-		
+
 		for i in listWebBlogs:
 			mutations = []
 			if not i.has_key('url'):
@@ -258,7 +258,7 @@ class HBaseOperator():
 		print "Start import activity data...."
 		tActivity = self.infoDB.web_activity
 		listActivity = tActivity.find()
-		
+
 		for i in listActivity:
 			mutations = []
 			if not i.has_key('url'):
@@ -308,7 +308,7 @@ class HBaseOperator():
 		print "Start import report data...."
 		tInfReport = self.infoDB.IndustryReport
 		listInfReport = tInfReport.find()
-		
+
 		for i in listInfReport:
 			#rowKey = hashlib.new('md5',i['url']).hexdigest()
 			mutations = []
@@ -370,7 +370,7 @@ class HBaseOperator():
 			'''
 			if type(i['publishTime']) == "unicode":
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).encode('utf-8')))
-			elif type(i['publishTime']) == "datetime.datetime": 
+			elif type(i['publishTime']) == "datetime.datetime":
 				mutations.append(Mutation(column='report:publishTime',value=(i['publishTime']).strftime('%Y-%m-%d %H:%M:%S')))
 			else:
 				mutations.append(Mutation(column='report:publishTime',value=i['publishTime']))
@@ -381,7 +381,7 @@ class HBaseOperator():
 		print "Start import weibo data...."
 		tWeiboContent = self.infoDB.wb_content
 		listWeiboContent = tWeiboContent.find()
-		
+
 		for i in listWeiboContent:
 			rowKey = hashlib.new('md5',i['mid']).hexdigest()
 			mutations = []
@@ -425,7 +425,7 @@ class HBaseOperator():
 		print "Start import macro data...."
 		tMacroData = self.infoDB.bm_macro_data
 		listMacroData = tMacroData.find()
-		
+
 		for i in listMacroData:
 			rowKey = hashlib.new('md5',i['key']).hexdigest()
 			mutations = []
@@ -444,7 +444,7 @@ class HBaseOperator():
 		print "Start import macro index data...."
 		tMacroIndex = self.infoDB.bm_macro_index
 		listMacroIndex = tMacroIndex.find()
-		
+
 		for i in listMacroIndex:
 			rowKey = hashlib.new('md5',i['code']).hexdigest()
 			mutations = []
@@ -466,7 +466,7 @@ class HBaseOperator():
 		print "Start import rate data...."
 		tRate = self.infoDB.bm_rate
 		listRate = tRate.find()
-		
+
 		for i in listRate:
 			rowKey = hashlib.new('md5',i['key']).hexdigest()
 			mutations = []
@@ -486,7 +486,7 @@ class HBaseOperator():
 		print "Start import stock balance sheet ...."
 		tStockBalanceSheet = self.infoDB.stock_balancesheet
 		listStockBalanceSheet = tStockBalanceSheet.find()
-		
+
 		for i in listStockBalanceSheet:
 			mutations = []
 			rowKey = hashlib.new('md5','balancesheet_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -500,7 +500,7 @@ class HBaseOperator():
 		print "Start import stock cash flow ...."
 		tStockCashFlow = self.infoDB.stock_cashflow
 		listStockCashFlow = tStockCashFlow.find()
-		
+
 		for i in listStockCashFlow:
 			mutations = []
 			rowKey = hashlib.new('md5','cashflow_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -514,7 +514,7 @@ class HBaseOperator():
 		print "Start import stock income statements...."
 		tStockIncomeStatements = self.infoDB.stock_incomestatements
 		listStockIncomeStatements = tStockIncomeStatements.find()
-		
+
 		for i in listStockIncomeStatements:
 			mutations = []
 			rowKey = hashlib.new('md5','income_'+i['stockCode']+'_'+i['pubtime']).hexdigest()
@@ -528,7 +528,7 @@ class HBaseOperator():
 		print "Start import stock company info...."
 		tStockCompanyInfo = self.infoDB.stock_companyinfo
 		listStockCompanyInfo = tStockCompanyInfo.find()
-		
+
 		for i in listStockCompanyInfo:
 			mutations = []
 			rowKey = hashlib.new('md5','companyinfo_'+i['stockCode']).hexdigest()
@@ -542,22 +542,22 @@ class HBaseOperator():
 		self.deleteInfoTables()
 		self.createInfoTables()
 
-		self.importBaiduArticlesDatas()
+		#self.importBaiduArticlesDatas()
 		self.importOtherArticlesDatas()
-		self.importBlogDatas()
-		self.importReportDatas()
-		self.importWeiboDatas()
-		self.importActivityDatas()
-		self.importMacroData()
-		self.importMacroIndexData()
-		self.importRateDatas()
-		self.importStockBalanceSheet()
-		self.importStockCashFlow()
-		self.importStockIncomeStatements()
-		self.importStockCompanyInfo()
+		#self.importBlogDatas()
+		#self.importReportDatas()
+		#self.importWeiboDatas()
+		#self.importActivityDatas()
+		#self.importMacroData()
+		#self.importMacroIndexData()
+		#self.importRateDatas()
+		#self.importStockBalanceSheet()
+		#self.importStockCashFlow()
+		#self.importStockIncomeStatements()
+		#self.importStockCompanyInfo()
 
-			
-		
+
+
 def main():
 	ho = HBaseOperator()
 	ho.importAllDatas()
