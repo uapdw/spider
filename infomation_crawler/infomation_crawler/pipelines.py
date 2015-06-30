@@ -15,6 +15,7 @@ from hbase.ttypes import *
 import pymongo
 import hashlib
 import time
+import re
 
 class BaiduNewsPipeline(object):
     def process_item(self, item, spider):
@@ -208,6 +209,23 @@ class WebArticlePipeLine(object):
       self.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
 
+def filter_tags(htmlstr):
+  re_cdata=re.compile('//<!\[CDATA\[[^>]*//\]\]>',re.I)
+  re_script=re.compile('<\s*script[^>]*>[^<]*<\s*/\s*script\s*>',re.I)#Script
+  re_style=re.compile('<\s*style[^>]*>[^<]*<\s*/\s*style\s*>',re.I)#style
+  re_br=re.compile('<br\s*?/?>')
+  re_h=re.compile('</?\w+[^>]*>')
+  re_comment=re.compile('<!--[^>]*-->')
+  s=re_cdata.sub('',htmlstr)
+  s=re_script.sub('',s)
+  s=re_style.sub('',s)
+  s=re_br.sub('',s)
+  s=re_h.sub('',s)
+  s=re_comment.sub('',s)
+  blank_line=re.compile('\n+')
+  s=blank_line.sub('',s)
+  return s
+
 class BBSDemoPipeLine(object):
 
   def __init__(self):
@@ -238,7 +256,8 @@ class BBSDemoPipeLine(object):
       mutations.append(Mutation(column='bbs:abstract',value=item['abstract'].encode("utf8")))
       mutations.append(Mutation(column='bbs:keyWords',value=item['keyWords'].encode("utf8")))
       mutations.append(Mutation(column='bbs:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
-      mutations.append(Mutation(column='bbs:content',value=item['content'].encode("utf8")))
+      content = filter_tags(item['content'])
+      mutations.append(Mutation(column='bbs:content',value=content.encode("utf8")))
       mutations.append(Mutation(column='bbs:siteName',value=item['siteName'].encode("utf8")))
       mutations.append(Mutation(column='bbs:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='bbs:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
@@ -275,7 +294,8 @@ class WebArticleDemoPipeLine(object):
       mutations.append(Mutation(column='article:abstract',value=item['abstract'].encode("utf8")))
       mutations.append(Mutation(column='article:keyWords',value=item['keyWords'].encode("utf8")))
       mutations.append(Mutation(column='article:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
-      mutations.append(Mutation(column='article:content',value=item['content'].encode("utf8")))
+      content = filter_tags(item['content'])
+      mutations.append(Mutation(column='bbs:content',value=content.encode("utf8")))
       mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
       mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
