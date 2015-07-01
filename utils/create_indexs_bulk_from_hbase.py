@@ -3,6 +3,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from elasticsearch import Elasticsearch
+from elasticsearch import helpers
 import re
 from thrift.transport.TSocket import TSocket
 from thrift.transport.TTransport import TBufferedTransport
@@ -10,6 +11,7 @@ from thrift.protocol import TBinaryProtocol
 from hbase import Hbase
 from hbase.ttypes import *
 import datetime
+import time
 import hashlib
 
 class ESIndexCreator:
@@ -17,13 +19,18 @@ class ESIndexCreator:
 		reComments = re.compile('<!--[^>]*-->')
 		reHtml = re.compile('</?\w+[^>]*>')
 
-		self.host = "172.20.6.62"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
 		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 		self.client = Hbase.Client(self.protocol)
-		self.es = Elasticsearch()
+		self.es = Elasticsearch(
+			['172.20.8.162'],
+			sniff_on_start = True,
+			sniff_on_connection_fail = True,
+			sniffer_timeout = 60
+		)
 
 	def __del__(self):
 		self.transport.close()
@@ -172,6 +179,7 @@ class ESIndexCreator:
 		return res
 
 
+	'''
 	def createDataIndex(self,tableName,tableColumnFamily,tableColumnList,indexName,indexTypeName,indexColumnList):
 		listColumns = []
 		for key in range(len(tableColumnList)):
@@ -191,11 +199,14 @@ class ESIndexCreator:
 					else:
 						body[indexColumnList[key]] = datetime.datetime.strptime(i.columns.get(listColumns[key]).value,'%Y-%m-%d %H:%M:%S')
 				elif indexColumnList[key] == 'content':
-					body[indexColumnList[key]] = self.filterTags(i.columns.get(listColumns[key]).value).strip()
+					#body[indexColumnList[key]] = self.filterTags(i.columns.get(listColumns[key]).value).strip()
+					body[indexColumnList[key]] = ''
 				else:
 					body[indexColumnList[key]] = i.columns.get(listColumns[key]).value
 
 			self.es.index(index=indexName,doc_type=indexTypeName, body=body)
+
+	'''
 
 
 	def createOtherArticlesIndex(self,indexName):
@@ -228,14 +239,70 @@ class ESIndexCreator:
 		indexColumnList = ['user_id','publishtime','content','screen_name','comments_count','reposts_count']
 		self.createDataIndex('info_public_monitor','weibo',tableColumnList,indexName,'weibo',indexColumnList)
 
+	def createActivityIndex(self,indexName):
+		print "Create activity index...."
+		tableColumnList = ['activityID','addTime','keyWords','location','siteName','time','title','trad','url']
+		indexColumnList = ['activityid','addtime','keywords','location','sitename','time','title','trad','url']
+		self.createDataIndex('info_public_monitor','activity',tableColumnList,indexName,'activity',indexColumnList)
+
 	def createAllIndex(self,indexName):
 		self.deleteIndex(indexName)
 		self.createIndex(indexName)
-		self.createBaiduArticlesIndex(indexName)
+		#self.createBaiduArticlesIndex(indexName)
 		self.createOtherArticlesIndex(indexName)
-		self.createReportIndex(indexName)
-		self.createBlogIndex(indexName)
-		self.createWeiboIndex(indexName)
+		#self.createReportIndex(indexName)
+		#self.createBlogIndex(indexName)
+		#self.createWeiboIndex(indexName)
+		#self.createActivityIndex(indexName)
+
+	def createDataIndex(self,tableName,tableColumnFamily,tableColumnList,indexName,indexTypeName,indexColumnList):
+		listColumns = []
+		for key in range(len(tableColumnList)):
+			listColumns.append(tableColumnFamily + ':' + tableColumnList[key])
+
+		scannerId = self.client.scannerOpen(tableName, '', listColumns, None)
+		actions = []
+		while True:
+			try:
+				results = self.client.scannerGet(scannerId)
+				i = results[0]
+			except:
+				break
+			
+			body = {}
+			for key in range(len(listColumns)):
+				if indexColumnList[key] == 'addtime':
+					body[indexColumnList[key]] = datetime.datetime.strptime(i.columns.get(listColumns[key]).value,'%Y-%m-%d %H:%M:%S')
+				elif indexColumnList[key] == 'publishtime':
+					if i.columns.get(listColumns[key]).value == '':
+						body[indexColumnList[key]] = datetime.datetime.now()
+					elif len((i.columns.get(listColumns[key]).value).strip()) <= 10:
+						body[indexColumnList[key]] = datetime.datetime.strptime((i.columns.get(listColumns[key]).value).strip() + ' 00:00:00','%Y-%m-%d %H:%M:%S')
+					else:
+						body[indexColumnList[key]] = datetime.datetime.strptime(i.columns.get(listColumns[key]).value,'%Y-%m-%d %H:%M:%S')
+				elif indexColumnList[key] == 'content':
+					body[indexColumnList[key]] = self.filterTags(i.columns.get(listColumns[key]).value).strip()
+				else:
+					body[indexColumnList[key]] = i.columns.get(listColumns[key]).value
+
+			#self.es.index(index=indexName,doc_type=indexTypeName, body=body)
+			action = {
+				'_index':indexName,
+				'_type':indexTypeName,
+				'_source':body
+			}
+
+			actions.append(action)
+			if(len(actions) == 500):
+				print 'creating indexes....'
+				helpers.bulk(self.es,actions)
+				del actions[0:len(actions)]
+				
+
+		if(len(actions) > 0):
+			helpers.bulk(self.es, actions)
+			del actions[0:len(actions)]
+		self.client.scannerClose(scannerId)
 
 
 def main():
@@ -244,7 +311,8 @@ def main():
 	print " "
 	
 	ic = ESIndexCreator()
-	ic.createAllIndex('test-articles')
+	ic.createAllIndex('web-articles')
+	#ic.getAllTablesInfo()
 
 if __name__ == "__main__":
 	main()
