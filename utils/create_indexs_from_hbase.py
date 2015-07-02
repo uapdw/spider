@@ -17,7 +17,7 @@ class ESIndexCreator:
 		reComments = re.compile('<!--[^>]*-->')
 		reHtml = re.compile('</?\w+[^>]*>')
 
-		self.host = "172.20.6.62"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -231,7 +231,7 @@ class ESIndexCreator:
 	def createAllIndex(self,indexName):
 		self.deleteIndex(indexName)
 		self.createIndex(indexName)
-		self.createBaiduArticlesIndex(indexName)
+		#self.createBaiduArticlesIndex(indexName)
 		self.createOtherArticlesIndex(indexName)
 		self.createReportIndex(indexName)
 		self.createBlogIndex(indexName)
@@ -244,7 +244,7 @@ def main():
 	print " "
 	
 	ic = ESIndexCreator()
-	ic.createAllIndex('test-articles')
+	ic.createAllIndex('web-articles')
 
 if __name__ == "__main__":
 	main()
