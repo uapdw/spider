@@ -26,10 +26,11 @@ class ESIndexCreator:
 		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
 		self.client = Hbase.Client(self.protocol)
 		self.es = Elasticsearch(
-			['172.20.8.162'],
-			sniff_on_start = True,
-			sniff_on_connection_fail = True,
-			sniffer_timeout = 60
+			['172.20.8.162','172.20.8.163'],
+			timeout = 600,
+			sniff_on_start=True, 
+			sniff_on_connection_fail=True, 
+			sniffer_timeout=60
 		)
 
 	def __del__(self):
@@ -250,10 +251,10 @@ class ESIndexCreator:
 		self.createIndex(indexName)
 		#self.createBaiduArticlesIndex(indexName)
 		self.createOtherArticlesIndex(indexName)
-		#self.createReportIndex(indexName)
-		#self.createBlogIndex(indexName)
-		#self.createWeiboIndex(indexName)
-		#self.createActivityIndex(indexName)
+		self.createReportIndex(indexName)
+		self.createBlogIndex(indexName)
+		self.createWeiboIndex(indexName)
+		self.createActivityIndex(indexName)
 
 	def createDataIndex(self,tableName,tableColumnFamily,tableColumnList,indexName,indexTypeName,indexColumnList):
 		listColumns = []
@@ -275,13 +276,14 @@ class ESIndexCreator:
 					body[indexColumnList[key]] = datetime.datetime.strptime(i.columns.get(listColumns[key]).value,'%Y-%m-%d %H:%M:%S')
 				elif indexColumnList[key] == 'publishtime':
 					if i.columns.get(listColumns[key]).value == '':
-						body[indexColumnList[key]] = datetime.datetime.now()
+						body[indexColumnList[key]] = datetime.datetime.strptime('2014-05-01 00:00:00','%Y-%m-%d %H:%M:%S')
 					elif len((i.columns.get(listColumns[key]).value).strip()) <= 10:
 						body[indexColumnList[key]] = datetime.datetime.strptime((i.columns.get(listColumns[key]).value).strip() + ' 00:00:00','%Y-%m-%d %H:%M:%S')
 					else:
 						body[indexColumnList[key]] = datetime.datetime.strptime(i.columns.get(listColumns[key]).value,'%Y-%m-%d %H:%M:%S')
 				elif indexColumnList[key] == 'content':
-					body[indexColumnList[key]] = self.filterTags(i.columns.get(listColumns[key]).value).strip()
+					#body[indexColumnList[key]] = self.filterTags(i.columns.get(listColumns[key]).value).strip()
+					body[indexColumnList[key]] = ''
 				else:
 					body[indexColumnList[key]] = i.columns.get(listColumns[key]).value
 
@@ -293,7 +295,7 @@ class ESIndexCreator:
 			}
 
 			actions.append(action)
-			if(len(actions) == 500):
+			if(len(actions) == 5000):
 				print 'creating indexes....'
 				helpers.bulk(self.es,actions)
 				del actions[0:len(actions)]
