@@ -3,7 +3,6 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-# all in one file
 import pymongo
 import datetime
 from scrapy.exceptions import DropItem
@@ -15,8 +14,7 @@ from hbase.ttypes import *
 import pymongo
 import hashlib
 import time
-import re
-
+import uuid
 class BaiduNewsPipeline(object):
     def process_item(self, item, spider):
       if spider.name not in ['baidu']:
@@ -207,99 +205,6 @@ class WebArticlePipeLine(object):
       mutations.append(Mutation(column='other_articles:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='other_articles:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       self.client.mutateRow('info_public_monitor',row,mutations,None)
-      return item
-
-def filter_tags(htmlstr):
-  re_cdata=re.compile('//<!\[CDATA\[[^>]*//\]\]>',re.I)
-  re_script=re.compile('<\s*script[^>]*>[^<]*<\s*/\s*script\s*>',re.I)#Script
-  re_style=re.compile('<\s*style[^>]*>[^<]*<\s*/\s*style\s*>',re.I)#style
-  re_br=re.compile('<br\s*?/?>')
-  re_h=re.compile('</?\w+[^>]*>')
-  re_comment=re.compile('<!--[^>]*-->')
-  s=re_cdata.sub('',htmlstr)
-  s=re_script.sub('',s)
-  s=re_style.sub('',s)
-  s=re_br.sub('',s)
-  s=re_h.sub('',s)
-  s=re_comment.sub('',s)
-  blank_line=re.compile('\n+')
-  s=blank_line.sub('',s)
-  return s
-
-class BBSDemoPipeLine(object):
-
-  def __init__(self):
-    self.host = "172.20.8.69"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-
-  def __del__(self):
-    self.transport.close()
-  
-  def process_item(self, item, spider):
-    if spider.name not in ['bbscheaa', 'jdbbs', 'jdwxinfo', 'baisejiadiantieba']:
-      return item
-
-    print "enter BBSDemoPipeLine...."
-    if item['title'] == '' or item['content'] == '':
-      raise DropItem("there is no article item! @@@url=%s" % item['url'])
-    else:
-      #insert item into hbase
-      row = hashlib.new("md5",item['url']).hexdigest()
-      mutations = []
-      mutations.append(Mutation(column='bbs:url',value=item['url']))
-      mutations.append(Mutation(column='bbs:title',value=item['title'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:author',value=item['author'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:abstract',value=item['abstract'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:keyWords',value=item['keyWords'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
-      content = filter_tags(item['content'])
-      mutations.append(Mutation(column='bbs:content',value=content.encode("utf8")))
-      mutations.append(Mutation(column='bbs:siteName',value=item['siteName'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:source',value=item['source'].encode("utf8")))
-      mutations.append(Mutation(column='bbs:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
-      self.client.mutateRow('info_public_demo',row,mutations,None)
-      return item
-
-class WebArticleDemoPipeLine(object):
-
-  def __init__(self):
-    self.host = "172.20.8.69"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-
-  def __del__(self):
-    self.transport.close()
-  
-  def process_item(self, item, spider):
-    if spider.name not in ['abi', 'cena', 'ea3w', 'hc360', 'hea163', 'newscheaa', 'smarthomeqianjia']:
-      return item
-
-    print "enter WebArticleDemoPipeLine...."
-    if item['title'] == '' or item['content'] == '':
-      raise DropItem("there is no article item! @@@url=%s" % item['url'])
-    else:
-      #insert item into hbase
-      row = hashlib.new("md5",item['url']).hexdigest()
-      mutations = []
-      mutations.append(Mutation(column='article:url',value=item['url']))
-      mutations.append(Mutation(column='article:title',value=item['title'].encode("utf8")))
-      mutations.append(Mutation(column='article:author',value=item['author'].encode("utf8")))
-      mutations.append(Mutation(column='article:abstract',value=item['abstract'].encode("utf8")))
-      mutations.append(Mutation(column='article:keyWords',value=item['keyWords'].encode("utf8")))
-      mutations.append(Mutation(column='article:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
-      content = filter_tags(item['content'])
-      mutations.append(Mutation(column='bbs:content',value=content.encode("utf8")))
-      mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
-      mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
-      mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
-      self.client.mutateRow('info_public_demo',row,mutations,None)
       return item
 
 class WebBlogPipeLine(object):
@@ -654,4 +559,321 @@ class GovSubPipeLine(object):
 		self.client.mutateRow('china_govsub',row,mutations,None)
 		
 		
+		return item
+class JDBaseInfoPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['JDBaseInfo']:
+			return item
+		print "enter JDBaseInfoPipeLine...."
+		
+		data = {'shopurl':item['shopurl'],'shopid':item['shopid']}
+		spider.tJDBaseInfo.update({'shopurl':item['shopurl']},{'$set':data},True)
+		'''
+    #insert item into hbase
+		
+		row = hashlib.new("md5",item['url']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:url',value=item['url']))
+		mutations.append(Mutation(column='column:title',value=item['title'].encode("utf8")))
+		mutations.append(Mutation(column='column:buyer',value=item['buyer'].encode("utf8")))
+		mutations.append(Mutation(column='column:agent',value=item['agent'].encode("utf8")))
+		mutations.append(Mutation(column='column:abstract',value=item['abstract'].encode("utf8")))
+		mutations.append(Mutation(column='column:keyWords',value=item['keyWords'].encode("utf8")))
+		mutations.append(Mutation(column='column:publishTime',value=item['publishTime'].encode("utf8")))
+		mutations.append(Mutation(column='column:content',value=item['content'].encode("utf8")))
+		mutations.append(Mutation(column='column:source',value=item['source']))
+		self.client.mutateRow('china_govsub',row,mutations,None)
+		
+		'''
+		return item
+class JDCommDetailPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['JDCommDetail']:
+			return item
+		print "enter JdCommDetailPipeLine...."
+		
+		#data = {'pt_name':item['ptname'],'danpin_name':item['danpinname'],'pt_sp_address':item['ptspaddress'],'satisfaction':item['satisfaction'],'com_keywords':item['comkeywords'],'com_feel_up':item['com_feel_up'],'com_feel':item['comfeel'],'com_order_show':item['comordershow'],'com_feel_reply':item['comfeelreply'],'com_establish_time':item['comestablishtime'],'order_buy_info':item['orderbuyinfo'],'com_id':item['comid'],'com_id_level':item['comidlevel'],'com_id_address':item['comidaddress'],'order_buy_time':item['orderbuytime']}
+		
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+		
+    #insert item into hbase
+		
+		row = hashlib.new("md5",'JD'+item['comestablishtime']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:pt_sp_address',value=item['ptspaddress']))
+		mutations.append(Mutation(column='column:pt_name',value=item['ptname'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_name',value=item['danpinname'].encode("utf8")))
+		mutations.append(Mutation(column='column:satisfaction',value=item['satisfaction'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_keywords',value=item['comkeywords'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_feel',value=item['comfeel'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_order_show',value=item['comordershow'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_feel_reply',value=item['comfeelreply'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_establish_time',value=item['comestablishtime'].encode("utf8")))
+		mutations.append(Mutation(column='column:order_buy_info',value=item['orderbuyinfo'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_id',value=item['comid'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_id_level',value=item['comidlevel'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_feel_up',value=item['com_feel_up'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_id_address',value=item['comidaddress'].encode("utf8")))
+		mutations.append(Mutation(column='column:order_buy_time',value=item['orderbuytime'].encode("utf8")))
+		self.client.mutateRow('DS_DETAIL_COM',row,mutations,None)
+		
+		
+		if item['com_reply_name']:
+			for key in range(len(item['com_reply_name'])-1):
+				mutations1 = []
+				row01 = hashlib.new("md5",item['com_reply_addtime'][key].encode("utf8")).hexdigest()
+				mutations1.append(Mutation(column='column:com_id',value=item['comid'].encode("utf8")))
+				mutations1.append(Mutation(column='column:com_reply_name',value=item['com_reply_name'][key].encode("utf8")))
+				mutations1.append(Mutation(column='column:com_reply_addtime',value=item['com_reply_addtime'][key].encode("utf8")))
+				mutations1.append(Mutation(column='column:com_reply_content',value=item['com_reply_content'][key].encode("utf8")))
+				self.client.mutateRow('DS_DETAIL_REPLY',row01,mutations1,None)
+		return item
+class JDWaresInfoPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['JDWaresInfo','JDWaresInfoTest','SNDSSPInfo']:
+			return item
+		print "enter JDWaresInfoPipeLine...."
+		
+		#data = {'pt_name':item['pt_name'],'pt_sp_address':item['pt_sp_address'],'danpin_promotion':item['danpin_promotion'],'danpin_carrier':item['danpin_carrier'],'name':item['name'],'pinlei':item['pinlei'],'dalei':item['dalei'],'xiaolei':item['xiaolei'],'brand':item['brand'],'danpin_name':item['danpin_name'],'danpin_code':item['danpin_code'],'danpin_photo':item['danpin_photo'],'danpin_intro':item['danpin_intro'],'danpin_spec':item['danpin_spec'],'danpin_package':item['danpin_package'],'danpin_after_sale':item['danpin_after_sale'],'danpin_slogan':item['danpin_slogan'],'danpin_info_detail':item['danpin_info_detail'],'danpin_price':item['danpin_price'],'danpin_fare':item['danpin_fare'],'danpin_payment_method':item['danpin_payment_method'],'danpin_add_service':item['danpin_add_service'],'danpin_service_tips':item['danpin_service_tips']}
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+    #insert item into hbase
+		print item
+		'''
+		row = hashlib.new("md5",item['pt_sp_address']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address'].encode("utf8")))
+		mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:name',value=item['name'].encode("utf8")))
+		mutations.append(Mutation(column='column:pinlei',value=item['pinlei'].encode("utf8")))
+		mutations.append(Mutation(column='column:dalei',value=item['dalei'].encode("utf8")))
+		mutations.append(Mutation(column='column:xiaolei',value=item['xiaolei'].encode("utf8")))
+		mutations.append(Mutation(column='column:brand',value=item['brand'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_code',value=item['danpin_code'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_photo',value=item['danpin_photo'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_intro',value=item['danpin_intro'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_spec',value=item['danpin_spec'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_package',value=item['danpin_package'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_after_sale',value=item['danpin_after_sale'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_slogan',value=item['danpin_slogan'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_info_detail',value=item['danpin_info_detail'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_price',value=item['danpin_price']))
+		mutations.append(Mutation(column='column:danpin_promotion',value=item['danpin_promotion'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_carrier',value=item['danpin_carrier'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_fare',value=item['danpin_fare'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_payment_method',value=item['danpin_payment_method'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_add_service',value=item['danpin_add_service'].encode("utf8")))
+		#mutations.append(Mutation(column='column:danpin_credit_service',value=item['danpin_credit_service'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_service_tips',value=item['danpin_service_tips'].encode("utf8")))
+		self.client.mutateRow('DS_SPinfo',row,mutations,None)
+		return item
+		'''
+class JDSummaryCommPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['JDSummaryComm']:
+			return item
+		print "enter JDSummaryCommPipeLine...."
+		
+		data = {'pt_name':item['pt_name'],'danpin_name':item['danpin_name'],'pt_sp_address':item['pt_sp_address'],'com_count':item['com_count'],'positive_com_count':item['positive_com_count'],'moderate_com_count':item['moderate_com_count'],'negative_com_count':item['negative_com_count'],'photo_com_count':item['photo_com_count'],'impression':item['impression']}
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+		
+    #insert item into hbase
+		
+		row = hashlib.new("md5",item['pt_sp_address']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address']))
+		mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:com_count',value=item['com_count'].encode("utf8")))
+		mutations.append(Mutation(column='column:positive_com_count',value=item['positive_com_count'].encode("utf8")))
+		mutations.append(Mutation(column='column:moderate_com_count',value=item['moderate_com_count'].encode("utf8")))
+		mutations.append(Mutation(column='column:negative_com_count',value=item['negative_com_count'].encode("utf8")))
+		mutations.append(Mutation(column='column:photo_com_count',value=item['photo_com_count'].encode("utf8")))
+		mutations.append(Mutation(column='column:impression',value=item['impression'].encode("utf8")))
+		self.client.mutateRow('DS_TOTAL_COM',row,mutations,None)
+		return item
+class JDDpInfoTestPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['JDDpInfoTest']:
+			return item
+		print "enter JDDpInfoTestPipeLine...."
+		
+		data = {'pt_name':item['pt_name'],'name':item['name'],'score_total':item['score_total'],'sp_score':item['sp_score'],'sp_compare':item['sp_compare'],'service_score':item['service_score'],'service_compare':item['service_compare'],'eff_score':item['eff_score'],'eff_compare':item['eff_compare'],'Company_name':item['Company_name'],'Company_city':item['Company_city'],'Surport_service':item['Surport_service'],'service_inf':item['service_inf']}
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+		
+    #insert item into hbase
+		
+		row = hashlib.new("md5",item['url']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:name',value=item['name'].encode("utf8")))
+		mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:score_total',value=item['score_total'].encode("utf8")))
+		mutations.append(Mutation(column='column:sp_score',value=item['sp_score'].encode("utf8")))
+		mutations.append(Mutation(column='column:sp_compare',value=item['sp_compare'].encode("utf8")))
+		mutations.append(Mutation(column='column:service_score',value=item['service_score'].encode("utf8")))
+		mutations.append(Mutation(column='column:service_compare',value=item['service_compare'].encode("utf8")))
+		mutations.append(Mutation(column='column:eff_score',value=item['eff_score'].encode("utf8")))
+		mutations.append(Mutation(column='column:eff_compare',value=item['eff_compare'].encode("utf8")))
+		mutations.append(Mutation(column='column:Company_name',value=item['Company_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:Company_city',value=item['Company_city'].encode("utf8")))
+		mutations.append(Mutation(column='column:Surport_service',value=item['Surport_service'].encode("utf8")))
+		mutations.append(Mutation(column='column:service_inf',value=item['service_inf'].encode("utf8")))
+		self.client.mutateRow('DS_DPinfo',row,mutations,None)
+		return item
+class HRDataPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['HRDataZhiL','HRDataYinC','Job51JobSpider']:
+			return item
+		print "enter HRDataPipeLine...."
+		
+		#data = {'pt_name':item['pt_name'],'pt_sp_address':item['pt_sp_address'],'danpin_promotion':item['danpin_promotion'],'danpin_carrier':item['danpin_carrier'],'name':item['name'],'pinlei':item['pinlei'],'dalei':item['dalei'],'xiaolei':item['xiaolei'],'brand':item['brand'],'danpin_name':item['danpin_name'],'danpin_code':item['danpin_code'],'danpin_photo':item['danpin_photo'],'danpin_intro':item['danpin_intro'],'danpin_spec':item['danpin_spec'],'danpin_package':item['danpin_package'],'danpin_after_sale':item['danpin_after_sale'],'danpin_slogan':item['danpin_slogan'],'danpin_info_detail':item['danpin_info_detail'],'danpin_price':item['danpin_price'],'danpin_fare':item['danpin_fare'],'danpin_payment_method':item['danpin_payment_method'],'danpin_add_service':item['danpin_add_service'],'danpin_service_tips':item['danpin_service_tips']}
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+    #insert item into hbase
+		
+		
+		row = hashlib.new("md5",item['url']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:name_company',value=item['name_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:web_source',value=item['websource'].encode("utf8")))
+		mutations.append(Mutation(column='column:scale_company',value=item['scale_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:type_company',value=item['type_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:industry_company',value=item['industry_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:website_company',value=item['website_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:address_company',value=item['address_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:info_company',value=item['info_company'].encode("utf8")))
+		mutations.append(Mutation(column='column:name_position',value=item['name_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:url',value=item['url'].encode("utf8")))
+		mutations.append(Mutation(column='column:keywords_position',value=item['keywords_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:salary_position',value=item['salary_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:location_position',value=item['location_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:release_time',value=item['release_time'].encode("utf8")))
+		mutations.append(Mutation(column='column:nature_position',value=item['nature_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:experience_position',value=item['experience_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:education_demand',value=item['education_demand'].encode("utf8")))
+		mutations.append(Mutation(column='column:sex_requrment',value=item['sex_requrment'].encode("utf8")))
+		mutations.append(Mutation(column='column:number_demand',value=item['number_demand'].encode("utf8")))
+		mutations.append(Mutation(column='column:type_position',value=item['type_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:jd_position',value=item['jd_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:sex_requrment',value=item['sex_requrment'].encode("utf8")))
+		mutations.append(Mutation(column='column:duty_position',value=item['dutypos'].encode("utf8")))
+		mutations.append(Mutation(column='column:requiremen_position',value=item['requiremen_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:pay_position',value=item['pay_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:welfare_position',value=item['welfare_position'].encode("utf8")))
+		mutations.append(Mutation(column='column:name_contact',value=item['name_contact'].encode("utf8")))
+		mutations.append(Mutation(column='column:tele_contact',value=item['tele_contact'].encode("utf8")))
+		mutations.append(Mutation(column='column:email_contact',value=item['email_contact'].encode("utf8")))
+		self.client.mutateRow('HR_Data',row,mutations,None)
+		return item
+class PM25ChinaPipeLine(object):
+	'''
+	def __init__(self):
+		print '#' *40
+		self.host = "172.20.8.69"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+	
+	def __del__(self):
+		self.transport.close()
+	'''
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['PM25China']:
+			return item
+		print "enter PM25ChinaPipeLine...."
+		
+		#data = {'pt_name':item['pt_name'],'name':item['name'],'score_total':item['score_total'],'sp_score':item['sp_score'],'sp_compare':item['sp_compare'],'service_score':item['service_score'],'service_compare':item['service_compare'],'eff_score':item['eff_score'],'eff_compare':item['eff_compare'],'Company_name':item['Company_name'],'Company_city':item['Company_city'],'Surport_service':item['Surport_service'],'service_inf':item['service_inf']}
+		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
+		
+    #insert item into hbase
+		
+		row = hashlib.new("md5",item['crawltime'] + item['jiankongdian_code']).hexdigest()
+		
+		mutations = []
+		mutations.append(Mutation(column='column:areacode',value=item['areacode'].encode("utf8")))
+		mutations.append(Mutation(column='column:areaname',value=item['areaname'].encode("utf8")+'市'))
+		mutations.append(Mutation(column='column:publishtime',value=item['publishtime'].encode("utf8")))
+		mutations.append(Mutation(column='column:index_value',value=item['index_value'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiankongdian_code',value=item['jiankongdian_code'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiankongdian_name',value=item['jiankongdian_name'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiangkongdian_aqi',value=item['jiangkongdian_aqi'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiangkongdian_pm25',value=item['jiangkongdian_pm25'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiangkongdian_pm10',value=item['jiangkongdian_pm10'].encode("utf8")))
+		mutations.append(Mutation(column='column:jiangkongdian_key',value=item['jiangkongdian_key'].encode("utf8")))
+		mutations.append(Mutation(column='column:crawltime',value=item['crawltime'].encode("utf8")))
+		spider.client.mutateRow('dw_pm25',row,mutations,None)
 		return item

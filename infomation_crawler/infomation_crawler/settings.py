@@ -25,9 +25,16 @@ ITEM_PIPELINES = {
 	'infomation_crawler.pipelines.DaniangWeiBoPipeLine':18,
 	'infomation_crawler.pipelines.DaniangWeiXinPipeLine':19,
 	'infomation_crawler.pipelines.GovSubPipeLine':20,
+	'infomation_crawler.pipelines.JDBaseInfoPipeLine':21,
+	'infomation_crawler.pipelines.JDCommDetailPipeLine':22,
+	'infomation_crawler.pipelines.JDWaresInfoPipeLine':23,
+	'infomation_crawler.pipelines.JDSummaryCommPipeLine':24,
+	'infomation_crawler.pipelines.JDDpInfoTestPipeLine':25,
+	'infomation_crawler.pipelines.HRDataPipeLine':26,
+	'infomation_crawler.pipelines.PM25ChinaPipeLine':27,
 	}
 USER_AGENT = fake.internet_explorer()
-
+#USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.54 Safari/536.5'
 '''
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 1
@@ -35,10 +42,15 @@ AUTOTHROTTLE_MAX_DELAY = 10
 AUTOTHROTTLE_DEBUG = True
 '''
 
+DOWNLOADER_MIDDLEWARES = {
+		    'scrapyjs.SplashMiddleware': 725,
+				}
+SPLASH_URL = 'http://172.20.8.3:8050/'
 DOWNLOAD_DELAY = 1
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
-CONCURRENT_REQUESTS = 1
-DOWNLOAD_TIMEOUT = 10
+DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
+#CONCURRENT_REQUESTS_PER_DOMAIN = 5
+#CONCURRENT_REQUESTS = 1
+#DOWNLOAD_TIMEOUT = 30
 
 LOG_LEVEL = 'DEBUG'
 #LOG_FILE = 'scrapy.log'
