@@ -600,7 +600,8 @@ class JDBaseInfoPipeLine(object):
 		return item
 class JDCommDetailPipeLine(object):
 	def __init__(self):
-		self.host = "172.20.8.69"
+		#self.host = "172.20.8.69"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -654,7 +655,8 @@ class JDCommDetailPipeLine(object):
 		return item
 class JDWaresInfoPipeLine(object):
 	def __init__(self):
-		self.host = "172.20.8.69"
+		#self.host = "172.20.8.69"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -706,7 +708,8 @@ class JDWaresInfoPipeLine(object):
 		'''
 class JDSummaryCommPipeLine(object):
 	def __init__(self):
-		self.host = "172.20.8.69"
+		#self.host = "172.20.8.69"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -742,7 +745,8 @@ class JDSummaryCommPipeLine(object):
 		return item
 class JDDpInfoTestPipeLine(object):
 	def __init__(self):
-		self.host = "172.20.8.69"
+		#self.host = "172.20.8.69"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()
@@ -782,7 +786,8 @@ class JDDpInfoTestPipeLine(object):
 		return item
 class HRDataPipeLine(object):
 	def __init__(self):
-		self.host = "172.20.8.69"
+		#self.host = "172.20.8.69"
+		self.host = "172.20.6.61"
 		self.port = 9090
 		self.transport = TBufferedTransport(TSocket(self.host, self.port))
 		self.transport.open()

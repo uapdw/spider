@@ -17,7 +17,8 @@ class PM25ChinaSpider(CrawlSpider):
 	allowed_domain = ['pm25china.net']
 	start_urls=["http://www.pm25china.net"]
 
-	host = "172.20.8.69"
+	#host = "172.20.8.69"
+	host = "172.20.6.61"
 	port = 9090
 	transport = TBufferedTransport(TSocket(host, port))
 	transport.open()
