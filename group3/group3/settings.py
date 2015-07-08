@@ -25,8 +25,8 @@ ITEM_PIPELINES = {
 	'group3.pipelines.DaniangWeiBoPipeLine':18,
 	'group3.pipelines.DaniangWeiXinPipeLine':19,
 	'group3.pipelines.GovSubPipeLine':20,
-	'group3.pipelines.WebArticleDemoPipeLine':21,
-	'group3.pipelines.BBSDemoPipeLine':22,
+	'group3.pipelines.PublicDemoArticlePipeLine':21,
+	'group3.pipelines.PublicDemoBBSPipeLine':22,
 	}
 USER_AGENT = fake.internet_explorer()
 
@@ -37,9 +37,9 @@ AUTOTHROTTLE_MAX_DELAY = 10
 AUTOTHROTTLE_DEBUG = True
 '''
 
-DOWNLOAD_DELAY = 1
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
-CONCURRENT_REQUESTS = 1
+DOWNLOAD_DELAY = 0.2
+CONCURRENT_REQUESTS_PER_DOMAIN = 8
+CONCURRENT_REQUESTS = 8
 DOWNLOAD_TIMEOUT = 10
 
 LOG_LEVEL = 'DEBUG'
