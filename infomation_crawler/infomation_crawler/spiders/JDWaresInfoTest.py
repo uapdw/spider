@@ -13,7 +13,7 @@ import re
 class JDWaresInfoTestSpider(CrawlSpider):
 	name = 'JDWaresInfoTest'
 	allowed_domain = ['jd.com','3.cn']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tJDBaseInfo = infoDB.tJDBaseInfo
 	listshop = tJDBaseInfo.find()

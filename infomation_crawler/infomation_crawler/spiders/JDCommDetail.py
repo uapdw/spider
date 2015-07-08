@@ -10,7 +10,7 @@ import re
 class JDCommDetailSpider(CrawlSpider):
 	name = 'JDCommDetail'
 	allowed_domain = ['jd.com']
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tJDBaseInfo = infoDB.tJDBaseInfo
 	tJdCommDetail = infoDB.tJdCommDetail

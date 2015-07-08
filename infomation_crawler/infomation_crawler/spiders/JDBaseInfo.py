@@ -10,7 +10,7 @@ class JDBaseInfoSpider(CrawlSpider):
 	name = 'JDBaseInfo'
 	allowed_domain = ['jd.com']
 	start_urls=["http://list.jd.com/list.html?cat=737,794,878"]
-	conn = pymongo.Connection('localhost',27017)
+	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	#remove = infoDB.tJDBaseInfo.remove({})
 	tJDBaseInfo = infoDB.tJDBaseInfo
