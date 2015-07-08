@@ -882,3 +882,83 @@ class PM25ChinaPipeLine(object):
 		mutations.append(Mutation(column='column:crawltime',value=item['crawltime'].encode("utf8")))
 		spider.client.mutateRow('dw_pm25',row,mutations,None)
 		return item
+
+class PublicDemoArticlePipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+  
+  def process_item(self, item, spider):
+    if spider.name not in ['abi','cena','ea3w','hc360','hea163','jdwxinfo','newscheaa','smarthomeqianjia']:
+      return item
+
+    print "enter PublicDemoArticlePipeLine...."
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    if item['title'] == '' or item['content'] == '':
+      raise DropItem("there is no article item! @@@url=%s" % item['url'])
+    #elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+    #  raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
+    else:
+      #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
+      #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='article:url',value=item['url']))
+      mutations.append(Mutation(column='article:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='article:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='article:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='article:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='article:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
+      mutations.append(Mutation(column='article:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
+      mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_demo',row,mutations,None)
+      return item
+
+class PublicDemoBBSPipeLine(object):
+  def __init__(self):
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+  def __del__(self):
+    self.transport.close()
+  
+  def process_item(self, item, spider):
+    if spider.name not in ['baisejiadiantieba','bbscheaa','jdbbs']:
+      return item
+
+    print "enter PublicDemoBBSPipeLine...."
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    if item['title'] == '' or item['content'] == '':
+      raise DropItem("there is no article item! @@@url=%s" % item['url'])
+    #elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+    #  raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
+    else:
+      #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
+      #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='bbs:url',value=item['url']))
+      mutations.append(Mutation(column='bbs:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
+      mutations.append(Mutation(column='bbs:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:siteName',value=item['siteName'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='bbs:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      self.client.mutateRow('info_public_demo',row,mutations,None)
+      return item
