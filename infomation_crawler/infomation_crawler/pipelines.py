@@ -908,7 +908,7 @@ class PublicDemoArticlePipeLine(object):
       #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       #insert item into hbase
-      row = hashlib.new("md5",item['url']).hexdigest()
+      row = hashlib.new("md5",'nosent_'+item['url']).hexdigest()
       mutations = []
       mutations.append(Mutation(column='article:url',value=item['url']))
       mutations.append(Mutation(column='article:title',value=item['title'].encode("utf8")))
@@ -949,7 +949,7 @@ class PublicDemoBBSPipeLine(object):
       #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       #insert item into hbase
-      row = hashlib.new("md5",item['url']).hexdigest()
+      row = hashlib.new("md5",'nosent_'+item['url']).hexdigest()
       mutations = []
       mutations.append(Mutation(column='bbs:url',value=item['url']))
       mutations.append(Mutation(column='bbs:title',value=item['title'].encode("utf8")))
