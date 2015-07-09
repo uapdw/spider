@@ -640,6 +640,7 @@ class JDCommDetailPipeLine(object):
 		mutations.append(Mutation(column='column:com_feel_up',value=item['com_feel_up'].encode("utf8")))
 		mutations.append(Mutation(column='column:com_id_address',value=item['comidaddress'].encode("utf8")))
 		mutations.append(Mutation(column='column:order_buy_time',value=item['orderbuytime'].encode("utf8")))
+		mutations.append(Mutation(column='column:sentiment',value=''))
 		self.client.mutateRow('DS_DETAIL_COM',row,mutations,None)
 		
 		
