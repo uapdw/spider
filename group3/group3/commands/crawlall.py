@@ -18,12 +18,12 @@ class Command(ScrapyCommand):
         settings = get_project_settings()
 
         for spider_name in self.crawler.spiders.list():
-            # crawler = Crawler(settings)
-            # crawler.configure()
-            # spider = crawler.spiders.create(spider_name)
-            # crawler.crawl(spider)
-            # crawler.start()
+            crawler = Crawler(settings)
+            crawler.configure()
+            spider = crawler.spiders.create(spider_name)
+            crawler.crawl(spider)
+            crawler.start()
 
-            print spider_name
+            # print spider_name
 
-        # self.crawler.start()
+        self.crawler.start()
