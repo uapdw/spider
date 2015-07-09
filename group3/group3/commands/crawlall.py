@@ -2,7 +2,7 @@ __author__ = 'kevenking'
 
 from scrapy.command import ScrapyCommand
 from scrapy.utils.project import get_project_settings
-from scrapy.crawler import Crawler
+from scrapy.crawler import Crawler, CrawlerProcess
 
 class Command(ScrapyCommand):
 
