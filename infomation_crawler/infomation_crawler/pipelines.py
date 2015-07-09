@@ -920,6 +920,7 @@ class PublicDemoArticlePipeLine(object):
       mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
       mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      mutations.append(Mutation(column='article:sentiment',value=''))
       self.client.mutateRow('info_public_demo',row,mutations,None)
       return item
 
@@ -960,5 +961,6 @@ class PublicDemoBBSPipeLine(object):
       mutations.append(Mutation(column='bbs:siteName',value=item['siteName'].encode("utf8")))
       mutations.append(Mutation(column='bbs:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='bbs:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      mutations.append(Mutation(column='bbs:sentiment',value=''))
       self.client.mutateRow('info_public_demo',row,mutations,None)
       return item
