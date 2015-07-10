@@ -885,16 +885,6 @@ class PM25ChinaPipeLine(object):
 		return item
 
 class PublicDemoArticlePipeLine(object):
-  def __init__(self):
-    self.host = "172.20.6.61"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-  def __del__(self):
-    self.transport.close()
-  
   def process_item(self, item, spider):
     if spider.name not in ['abi','cena','ea3w','hc360','hea163','jdwxinfo','newscheaa','smarthomeqianjia']:
       return item
@@ -909,7 +899,7 @@ class PublicDemoArticlePipeLine(object):
       #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       #insert item into hbase
-      row = hashlib.new("md5",'nosent_'+item['url']).hexdigest()
+      row = hashlib.new("md5",item['url']).hexdigest()
       mutations = []
       mutations.append(Mutation(column='article:url',value=item['url']))
       mutations.append(Mutation(column='article:title',value=item['title'].encode("utf8")))
@@ -922,20 +912,10 @@ class PublicDemoArticlePipeLine(object):
       mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       mutations.append(Mutation(column='article:sentiment',value=''))
-      self.client.mutateRow('info_public_demo',row,mutations,None)
+      spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
       return item
 
 class PublicDemoBBSPipeLine(object):
-  def __init__(self):
-    self.host = "172.20.6.61"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-  def __del__(self):
-    self.transport.close()
-  
   def process_item(self, item, spider):
     if spider.name not in ['baisejiadiantieba','bbscheaa','jdbbs']:
       return item
@@ -950,7 +930,7 @@ class PublicDemoBBSPipeLine(object):
       #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
       #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
       #insert item into hbase
-      row = hashlib.new("md5",'nosent_'+item['url']).hexdigest()
+      row = hashlib.new("md5",item['url']).hexdigest()
       mutations = []
       mutations.append(Mutation(column='bbs:url',value=item['url']))
       mutations.append(Mutation(column='bbs:title',value=item['title'].encode("utf8")))
@@ -963,5 +943,5 @@ class PublicDemoBBSPipeLine(object):
       mutations.append(Mutation(column='bbs:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='bbs:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       mutations.append(Mutation(column='bbs:sentiment',value=''))
-      self.client.mutateRow('info_public_demo',row,mutations,None)
+      spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
       return item

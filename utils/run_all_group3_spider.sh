@@ -4,5 +4,5 @@ cd /data0/sourcecode/information_crawler/group3/
 
 for spider in `scrapy list`
 do
-  echo $spider
+  scrapy crawl $spider
 done

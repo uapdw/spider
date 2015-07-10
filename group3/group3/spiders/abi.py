@@ -9,6 +9,11 @@ from scrapy import Spider
 from group3.items import WebArticleItem
 from urlparse import urlparse
 import datetime
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from group3.hbase import Hbase
+from group3.hbase.ttypes import *
 
 class AbiSpider(Spider):
   name = "abi"
@@ -16,6 +21,17 @@ class AbiSpider(Spider):
   start_urls = [
     'http://www.abi.com.cn/news/news-more.asp?lb=2'
   ]
+
+  def __init__(self):
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+
+  def __del__(self):
+    self.transport.close()
 
   def parse(self, response):
     return self.parse_list(response)

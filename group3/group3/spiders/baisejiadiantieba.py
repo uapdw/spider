@@ -9,9 +9,15 @@ from scrapy.selector import Selector
 from group3.items import WebBBSItem
 from urlparse import urlparse
 import datetime
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from group3.hbase import Hbase
+from group3.hbase.ttypes import *
 
 class BaisejiadianTiebaSpider(CrawlSpider):
   name = "baisejiadiantieba"
+
   allowed_domains = ["tieba.baidu.com"]
   start_urls = [
     'http://tieba.baidu.com/f?kw=%E7%99%BD%E8%89%B2%E5%AE%B6%E7%94%B5&ie=utf-8&pn=0'
@@ -21,6 +27,19 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     Rule(LinkExtractor(allow=('f?kw=%E7%99%BD%E8%89%B2%E5%AE%B6%E7%94%B5&ie=utf-8&pn=\d+'), restrict_xpaths=('//*[@class="next"]'))),
     Rule(LinkExtractor(allow=('/p/\d+')), callback='parse_thread'),
   )
+
+  def __init__(self,**kw):
+    super(BaisejiadianTiebaSpider,self).__init__(**kw)
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+
+
+  def __del__(self):
+    self.transport.close()
 
   def parse_thread(self, response):
 
