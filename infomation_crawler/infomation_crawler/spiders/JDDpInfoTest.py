@@ -25,7 +25,7 @@ class JDDpInfoTestSpider(CrawlSpider):
 		shopid = item['shopid']
 		url = 'http://item.jd.com/' + shopid +'.html'
 		urls.append(url)
-		print url
+		#print url
 	start_urls = urls
 
 	def __init__(self):
