@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "run JD spiders...."
-for i in JDBaseInfo JDCommDetail JDDpInfoTest JDSummaryComm JDWaresInfo JDWaresInfoTest
+for i in JDCommDetail JDDpInfoTest JDSummaryComm JDWaresInfo JDWaresInfoTest
 do
 	echo "curl http://172.20.8.162:6800/schedule.json -d project=group3 -d spider="${i}
 done
