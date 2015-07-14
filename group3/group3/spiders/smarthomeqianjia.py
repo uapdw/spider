@@ -20,6 +20,7 @@ class SmarthomeQianjiaSpider(Spider):
   name = "smarthomeqianjia"
   allowed_domains = ["qianjia.com"]
   start_urls = [
+    #'http://smarthome.qianjia.com/html/2006-03/12_111978.html'
     'http://smarthome.qianjia.com/news/'
   ]
 
@@ -35,6 +36,9 @@ class SmarthomeQianjiaSpider(Spider):
     self.transport.close()
 
   def parse(self, response):
+    #i = self.parse_news(response)
+    #print i
+    #return i
     return self.parse_list(response)
 
   def parse_list(self, response):
