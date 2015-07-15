@@ -5,6 +5,11 @@ from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
 import re
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 class tech163Spider(CrawlSpider):
   name = 'tech163'
@@ -18,6 +23,19 @@ class tech163Spider(CrawlSpider):
   rules = (
     Rule(SgmlLinkExtractor(allow=r'tech\.163\.com/\d{2}/\d{4}'), callback='parse_item'),
   )
+
+  def __init__(self,**kw):
+    super(tech163Spider,self).__init__(**kw)
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+
+
+  def __del__(self):
+    self.transport.close()
 
   def parse_item(self, response):
     print "enter tech163_parse_item...."

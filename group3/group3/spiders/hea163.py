@@ -75,7 +75,7 @@ class Hea163Spider(Spider):
       pass
 
     if not i['publishTime']:
-      i['publishTime'] = datetime.datetime.now()
+      i['publishTime'] = datetime.datetime(1970,1,1)
 
     i['abstract'] = xpath.first('//*[@id="endText"]/p')
     i['keyWords'] = xpath.first('//*[@name="keywords"]/@content')

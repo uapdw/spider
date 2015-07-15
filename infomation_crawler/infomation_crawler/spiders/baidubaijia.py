@@ -6,6 +6,11 @@ from scrapy.http import Request
 import json
 import datetime
 import pymongo
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 class BaiduBaijiaSpider(CrawlSpider):
   name = 'baidubaijia'
@@ -15,7 +20,16 @@ class BaiduBaijiaSpider(CrawlSpider):
   conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tWebArticles = infoDB.web_articles
+  def __init__(self):
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
 
+  def __del__(self):
+    self.transport.close()
   def parse_item(self, response):
     sel = Selector(response)
     i = response.meta['item']

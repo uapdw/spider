@@ -81,7 +81,7 @@ class CenaSpider(Spider):
         time_str = match.group(1)
       i['publishTime'] = datetime.datetime.strptime(time_str, '%Y-%m-%d')
     except:
-      i['publishTime'] = datetime.datetime.now()
+      i['publishTime'] = datetime.datetime(1970,1,1)
 
     i['abstract'] = xpath.first('//*[@name="Description"]/@content')
     if not i['abstract']:

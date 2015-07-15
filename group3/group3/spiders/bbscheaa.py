@@ -68,7 +68,7 @@ class BBSCheaaSpider(CrawlSpider):
       pass
 
     if not i['publishTime']:
-      i['publishTime'] = datetime.datetime.now()
+      i['publishTime'] = datetime.datetime(1970,1,1)
 
     i['abstract'] = ''
     i['keyWords'] = xpath.first('//*[@name="keywords"]/@content')

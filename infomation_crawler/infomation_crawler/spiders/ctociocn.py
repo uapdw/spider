@@ -5,6 +5,11 @@ from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
 import re
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 class CtocioCNSpider(CrawlSpider):
 	name = 'ctociocn'
@@ -20,6 +25,18 @@ class CtocioCNSpider(CrawlSpider):
 	rules = (
 			Rule(SgmlLinkExtractor(allow=r'(www|server|news|bigdata|mobile|storage|database|esoft|networking|security|os|cio|virtualization)\.ctocio\.com\.cn/\d+/\d+\.shtml'), callback='parse_item'),
   )
+        def __init__(self,**kw):
+          super(CtocioCNSpider,self).__init__(**kw)
+          self.host = "172.20.6.61"
+          self.port = 9090
+          self.transport = TBufferedTransport(TSocket(self.host, self.port))
+          self.transport.open()
+          self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+          self.client = Hbase.Client(self.protocol)
+      
+      
+        def __del__(self):
+          self.transport.close()
 	
 	def parse_item(self, response):
 		print "enter ctocioCN_parse_item...."

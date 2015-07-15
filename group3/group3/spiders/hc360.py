@@ -95,7 +95,7 @@ class Hc360Spider(Spider):
         pass
 
       if not i['publishTime']:
-        i['publishTime'] = datetime.datetime.now()
+        i['publishTime'] = datetime.datetime(1970,1,1)
 
       i['source'] = xpath.first('//*[@id="endSource"]/text()')
       if not i['source']:

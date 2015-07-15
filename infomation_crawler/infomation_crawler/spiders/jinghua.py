@@ -2,13 +2,16 @@
 from scrapy.selector import Selector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider,Rule
-
-
 from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
 from scrapy.http import Request
 import re
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 __author__ = 'Administrator'
 class JingHSpider(CrawlSpider):
@@ -21,6 +24,18 @@ class JingHSpider(CrawlSpider):
     #rules = [
     #    Rule(SgmlLinkExtractor(allow=r'http://.gmw.cn/\d{4}-\d{2}/\d+/content_\d+.htm'),callback='parse_item',follow=True)
     #]
+    def __init__(self,**kw):
+      self.host = "172.20.6.61"
+      self.port = 9090
+      self.transport = TBufferedTransport(TSocket(self.host, self.port))
+      self.transport.open()
+      self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+      self.client = Hbase.Client(self.protocol)
+
+
+    def __del__(self):
+      self.transport.close()
+
     def parse_item(self, response):
         sel = Selector(response)
         i = response.meta['item']

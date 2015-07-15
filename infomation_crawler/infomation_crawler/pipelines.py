@@ -168,18 +168,9 @@ class WhpjPipeline(object):
     return item
 
 class WebArticlePipeLine(object):
-  def __init__(self):
-    self.host = "172.20.6.61"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-  def __del__(self):
-    self.transport.close()
   
   def process_item(self, item, spider):
-    if spider.name not in ['csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinamobile','leiphone','ctocioCN','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews']:
+    if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol']:
       return item
 
     print "enter WebArticlePipeLine...."
@@ -204,7 +195,7 @@ class WebArticlePipeLine(object):
       mutations.append(Mutation(column='other_articles:siteName',value=item['siteName']))
       mutations.append(Mutation(column='other_articles:source',value=item['source'].encode("utf8")))
       mutations.append(Mutation(column='other_articles:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
-      self.client.mutateRow('info_public_monitor',row,mutations,None)
+      spider.client.mutateRow('info_public_monitor',row,mutations,None)
       return item
 
 class WebBlogPipeLine(object):
@@ -248,16 +239,6 @@ class WebBlogPipeLine(object):
       return item
 
 class IndustryReportPipeLine(object):
-  def __init__(self):
-    self.host = "172.20.6.61"
-    self.port = 9090
-    self.transport = TBufferedTransport(TSocket(self.host, self.port))
-    self.transport.open()
-    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-    self.client = Hbase.Client(self.protocol)
-  def __del__(self):
-    self.transport.close()
-
   def process_item(self, item, spider):
 		if spider.name not in ['idc','gartner','iresearchReport','eguan']:
 			return item
@@ -285,7 +266,7 @@ class IndustryReportPipeLine(object):
 			mutations.append(Mutation(column='report:siteName',value=item['siteName']))
 			mutations.append(Mutation(column='report:source',value=item['source'].encode("utf8")))
 			mutations.append(Mutation(column='report:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
-			self.client.mutateRow('info_public_monitor',row,mutations,None)
+			spider.client.mutateRow('info_public_monitor',row,mutations,None)
 			
 			return item
 
@@ -301,7 +282,7 @@ class WebActivityPipeLine(object):
     self.transport.close()
 
   def process_item(self, item, spider):
-    if spider.name not in ['csdnActivity']:
+    if spider.name not in ['csdnactivity']:
       return item
 
     print "enter WebActivityPipeLine...."
@@ -599,17 +580,6 @@ class JDBaseInfoPipeLine(object):
 		'''
 		return item
 class JDCommDetailPipeLine(object):
-	def __init__(self):
-		#self.host = "172.20.8.69"
-		self.host = "172.20.6.61"
-		self.port = 9090
-		self.transport = TBufferedTransport(TSocket(self.host, self.port))
-		self.transport.open()
-		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.client = Hbase.Client(self.protocol)
-	
-	def __del__(self):
-		self.transport.close()
 		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDCommDetail']:
@@ -641,9 +611,11 @@ class JDCommDetailPipeLine(object):
 		mutations.append(Mutation(column='column:com_id_address',value=item['comidaddress'].encode("utf8")))
 		mutations.append(Mutation(column='column:order_buy_time',value=item['orderbuytime'].encode("utf8")))
 		mutations.append(Mutation(column='column:sentiment',value=''))
-		self.client.mutateRow('DS_DETAIL_COM',row,mutations,None)
+		spider.client.mutateRow('DS_DETAIL_COM',row,mutations,None)
+		#spider.client.mutateRow('spider_ds_detail_com',row,mutations,None)
 		
 		
+		'''
 		if item['com_reply_name']:
 			for key in range(len(item['com_reply_name'])-1):
 				mutations1 = []
@@ -653,7 +625,10 @@ class JDCommDetailPipeLine(object):
 				mutations1.append(Mutation(column='column:com_reply_addtime',value=item['com_reply_addtime'][key].encode("utf8")))
 				mutations1.append(Mutation(column='column:com_reply_content',value=item['com_reply_content'][key].encode("utf8")))
 				self.client.mutateRow('DS_DETAIL_REPLY',row01,mutations1,None)
+		'''
+
 		return item
+
 class JDWaresInfoPipeLine(object):
 	def __init__(self):
 		#self.host = "172.20.8.69"
@@ -890,6 +865,37 @@ class PublicDemoArticlePipeLine(object):
       return item
 
     print "enter PublicDemoArticlePipeLine...."
+    print "item num is : %d" % len(spider.itemList)
+    print "*"*50
+
+    '''
+    if len(spider.itemList) == 100:
+      print "batch insert into HBase...."
+      mutationsBatch = []
+      for i in spider.itemList:
+        if i['title'] == '' or i['content'] == '':
+          pass
+          #raise DropItem("there is no article item! @@@url=%s" % item['url'])
+        else:
+          row = hashlib.new("md5",i['url']).hexdigest()
+          mutations = []
+          mutations.append(Mutation(column='article:url',value=i['url']))
+          mutations.append(Mutation(column='article:title',value=i['title'].encode("utf8")))
+          mutations.append(Mutation(column='article:author',value=i['author'].encode("utf8")))
+          mutations.append(Mutation(column='article:abstract',value=i['abstract'].encode("utf8")))
+          mutations.append(Mutation(column='article:keyWords',value=i['keyWords'].encode("utf8")))
+          mutations.append(Mutation(column='article:publishTime',value=i['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
+          mutations.append(Mutation(column='article:content',value=i['content'].encode("utf8")))
+          mutations.append(Mutation(column='article:siteName',value=i['siteName'].encode("utf8")))
+          mutations.append(Mutation(column='article:source',value=i['source'].encode("utf8")))
+          mutations.append(Mutation(column='article:addTime',value=i['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+          mutations.append(Mutation(column='article:sentiment',value=''))
+          #spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
+          mutationsBatch.append(BatchMutation(row=row,mutations=mutations))
+
+      spider.client.mutateRows('spider_info_public_demo',mutationsBatch,None)
+      del spider.itemList[0:len(spider.itemList)]
+    '''
     yesterday = datetime.date.today() - datetime.timedelta(days=1)
     if item['title'] == '' or item['content'] == '':
       raise DropItem("there is no article item! @@@url=%s" % item['url'])
@@ -913,7 +919,8 @@ class PublicDemoArticlePipeLine(object):
       mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
       mutations.append(Mutation(column='article:sentiment',value=''))
       spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
-      return item
+
+    return item
 
 class PublicDemoBBSPipeLine(object):
   def process_item(self, item, spider):

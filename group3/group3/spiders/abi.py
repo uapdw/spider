@@ -67,7 +67,7 @@ class AbiSpider(Spider):
       time_str = xpath.first('//*[@class="bz1"]/span[1]/text()')
       i['publishTime'] = datetime.datetime.strptime(time_str, '%Y-%m-%d')
     except:
-      i['publishTime'] = datetime.datetime.now()
+      i['publishTime'] = datetime.datetime(1970,1,1)
 
     # 取第一个非空行
     p_list = xpath.list('//*[@id="content"]/p/text()')

@@ -5,7 +5,11 @@ from scrapy.http import Request
 from infomation_crawler.items import IndustryReportItem
 import time,datetime
 import pymongo
-
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 class EguanSpider(CrawlSpider):
   name = 'eguan'
   allowed_domains = ['eguan.cn']
@@ -14,6 +18,16 @@ class EguanSpider(CrawlSpider):
   conn = pymongo.Connection('172.20.8.3',27017)
   infoDB = conn.info
   tIndustryReport = infoDB.IndustryReport
+  def __init__(self):
+    self.host = "172.20.6.61"
+    self.port = 9090
+    self.transport = TBufferedTransport(TSocket(self.host, self.port))
+    self.transport.open()
+    self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+    self.client = Hbase.Client(self.protocol)
+
+  def __del__(self):
+    self.transport.close()
   
   def parse_item(self, response):
     sel = Selector(response)

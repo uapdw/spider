@@ -2,12 +2,15 @@
 from scrapy.selector import Selector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider,Rule
-
-
 from infomation_crawler.items import WebArticleItem
 import datetime
 import pymongo
 from scrapy.http import Request
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 class ScienceChinaSpider(CrawlSpider):
     name = 'sciencechina'
@@ -19,6 +22,18 @@ class ScienceChinaSpider(CrawlSpider):
     rules = (
        Rule(SgmlLinkExtractor(allow=(r'http://science.china.com.cn/\d{4}-\d{2}/\d+/content_\d+.htm'),restrict_xpaths=('//div[@class="TopNews" or @class="News_left" or @class="AppBox" or @class="Videos_left" or @class="News_right_left" or @class="Technology_left" or @class="Technology_center" or @class="Technology_right"]'),deny_extensions=""),callback='parse_item'),
     )
+
+    def __init__(self,**kw):
+      super(ScienceChinaSpider,self).__init__(**kw)
+      self.host = "172.20.6.61"
+      self.port = 9090
+      self.transport = TBufferedTransport(TSocket(self.host, self.port))
+      self.transport.open()
+      self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+      self.client = Hbase.Client(self.protocol)
+
+    def __del__(self):
+      self.transport.close()
 
     def parse_item(self, response):
         sel = Selector(response)

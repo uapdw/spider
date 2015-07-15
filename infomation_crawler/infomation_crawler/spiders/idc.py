@@ -6,6 +6,11 @@ from infomation_crawler.items import IndustryReportItem
 import datetime
 import pymongo
 import time
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
 
 class IDCSpider(CrawlSpider):
 	name = 'idc'
@@ -22,7 +27,15 @@ class IDCSpider(CrawlSpider):
 			self.start_urls = urls
 		else:
 			self.start_urls = ['http://idc.com.cn/about/index.jsp?page=1&thisy=2015']
-			
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+     
+	def __del__(self):
+		self.transport.close()
 	conn = pymongo.Connection('172.20.8.3',27017)
 	infoDB = conn.info
 	tIndustryReport = infoDB.IndustryReport

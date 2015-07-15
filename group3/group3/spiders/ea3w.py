@@ -98,7 +98,7 @@ class Ea3wSpider(Spider):
         pass
 
     if not i['publishTime']:
-      i['publishTime'] = datetime.datetime.now()
+      i['publishTime'] = datetime.datetime(1970,1,1)
 
     source_xpath_list = ['//*[@class="source"]/text()', '//*[@id="source_baidu"]/a/text()', '//*[@id="source_baidu"]/text()']
     for source_xpath in source_xpath_list:
