@@ -865,7 +865,7 @@ class PublicDemoArticlePipeLine(object):
       return item
 
     print "enter PublicDemoArticlePipeLine...."
-    print "item num is : %d" % len(spider.itemList)
+    #print "item num is : %d" % len(spider.itemList)
     print "*"*50
 
     '''

@@ -48,7 +48,7 @@ class Hc360Spider(Spider):
 
     xpath = XPath(Selector(response))
     page_url_list = xpath.list('//table[2]/tr/td/a/@href')
-    for page_url in page_url_list:
+    for page_url in page_url_list[:3]: # 前三页（算本页）
       if page_url != self.more_url:
         request_list.append(Request(domain_url + '/list/' + page_url, callback=self.parse_list))
 

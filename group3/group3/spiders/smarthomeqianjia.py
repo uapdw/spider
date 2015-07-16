@@ -23,6 +23,8 @@ class SmarthomeQianjiaSpider(Spider):
     #'http://smarthome.qianjia.com/html/2006-03/12_111978.html'
     'http://smarthome.qianjia.com/news/'
   ]
+    
+  page = 0
 
   def __init__(self):
     self.host = "172.20.6.61"
@@ -81,9 +83,11 @@ class SmarthomeQianjiaSpider(Spider):
     for news_url in news_url_list:
       yield Request(news_url, callback=self.parse_news)
 
-    next_url = xpath.first('//a[@title="' + u'下一页' + '"]/@href')
-    if next_url:
-      yield Request(domain_url + '/news/' + next_url, callback=self.parse_list)
+    self.page += 1
+    if self.page < 5: # 前5页
+      next_url = xpath.first('//a[@title="' + u'下一页' + '"]/@href')
+      if next_url:
+        yield Request(domain_url + '/news/' + next_url, callback=self.parse_list)
 
   def parse_news(self, response):
 

@@ -21,6 +21,10 @@ class NewsCheaaSpider(Spider):
   start_urls = [
     'http://news.cheaa.com/hangye.shtml'
   ]
+    
+  today = datetime.date.today()
+  yesterday = (datetime.date.today() - datetime.timedelta(days=1))
+  time_range = [today, yesterday]
 
   def __init__(self):
     self.host = "172.20.6.61"
@@ -39,12 +43,31 @@ class NewsCheaaSpider(Spider):
   def parse_list(self, response):
     xpath = XPath(Selector(response))
     news_url_list = xpath.list('//*[@id="main-list"]/div[contains(@class,"ListPageBox")]/.//a/@href')
-    for news_url in news_url_list:
-      yield Request(news_url, callback=self.parse_news)
+    time_list = xpath.list('//*[@id="main-list"]/div[contains(@class,"ListPageBox")]/.//span[@class="liright"]/text()')
+    for news_url, time in zip(news_url_list, time_list):
+      publish_time = None
+      try:
+        match = re.match(u'(\d+)年(\d+)月(\d+)日', time)
+        time = match.group(1) + '-' + match.group(2) + '-' + match.group(3)
+        publish_time = datetime.datetime.strptime(time, '%Y-%m-%d').date()
+      except:
+        pass
 
-    next_url = xpath.first('//a[@class="next"]/@href')
-    if next_url:
-      yield Request(next_url, callback=self.parse_list)
+      if publish_time in self.time_range:
+        yield Request(news_url, callback=self.parse_news)
+
+    last_publish_time = None
+    try:
+      match = re.match(u'(\d+)年(\d+)月(\d+)日', time_list[len(time_list)-1])
+      last_time = match.group(1) + '-' + match.group(2) + '-' + match.group(3)
+      last_publish_time = datetime.datetime.strptime(last_time, '%Y-%m-%d').date()
+    except:
+      pass
+
+    if last_publish_time in self.time_range:
+      next_url = xpath.first('//a[@class="next"]/@href')
+      if next_url:
+        yield Request(next_url, callback=self.parse_list)
 
   def parse_news(self, response):
     xpath = XPath(Selector(response))

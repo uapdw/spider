@@ -27,6 +27,10 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     Rule(LinkExtractor(allow=('f?kw=%E7%99%BD%E8%89%B2%E5%AE%B6%E7%94%B5&ie=utf-8&pn=\d+'), restrict_xpaths=('//*[@class="next"]'))),
     Rule(LinkExtractor(allow=('/p/\d+')), callback='parse_thread'),
   )
+    
+  today = datetime.date.today()
+  yesterday = (datetime.date.today() - datetime.timedelta(days=1))
+  time_range = [today, yesterday]
 
   def __init__(self,**kw):
     super(BaisejiadianTiebaSpider,self).__init__(**kw)
@@ -59,7 +63,10 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     except:
       pass
 
-    if not i['publishTime']:
+    if i['publishTime']:
+      if i['publishTime'].date() not in self.time_range:
+        return
+    else:
       i['publishTime'] = datetime.datetime(1970,1,1)
 
     i['abstract'] = ''

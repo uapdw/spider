@@ -25,6 +25,10 @@ class CenaSpider(Spider):
     'http://jydq.cena.com.cn/node_384.htm'
   ]
 
+  today = datetime.date.today()
+  yesterday = (datetime.date.today() - datetime.timedelta(days=1))
+  time_range = [today, yesterday]
+    
   def __init__(self):
     self.host = "172.20.6.61"
     self.port = 9090
@@ -42,17 +46,32 @@ class CenaSpider(Spider):
   def parse_list(self, response):
     xpath = XPath(Selector(response))
     news_url_list = xpath.list('//*[@id="list"]/ul/li/a/@href')
+    time_list = xpath.list('//*[@id="list"]/ul/li/span/text()')
 
     domain_url = self.domain_url(response.url)
 
-    for news_url in news_url_list:
-      if '://' not in news_url:
-        news_url = domain_url + '/' + news_url
-      yield Request(news_url, callback=self.parse_news)
+    for news_url, time in zip(news_url_list, time_list):
+      publish_time = None
+      try:
+        publish_time = datetime.datetime.strptime(time, '%Y-%m-%d').date()
+      except:
+        pass
 
-    next_url = xpath.first('//*[@id="displaypagenum"]/.//a[text()="' + u'下一页' + '"]/@href')
-    if next_url:
-      yield Request(domain_url + '/' + next_url, callback=self.parse_list)
+      if publish_time in self.time_range:
+        if '://' not in news_url:
+          news_url = domain_url + '/' + news_url
+        yield Request(news_url, callback=self.parse_news)
+
+    last_publish_time = None
+    try:
+      last_publish_time = datetime.datetime.strptime(time_list[len(time_list)-1], '%Y-%m-%d').date()
+    except:
+      pass
+
+    if last_publish_time in self.time_range:
+      next_url = xpath.first('//*[@id="displaypagenum"]/.//a[text()="' + u'下一页' + '"]/@href')
+      if next_url:
+        yield Request(domain_url + '/' + next_url, callback=self.parse_list)
 
   def parse_news(self, response):
     # domain_url = self.domain_url(response.url)

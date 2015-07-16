@@ -24,9 +24,13 @@ class JdBBSSpider(CrawlSpider):
   ]
 
   rules = (
-    Rule(LinkExtractor(allow=('forum-43-\d+.html'), restrict_xpaths=('//*[@class="nxt"]'))),
+    Rule(LinkExtractor(allow=('forum-43-\d.html'), restrict_xpaths=('//*[@class="nxt"]'))), #前9页
     Rule(LinkExtractor(allow=('thread-\d+-1-\d+.html')), callback='parse_thread'),
   )
+    
+  today = datetime.date.today()
+  yesterday = (datetime.date.today() - datetime.timedelta(days=1))
+  time_range = [today, yesterday]
 
   def __init__(self,**kw):
     super(JdBBSSpider,self).__init__(**kw)
@@ -67,7 +71,10 @@ class JdBBSSpider(CrawlSpider):
     except:
       pass
 
-    if not i['publishTime']:
+    if i['publishTime']:
+      if i['publishTime'].date() not in self.time_range:
+        return
+    else:
       i['publishTime'] = datetime.datetime(1970,1,1)
 
     i['abstract'] = ''

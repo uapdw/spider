@@ -24,6 +24,8 @@ class Ea3wSpider(Spider):
     'http://icebox.ea3w.com/more/2_6.html',
     'http://washer.ea3w.com/more/2_11.html'
   ]
+    
+  page = 0
 
   def __init__(self):
     self.host = "172.20.6.61"
@@ -50,9 +52,11 @@ class Ea3wSpider(Spider):
       for news_url in news_url_list:
         yield Request(domain_url + news_url, callback=self.parse_news)
 
-      next_url = xpath.first('//*[@class="next"]/@href')
-      if next_url:
-        yield Request(domain_url + next_url, callback=self.parse_list)
+      self.page += 1
+      if self.page < 3: # 前三页
+        next_url = xpath.first('//*[@class="next"]/@href')
+        if next_url:
+          yield Request(domain_url + next_url, callback=self.parse_list)
 
   def parse_news(self, response):
     domain_url = self.domain_url(response.url)

@@ -41,7 +41,7 @@ class Hea163Spider(Spider):
   def parse(self, response):
     yield Request('http://hea.163.com/special/jiadian_data/', callback=self.parse_list)
 
-    for page in range(2, 6):
+    for page in range(2, 6): # 一共就5页
       yield Request('http://hea.163.com/special/jiadian_data_0' + str(page) + '/', callback=self.parse_list)
 
   def parse_list(self, response):
