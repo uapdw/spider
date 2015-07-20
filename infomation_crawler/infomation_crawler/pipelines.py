@@ -168,7 +168,6 @@ class WhpjPipeline(object):
     return item
 
 class WebArticlePipeLine(object):
-  
   def process_item(self, item, spider):
     if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol']:
       return item
@@ -542,17 +541,6 @@ class GovSubPipeLine(object):
 		
 		return item
 class JDBaseInfoPipeLine(object):
-	def __init__(self):
-		self.host = "172.20.6.61"
-		self.port = 9090
-		self.transport = TBufferedTransport(TSocket(self.host, self.port))
-		self.transport.open()
-		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.client = Hbase.Client(self.protocol)
-	
-	def __del__(self):
-		self.transport.close()
-		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDBaseInfo']:
 			return item
@@ -561,7 +549,7 @@ class JDBaseInfoPipeLine(object):
 		data = {'shopurl':item['shopurl'],'shopid':item['shopid']}
 		spider.tJDBaseInfo.update({'shopurl':item['shopurl']},{'$set':data},True)
 		'''
-    #insert item into hbase
+		#insert item into hbase
 		
 		row = hashlib.new("md5",item['url']).hexdigest()
 		
@@ -580,7 +568,6 @@ class JDBaseInfoPipeLine(object):
 		'''
 		return item
 class JDCommDetailPipeLine(object):
-		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDCommDetail']:
 			return item
@@ -630,18 +617,6 @@ class JDCommDetailPipeLine(object):
 		return item
 
 class JDWaresInfoPipeLine(object):
-	def __init__(self):
-		#self.host = "172.20.8.69"
-		self.host = "172.20.6.61"
-		self.port = 9090
-		self.transport = TBufferedTransport(TSocket(self.host, self.port))
-		self.transport.open()
-		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.client = Hbase.Client(self.protocol)
-	
-	def __del__(self):
-		self.transport.close()
-		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDWaresInfo','JDWaresInfoTest','SNDSSPInfo']:
 			return item
@@ -651,7 +626,7 @@ class JDWaresInfoPipeLine(object):
 		#spider.tJdCommDetail.update({'comid':item['comid']},{'$set':data},True)
     #insert item into hbase
 		print item
-		'''
+
 		row = hashlib.new("md5",item['pt_sp_address']).hexdigest()
 		
 		mutations = []
@@ -679,22 +654,10 @@ class JDWaresInfoPipeLine(object):
 		mutations.append(Mutation(column='column:danpin_add_service',value=item['danpin_add_service'].encode("utf8")))
 		#mutations.append(Mutation(column='column:danpin_credit_service',value=item['danpin_credit_service'].encode("utf8")))
 		mutations.append(Mutation(column='column:danpin_service_tips',value=item['danpin_service_tips'].encode("utf8")))
-		self.client.mutateRow('DS_SPinfo',row,mutations,None)
+		spider.client.mutateRow('DS_SPinfo',row,mutations,None)
 		return item
-		'''
+
 class JDSummaryCommPipeLine(object):
-	def __init__(self):
-		#self.host = "172.20.8.69"
-		self.host = "172.20.6.61"
-		self.port = 9090
-		self.transport = TBufferedTransport(TSocket(self.host, self.port))
-		self.transport.open()
-		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.client = Hbase.Client(self.protocol)
-	
-	def __del__(self):
-		self.transport.close()
-		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDSummaryComm']:
 			return item
@@ -717,21 +680,10 @@ class JDSummaryCommPipeLine(object):
 		mutations.append(Mutation(column='column:negative_com_count',value=item['negative_com_count'].encode("utf8")))
 		mutations.append(Mutation(column='column:photo_com_count',value=item['photo_com_count'].encode("utf8")))
 		mutations.append(Mutation(column='column:impression',value=item['impression'].encode("utf8")))
-		self.client.mutateRow('DS_TOTAL_COM',row,mutations,None)
+		spider.client.mutateRow('DS_TOTAL_COM',row,mutations,None)
 		return item
+
 class JDDpInfoTestPipeLine(object):
-	def __init__(self):
-		#self.host = "172.20.8.69"
-		self.host = "172.20.6.61"
-		self.port = 9090
-		self.transport = TBufferedTransport(TSocket(self.host, self.port))
-		self.transport.open()
-		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.client = Hbase.Client(self.protocol)
-	
-	def __del__(self):
-		self.transport.close()
-		
 	def process_item(self, item, spider):
 		if spider.name not in ['JDDpInfoTest']:
 			return item
@@ -758,8 +710,9 @@ class JDDpInfoTestPipeLine(object):
 		mutations.append(Mutation(column='column:Company_city',value=item['Company_city'].encode("utf8")))
 		mutations.append(Mutation(column='column:Surport_service',value=item['Surport_service'].encode("utf8")))
 		mutations.append(Mutation(column='column:service_inf',value=item['service_inf'].encode("utf8")))
-		self.client.mutateRow('DS_DPinfo',row,mutations,None)
+		spider.client.mutateRow('DS_DPinfo',row,mutations,None)
 		return item
+
 class HRDataPipeLine(object):
 	def __init__(self):
 		#self.host = "172.20.8.69"
@@ -817,6 +770,7 @@ class HRDataPipeLine(object):
 		mutations.append(Mutation(column='column:email_contact',value=item['email_contact'].encode("utf8")))
 		self.client.mutateRow('HR_Data',row,mutations,None)
 		return item
+
 class PM25ChinaPipeLine(object):
 	'''
 	def __init__(self):

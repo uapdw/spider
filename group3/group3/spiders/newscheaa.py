@@ -83,6 +83,10 @@ class NewsCheaaSpider(Spider):
       time_str = match.group(1)
       i['source'] = match.group(2)
       i['author'] = match.group(3)
+      try:
+        i['publishTime'] = datetime.datetime.strptime(time_str, '%Y-%m-%d %H:%M')
+      except:
+        pass
     else:
       match = re.match(u'(\d\d\d\d-\d\d-\d\d \d\d:\d\d).*:\s+(\S+)', news_info, re.UNICODE)
       if match:
