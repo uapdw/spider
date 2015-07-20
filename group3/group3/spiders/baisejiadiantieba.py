@@ -9,6 +9,7 @@ from scrapy.selector import Selector
 from group3.items import WebBBSItem
 from urlparse import urlparse
 import datetime
+import re
 from thrift.transport.TSocket import TSocket
 from thrift.transport.TTransport import TBufferedTransport
 from thrift.protocol import TBinaryProtocol
@@ -63,6 +64,15 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     except:
       pass
 
+    if not i['publishTime']:
+      try:
+        postlist = xpath.first('//div[@class="p_postlist"]')
+        match = re.match('.*\D(\d+-\d+-\d+ \d+:\d+)', postlist)
+        time_str = match.group(1)
+        i['publishTime'] = datetime.datetime.strptime(time_str, '%Y-%m-%d %H:%M')
+      except:
+        pass
+    
     if i['publishTime']:
       if i['publishTime'].date() not in self.time_range:
         return

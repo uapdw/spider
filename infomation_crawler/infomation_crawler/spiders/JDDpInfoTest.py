@@ -11,6 +11,12 @@ from BeautifulSoup import BeautifulSoup
 import datetime
 import pymongo
 import re
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
+
 class JDDpInfoTestSpider(CrawlSpider):
 	name = 'JDDpInfoTest'
 	allowed_domain = ['jd.com']
@@ -29,6 +35,13 @@ class JDDpInfoTestSpider(CrawlSpider):
 	start_urls = urls
 
 	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+
 		vdisplay = Xvfb()
 		vdisplay.start()
 		self.driver = webdriver.Firefox()
@@ -46,6 +59,7 @@ class JDDpInfoTestSpider(CrawlSpider):
 	'''
 	def __del__(self):
 		self.driver.close()
+		self.transport.close()
 
 	def parse(self, response):
 		item= JDDpInfoTestItem()

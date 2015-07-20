@@ -6,6 +6,7 @@ from infomation_crawler.items import JDBaseInfoItem
 import datetime
 import pymongo
 import re
+
 class JDBaseInfoSpider(CrawlSpider):
 	name = 'JDBaseInfo'
 	allowed_domain = ['jd.com']
@@ -18,6 +19,7 @@ class JDBaseInfoSpider(CrawlSpider):
 			Rule(SgmlLinkExtractor(allow=("/list.html\?cat=737%2C794%2C878&page=\d+&JL=6_0_0"))),
 			Rule(SgmlLinkExtractor(allow=(r'http://item.jd.com/\d+.html\#comments-list'),restrict_xpaths=('//div[@id="plist"]')),callback='parse_item'),
 			]
+
 	def parse_item(self, response):
 	 item= JDBaseInfoItem()
 	 sel = Selector(response)

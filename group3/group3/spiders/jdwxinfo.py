@@ -75,6 +75,13 @@ class JdwxInfoSpider(CrawlSpider):
     except:
       pass
 
+    if not i['publishTime']:
+      try:
+        time_str = xpath.first('//*[starts-with(@id, "authorposton")]/span/@title')
+        i['publishTime'] = datetime.datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
+      except:
+        pass
+    
     if i['publishTime']:
       if i['publishTime'].date() not in self.time_range:
         return

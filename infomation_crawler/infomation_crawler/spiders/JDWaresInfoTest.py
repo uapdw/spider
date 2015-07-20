@@ -10,6 +10,12 @@ from xvfbwrapper import Xvfb
 import datetime
 import pymongo
 import re
+from thrift.transport.TSocket import TSocket
+from thrift.transport.TTransport import TBufferedTransport
+from thrift.protocol import TBinaryProtocol
+from infomation_crawler.hbase import Hbase
+from infomation_crawler.hbase.ttypes import *
+
 class JDWaresInfoTestSpider(CrawlSpider):
 	name = 'JDWaresInfoTest'
 	allowed_domain = ['jd.com','3.cn']
@@ -23,22 +29,22 @@ class JDWaresInfoTestSpider(CrawlSpider):
 		url = 'http://item.jd.com/' + shopid +'.html'
 		urls.append(url)
 	start_urls = urls
+
 	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+
 		vdisplay = Xvfb()
 		vdisplay.start()
 		self.driver = webdriver.Firefox()
 
-	'''
-	rules = [
-			Rule(SgmlLinkExtractor(allow=("/list.html\?cat=737%2C794%2C878&page=\d+&JL=6_0_0"))),
-			Rule(SgmlLinkExtractor(allow=(r'http://item.jd.com/\d+.html'),restrict_xpaths=('//div[@id="plist"]')),callback='parse_item'),
-	]
-
-	rules = [
-			Rule(SgmlLinkExtractor(allow=(r'http://item.jd.com/\d+.html'),restrict_xpaths=('//div[@id="plist"]')),callback='parse_item'),
-			Rule(SgmlLinkExtractor(allow=("/list.html\?cat=737%2C794%2C878&page=\d+&JL=6_0_0"), restrict_xpaths=("//a[@class='next']"))),
-			]
-	'''
+	def __del__(self):
+		self.driver.close()
+		self.transport.close()
 
 	def parse(self, response):
 		item= JDWaresInfoTestItem()
@@ -156,8 +162,6 @@ class JDWaresInfoTestSpider(CrawlSpider):
 		#print '#' *40
 		#print item['danpin_price']
 		#yield Request(crediturl,meta={'item':item},callback=self.parseCredit)
-	def __del__(self):
-		self.driver.close()
 
 
 	def parseCredit(self, response):
