@@ -9,6 +9,7 @@
 
 
 import re
+import datetime
 from scrapy.spider import Spider
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.selector import Selector
@@ -129,7 +130,10 @@ class Job51JobSpider(Spider):
       elif re.match(u'工作地点',k):
         i['location_position'] = v
       elif re.match(u'发布日期',k):
-        i['release_time'] = v
+        try:
+          i['release_time'] = datetime.datetime.strptime(v, '%Y-%m-%d')
+        except:
+          i['release_time'] = datetime.datetime(1970,1,1)
       elif re.match(u'工作年限',k):
         i['experience_position'] = v
       elif re.match(u'学.*历',k):

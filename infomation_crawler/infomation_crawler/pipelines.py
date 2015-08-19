@@ -15,6 +15,7 @@ import pymongo
 import hashlib
 import time
 import uuid
+from items import NewMotorProductItem, NewMotorRateStastisticItem, NewMotorRateDetailItem, NewMotorRateStastisticItem, NewMotorProductDynamicItem
 class BaiduNewsPipeline(object):
     def process_item(self, item, spider):
       if spider.name not in ['baidu']:
@@ -752,7 +753,7 @@ class HRDataPipeLine(object):
 		mutations.append(Mutation(column='column:keywords_position',value=item['keywords_position'].encode("utf8")))
 		mutations.append(Mutation(column='column:salary_position',value=item['salary_position'].encode("utf8")))
 		mutations.append(Mutation(column='column:location_position',value=item['location_position'].encode("utf8")))
-		mutations.append(Mutation(column='column:release_time',value=item['release_time'].encode("utf8")))
+		mutations.append(Mutation(column='column:release_time',value=item['release_time'].strftime("%Y-%m-%d %H:%M:%S")))
 		mutations.append(Mutation(column='column:nature_position',value=item['nature_position'].encode("utf8")))
 		mutations.append(Mutation(column='column:experience_position',value=item['experience_position'].encode("utf8")))
 		mutations.append(Mutation(column='column:education_demand',value=item['education_demand'].encode("utf8")))
@@ -815,7 +816,7 @@ class PM25ChinaPipeLine(object):
 
 class PublicDemoArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['abi','cena','ea3w','hc360','hea163','jdwxinfo','newscheaa','smarthomeqianjia']:
+    if spider.name not in ['abi','cena','ea3w','hc360','hea163','newscheaa','smarthomeqianjia']:
       return item
 
     print "enter PublicDemoArticlePipeLine...."
@@ -866,6 +867,7 @@ class PublicDemoArticlePipeLine(object):
       mutations.append(Mutation(column='article:author',value=item['author'].encode("utf8")))
       mutations.append(Mutation(column='article:abstract',value=item['abstract'].encode("utf8")))
       mutations.append(Mutation(column='article:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='article:newstype',value=item['newstype'].encode("utf8")))
       mutations.append(Mutation(column='article:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
       mutations.append(Mutation(column='article:content',value=item['content'].encode("utf8")))
       mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
@@ -878,7 +880,7 @@ class PublicDemoArticlePipeLine(object):
 
 class PublicDemoBBSPipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['baisejiadiantieba','bbscheaa','jdbbs']:
+    if spider.name not in ['baisejiadiantieba','bbscheaa','jdbbs','jdwxinfo']:
       return item
 
     print "enter PublicDemoBBSPipeLine...."
@@ -906,3 +908,172 @@ class PublicDemoBBSPipeLine(object):
       mutations.append(Mutation(column='bbs:sentiment',value=''))
       spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
       return item
+
+class PublicDemoBBSNewPipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['zongshen_autohome','zongshen_bbsmoto8','zongshen_motorfans','zongshen_newmotor','zongshen_tieba','zongshen_zongshenmotor']:
+      return item
+
+    print "enter PublicDemoBBSNewPipeLine...."
+    if item['content'] == '':
+      raise DropItem("there is no article item! @@@url=%s" % item['url'])
+    else:
+      row = hashlib.new("md5",item['siteName'] + '_' + item['threadId'] + '_' + item['postId']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='bbsnew:url',value=item['url']))
+      mutations.append(Mutation(column='bbsnew:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:threadId',value=item['threadId'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:postId',value=item['postId'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
+      mutations.append(Mutation(column='bbsnew:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:siteName',value=item['siteName'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='bbsnew:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      mutations.append(Mutation(column='bbsnew:sentiment',value=''))
+      spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
+      return item
+class PublicDemoArticleNewPipeLine(object):
+  def process_item(self, item, spider):
+    if spider.name not in ['chmotor','newmotor','zongs_weixin','zongs_baidu','zongs_hexun','zongs_caijing','zongs_caam','zongshen_haojue','zongshen_lifan','zongshen_wuyanghonda','zongshen_zongshencc']:
+      return item
+
+    print "enter PublicDemoArticlePipeLine...."
+    #print "item num is : %d" % len(spider.itemList)
+    print "*"*50
+
+    print item
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    if item['title'] == '' or item['content'] == '':
+      raise DropItem("there is no article item! @@@url=%s" % item['url'])
+    #elif cmp(item['publishTime'],str(yesterday))!=0 and cmp(item['publishTime'],str(datetime.date.today()))!=0:
+    #  raise DropItem("the article is not fresh! @@@publishTime=%s, url=%s" % (item['publishTime'],item['url']))
+    else:
+      #data = {'title':item['title'],'author':item['author'],'abstract':item['abstract'],'keyWords':item['keyWords'],'publishTime':item['publishTime'],'content':item['content'],'siteName':item['siteName'],'source':item['source'],'addTime':item['addTime']}
+      #spider.tWebArticles.update({'url':item['url']},{'$set':data},True)
+      #insert item into hbase
+    
+      row = hashlib.new("md5",item['url']).hexdigest()
+      mutations = []
+      mutations.append(Mutation(column='article:url',value=item['url']))
+      mutations.append(Mutation(column='article:title',value=item['title'].encode("utf8")))
+      mutations.append(Mutation(column='article:author',value=item['author'].encode("utf8")))
+      mutations.append(Mutation(column='article:abstract',value=item['abstract'].encode("utf8")))
+      mutations.append(Mutation(column='article:keyWords',value=item['keyWords'].encode("utf8")))
+      mutations.append(Mutation(column='article:publishTime',value=item['publishTime'].strftime("%Y-%m-%dT%H:%M:%SZ")))
+      mutations.append(Mutation(column='article:content',value=item['content'].encode("utf8")))
+      mutations.append(Mutation(column='article:siteName',value=item['siteName'].encode("utf8")))
+      mutations.append(Mutation(column='article:source',value=item['source'].encode("utf8")))
+      mutations.append(Mutation(column='article:newstype',value=item['newstype']))
+      mutations.append(Mutation(column='article:addTime',value=item['addTime'].strftime("%Y-%m-%d %H:%M:%S")))
+      mutations.append(Mutation(column='article:sentiment',value=''))
+      spider.client.mutateRow('spider_info_public_demo',row,mutations,None)
+      return item
+   
+
+class NewMotorPipeLine(object):
+	def process_item(self, item, spider):
+		if spider.name not in ['zongshen_mallnewmotor']:
+			return item
+		print "enter NewMotorPipeLine...."
+		
+		print item.__class__.__name__
+
+		if isinstance(item, NewMotorProductItem):
+			print "processing NewMotorProductItem...."
+			row = hashlib.new("md5",item['pt_sp_address']).hexdigest()
+		
+			mutations = []
+			mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address'].encode("utf8")))
+			mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:name',value=item['name'].encode("utf8")))
+			mutations.append(Mutation(column='column:pinlei',value=item['pinlei'].encode("utf8")))
+			mutations.append(Mutation(column='column:dalei',value=item['dalei'].encode("utf8")))
+			mutations.append(Mutation(column='column:xiaolei',value=item['xiaolei'].encode("utf8")))
+			mutations.append(Mutation(column='column:brand',value=item['brand'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_longname',value=item['danpin_longname'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_code',value=item['danpin_code'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_photo',value=item['danpin_photo'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_intro',value=item['danpin_intro'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_spec',value=item['danpin_spec'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_package',value=item['danpin_package'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_slogan',value=item['danpin_slogan'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_price',value=item['danpin_price'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_stock',value=item['danpin_stock'].encode("utf8")))	
+			mutations.append(Mutation(column='column:danpin_service_tips',value=item['danpin_service_tips'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_sale',value=item['danpin_sale'].encode("utf8")))
+
+			mutations.append(Mutation(column='column:fuel_economy',value=item['fuel_economy'].encode("utf8")))
+			mutations.append(Mutation(column='column:full_weight',value=item['full_weight'].encode("utf8")))
+			mutations.append(Mutation(column='column:cylinders_count',value=item['cylinders_count'].encode("utf8")))
+			mutations.append(Mutation(column='column:rim',value=item['rim'].encode("utf8")))
+			mutations.append(Mutation(column='column:fuel_capacity',value=item['fuel_capacity'].encode("utf8")))
+			mutations.append(Mutation(column='column:maximum_torque',value=item['maximum_torque'].encode("utf8")))
+			mutations.append(Mutation(column='column:clearance',value=item['clearance'].encode("utf8")))
+			mutations.append(Mutation(column='column:cooling',value=item['cooling'].encode("utf8")))
+			mutations.append(Mutation(column='column:brake',value=item['brake'].encode("utf8")))
+			mutations.append(Mutation(column='column:rear_wheel_size',value=item['rear_wheel_size'].encode("utf8")))
+			mutations.append(Mutation(column='column:environmental_standards',value=item['environmental_standards'].encode("utf8")))
+			mutations.append(Mutation(column='column:wheel_count',value=item['wheel_count'].encode("utf8")))
+			mutations.append(Mutation(column='column:compression_ratio',value=item['compression_ratio'].encode("utf8")))
+			mutations.append(Mutation(column='column:oil_supply',value=item['oil_supply'].encode("utf8")))
+			mutations.append(Mutation(column='column:top_speed',value=item['top_speed'].encode("utf8")))
+			mutations.append(Mutation(column='column:clutch',value=item['clutch'].encode("utf8")))
+			mutations.append(Mutation(column='column:stroke',value=item['stroke'].encode("utf8")))
+			mutations.append(Mutation(column='column:release_time',value=item['release_time'].strftime("%Y-%m-%d %H:%M:%S")))
+			mutations.append(Mutation(column='column:available_colors',value=item['available_colors'].encode("utf8")))
+			mutations.append(Mutation(column='column:empty_weight',value=item['empty_weight'].encode("utf8")))
+			mutations.append(Mutation(column='column:transmission_type',value=item['transmission_type'].encode("utf8")))
+			mutations.append(Mutation(column='column:engine_displacement',value=item['engine_displacement'].encode("utf8")))
+			mutations.append(Mutation(column='column:wheelbase',value=item['wheelbase'].encode("utf8")))
+			mutations.append(Mutation(column='column:seat_height',value=item['seat_height'].encode("utf8")))
+			mutations.append(Mutation(column='column:size',value=item['size'].encode("utf8")))
+			mutations.append(Mutation(column='column:production_status',value=item['production_status'].encode("utf8")))
+			mutations.append(Mutation(column='column:starting_method',value=item['starting_method'].encode("utf8")))
+			mutations.append(Mutation(column='column:front_wheel_size',value=item['front_wheel_size'].encode("utf8")))
+			mutations.append(Mutation(column='column:maximum_power',value=item['maximum_power'].encode("utf8")))
+			spider.client.mutateRow('ds_motor_danpin',row,mutations,None)
+		
+		elif isinstance(item,NewMotorProductDynamicItem):
+			print "processing NewMotorProductDynamicItem...."
+			row = hashlib.new("md5",item['pt_sp_address'] + item['crawl_time'].strftime("%Y-%m-%d %H:%M:%S")).hexdigest()
+		
+			mutations = []
+			mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address'].encode("utf8")))
+			mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:crawl_time',value=item['crawl_time'].strftime("%Y-%m-%d %H:%M:%S")))
+			mutations.append(Mutation(column='column:danpin_sale',value=item['danpin_sale'].encode("utf8")))	
+			mutations.append(Mutation(column='column:danpin_price',value=item['danpin_price'].encode("utf8")))
+			spider.client.mutateRow('ds_motor_danpin_dynamic',row,mutations,None)
+
+		elif isinstance(item,NewMotorRateStastisticItem):
+			print "processing NewMotorRateStastisticItem...."
+			row = hashlib.new("md5",item['pt_sp_address']).hexdigest()
+		
+			mutations = []
+			mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address'].encode("utf8")))
+			mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:com_count',value=item['com_count'].encode("utf8")))
+			mutations.append(Mutation(column='column:positive_com_count',value=item['positive_com_count'].encode("utf8")))	
+			mutations.append(Mutation(column='column:moderate_com_count',value=item['moderate_com_count'].encode("utf8")))
+			mutations.append(Mutation(column='column:negative_com_count',value=item['negative_com_count'].encode("utf8")))
+			spider.client.mutateRow('ds_motor_com_total',row,mutations,None)
+
+		elif isinstance(item,NewMotorRateDetailItem):
+			print "processing NewMotorRateDetailItem...."
+			row = hashlib.new("md5",item['pt_sp_address'] + '_' + item['com_id'].encode("utf8") + '_' + item['com_establish_time'].strftime("%Y-%m-%d %H:%M:%S")).hexdigest()
+		
+			mutations = []
+			mutations.append(Mutation(column='column:pt_sp_address',value=item['pt_sp_address'].encode("utf8")))
+			mutations.append(Mutation(column='column:pt_name',value=item['pt_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:danpin_name',value=item['danpin_name'].encode("utf8")))
+			mutations.append(Mutation(column='column:com_feel',value=item['com_feel'].encode("utf8")))
+			mutations.append(Mutation(column='column:com_id',value=item['com_id'].encode("utf8")))	
+			mutations.append(Mutation(column='column:com_establish_time',value=item['com_establish_time'].strftime("%Y-%m-%d %H:%M:%S")))
+			spider.client.mutateRow('spider_ds_motor_com_detail',row,mutations,None)
+

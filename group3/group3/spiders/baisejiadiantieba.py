@@ -10,6 +10,7 @@ from group3.items import WebBBSItem
 from urlparse import urlparse
 import datetime
 import re
+import json
 from thrift.transport.TSocket import TSocket
 from thrift.transport.TTransport import TBufferedTransport
 from thrift.protocol import TBinaryProtocol
@@ -47,6 +48,14 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     self.transport.close()
 
   def parse_thread(self, response):
+        
+    threadId = None
+    try:
+      match = re.match('.*p/(\d+)', response.url)
+      threadId = match.group(1)
+    except Exception as e:
+      print 'can not find threadId on url: ', response.url, '\n', e
+      raise e
 
     xpath = XPath(Selector(response))
     i = WebBBSItem()
@@ -54,6 +63,13 @@ class BaisejiadianTiebaSpider(CrawlSpider):
     i['title'] = xpath.first('//*[@class="core_title_txt  "]/@title')
     i['author'] = xpath.first('//*[@class="p_author"]/*[@class="d_name"]/a/text()')
     i['url'] = response.url
+    
+    i['threadId'] = threadId
+
+    data_field = xpath.first('//*[contains(@class, "l_post_bright")]/@data-field')
+    data_dict = json.loads(data_field)
+    i['postId'] = str(data_dict['content']['post_id'])
+    
     i['source'] = ''
 
     i['publishTime'] = None

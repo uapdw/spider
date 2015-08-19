@@ -139,6 +139,7 @@ class SmarthomeQianjiaSpider(Spider):
     i['content'] = xpath.first('//*[@id="detail-con"]')
 
     i['siteName'] = u'中国智能家居网'
+    i['newstype'] = u'家电'
     i['addTime'] = datetime.datetime.now()
 
     #self.itemList.append(i)

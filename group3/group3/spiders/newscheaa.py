@@ -108,6 +108,7 @@ class NewsCheaaSpider(Spider):
     i['abstract'] = xpath.first('//*[@name="description"]/@content')
     i['keyWords'] = xpath.first('//*[@name="keywords"]/@content')
     i['siteName'] = u'中国家电信息网'
+    i['newstype'] = u'家电'
     i['content'] = xpath.first('//*[@id="ctrlfscont"]')
     i['addTime'] = datetime.datetime.now()
 

@@ -115,6 +115,7 @@ class CenaSpider(Spider):
     i['content'] = xpath.first('//*[@id="artbody"]')
 
     i['siteName'] = u'电子信息产业网'
+    i['newstype'] = u'家电'
     i['addTime'] = datetime.datetime.now()
 
     return i

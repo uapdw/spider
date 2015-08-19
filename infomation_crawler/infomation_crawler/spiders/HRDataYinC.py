@@ -56,7 +56,11 @@ class HRDataYinCSpider(CrawlSpider):
 		location_position = sel.xpath('//p[@class="infoMa"]/a/text()').extract()
 		i['location_position'] = len(location_position)>0 and location_position[0].strip() or ''
 		release_time = sel.xpath('//span[@class="detail_C_Date fl"]/text()').extract()
-		i['release_time'] = len(release_time)>0 and release_time[0].split(u'\uff1a')[1].strip() or ''
+		time_str = len(release_time)>0 and release_time[0].split(u'\uff1a')[1].strip() or ''
+		try:
+                        i['release_time'] = datetime.datetime.strptime(time_str, '%Y-%m-%d')
+                except:
+                        i['release_time'] = datetime.datetime(1970,1,1)
 		nature_position = sel.xpath('//div[@class="job_desc"]/p[2]/text()').extract()
 		i['nature_position'] = len(nature_position)>0 and nature_position[0].split(u'\uff1a')[1].strip() or ''
 		experience_position = sel.xpath('//div[@class="detail_C_info"]/span[3]/text()').extract()

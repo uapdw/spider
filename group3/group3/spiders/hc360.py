@@ -109,6 +109,7 @@ class Hc360Spider(Spider):
       i['content'] = '\r\n'.join(xpath.list('//*[@id="artical"]/p'))
 
       i['siteName'] = u'慧聪家电网'
+      i['newstype'] = u'家电'
       i['addTime'] = datetime.datetime.now()
     else:
       i = response.meta['item']

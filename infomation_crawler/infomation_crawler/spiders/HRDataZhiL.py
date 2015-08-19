@@ -63,7 +63,11 @@ class HRDataZhiLSpider(CrawlSpider):
 		location_position = sel.xpath('//ul[@class="terminal-ul clearfix"]/li[2]/strong/a/text()').extract()
 		i['location_position'] = len(location_position)>0 and location_position[0].strip() or ''
 		release_time = sel.xpath('//ul[@class="terminal-ul clearfix"]/li[3]/strong/span/text()').extract()
-		i['release_time'] = len(release_time)>0 and release_time[0].strip() or ''
+		time_str = len(release_time)>0 and release_time[0].strip() or ''
+		try:
+			i['release_time'] = datetime.datetime.strptime(time_str, '%Y-%m-%d')
+		except:
+			i['release_time'] = datetime.datetime(1970,1,1)
 		nature_position = sel.xpath('//ul[@class="terminal-ul clearfix"]/li[4]/strong/text()').extract()
 		i['nature_position'] = len(nature_position)>0 and nature_position[0].strip() or ''
 		experience_position = sel.xpath('//ul[@class="terminal-ul clearfix"]/li[5]/strong/text()').extract()

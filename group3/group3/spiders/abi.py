@@ -99,6 +99,7 @@ class AbiSpider(Spider):
     i['content'] = xpath.first('//*[@id="content"]')
 
     i['siteName'] = u'艾肯家电网'
+    i['newstype'] = u'家电'
     i['addTime'] = datetime.datetime.now()
 
     return i

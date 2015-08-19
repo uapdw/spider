@@ -134,6 +134,7 @@ class Ea3wSpider(Spider):
         break
 
     i['siteName'] = u'万维家电网'
+    i['newstype'] = u'家电'
     i['addTime'] = datetime.datetime.now()
 
     return i

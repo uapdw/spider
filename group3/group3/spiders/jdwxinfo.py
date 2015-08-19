@@ -50,6 +50,18 @@ class JdwxInfoSpider(CrawlSpider):
 
   def parse_thread(self, response):
 
+    threadId = None
+    try:
+      match = re.match('.*thread-(\d+)-1-\d+.html', response.url)
+      if match:
+        threadId = match.group(1)
+      if not threadId:
+        match = re.match('.*mod=viewthread&tid=(\d+)', response.url)
+        threadId = match.group(1)
+    except Exception as e:
+      print 'can not find threadId on url: ', response.url, '\n', e
+      raise e
+        
     xpath = XPath(Selector(response))
     i = WebBBSItem()
 
@@ -62,6 +74,10 @@ class JdwxInfoSpider(CrawlSpider):
       return
 
     i['url'] = response.url
+    
+    i['threadId'] = threadId
+    i['postId'] = xpath.first('//*[@ id="postlist"]/div[starts-with(@id, "post_")][1]/@id')
+
     i['source'] = ''
 
     i['publishTime'] = None

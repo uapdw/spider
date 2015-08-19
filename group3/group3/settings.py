@@ -27,9 +27,12 @@ ITEM_PIPELINES = {
 	'group3.pipelines.GovSubPipeLine':20,
 	'group3.pipelines.PublicDemoArticlePipeLine':21,
 	'group3.pipelines.PublicDemoBBSPipeLine':22,
+        'group3.pipelines.PublicDemoBBSNewPipeLine':23,
+        'group3.pipelines.PublicDemoArticleNewPipeLine':24,
+	'group3.pipelines.NewMotorPipeLine':25,
 	}
 USER_AGENT = fake.internet_explorer()
-
+#USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.54 Safari/536.5'
 '''
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 1
@@ -37,7 +40,7 @@ AUTOTHROTTLE_MAX_DELAY = 10
 AUTOTHROTTLE_DEBUG = True
 '''
 
-DOWNLOAD_DELAY = 0
+#DOWNLOAD_DELAY = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 8
 CONCURRENT_REQUESTS = 16
 DOWNLOAD_TIMEOUT = 10
