@@ -1016,7 +1016,7 @@ $(document).ready(function(){
 
 	var indexName = "web-articles";
 	var typeName = "article";
-	var rowNum = 20;
+	var rowNum = 10;
 	for (var i = 0; i<arrCate.length; i++) {
 		console.log(arrCate[i] + "##" + arrKeywords[i]);
 		if (arrCate[i] == 'yjbg-gartner' || arrCate[i] == 'yjbg-idc') {
@@ -1037,7 +1037,7 @@ $(document).ready(function(){
 			rowNum = 6;
 		} else {
 			typeName = 'article';
-			rowNum = 20;
+			rowNum = 10;
 		};
 		searchKeywords(arrCate[i],arrKeywords[i],indexName,typeName,rowNum);	
 		
