@@ -37,23 +37,40 @@ a{
     <td valign="top"">
 			<table width="100%" align="center" border="0" cellspacing="0" cellpadding="6">
           <tr>
-            <td width="30%"  style="padding-left:40px;vertical-align:top;"><div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span></div>
-              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">34个</span></div>
-							<!--
+            <td width="30%"  style="padding-left:40px;vertical-align:top;">
+              <!--
+              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span></div>
+              <div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">用友、用友BQ、用友HCM、用友NC、用友U8、用友U9、用友iUAP、用友杜宇、用友电商、用友移动、甲骨文、电商、电商运营、电商通、百度、移动CRM、章培林等127个关键词</span></div>
+							
 							<div><span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">采集数据:&nbsp;</span><span style="color:#666666;font-family:微软雅黑;font-size:12px;">总信息8477</span></div>
-						-->
+						  -->
 						</td>
-						<td style="padding-bottom:20px;">
+						<td >
 							<div style="color:#c00000;font-size:25px;line-height:27px;text-align:center;font-family:黑体;" ><strong>每&nbsp;日&nbsp;信&nbsp;息&nbsp;概&nbsp;览</strong></div>
 					 </td>
 					 <td style="text-align:right;padding-right:40px;">
-						 <div>
+						 <div style="height:50px;width:100px;">&nbsp;</div>
+             <!--
+             <div style="height:100px;">
 							 <img src="http://udn.yyuap.com/techreport/images/100x100.jpg" />
 						 </div>
 						 <div style="font-size: 14px; font-family: 微软雅黑; font-weight: bold; color: #656565;">
 								QQ:175616067
 						 </div>
+             -->
 					 </td>
+          </tr>
+          <tr>
+            <td colspan="4" style="padding-left:40px;">
+              <div>
+                <span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;</span>
+                <span style="color:#666666;font-family:微软雅黑;font-size:12px;" id="spanDate"></span>
+              </div>
+              <div>
+                <span style="font-size:14px;font-family:微软雅黑;font-weight:bold;color:#656565;">关&nbsp;&nbsp;键&nbsp;&nbsp;词:&nbsp;</span>
+                <span style="color:#666666;font-family:微软雅黑;font-size:12px;">用友、用友BQ、用友HCM、用友NC、用友U8、用友U9、用友iUAP、用友电商、用友移动等127个关键词</span>
+              </div>
+            </td>
           </tr>
 			</table>
 			<!--
@@ -820,6 +837,16 @@ a{
             <td  "><span style="font-size:13px;font-family:微软雅黑;">面向用友集团iUAP中心各类产品与技术研发人员，聚焦业内领先技术应用的搜集与数据分析，提供全面的定制化技术类与应用类资讯，支持。我们期望帮助您在互联网时代的产品研发与技术应用中，最快的感知变化，最快的获取支持，进而打造业内领先的企业信息化技术平台。
 </span></td>
           </tr>
+          <tr>
+            <td>
+              <div style="height:100px;">
+               <img src="http://udn.yyuap.com/techreport/images/100x100.jpg" />
+              </div>
+              <div style="font-size: 14px; font-family: 微软雅黑; font-weight: bold; color: #656565;">
+                QQ:175616067
+              </div>
+            </td>
+          </tr>
         </table>
       </td>
   </tr>
@@ -907,43 +934,41 @@ $(document).ready(function(){
 	      if(json.hits.total == 0){
 		//alert('没有您要搜索的数据！');
 	      }else{
-		$.each(json.hits.hits,function(i,v){
-		  data = v._source
-		  dataHighLight = v.highlight
-		  if(cateId == 'zmt-weibo'){
-		    var userUrl = "http://weibo.com/u/" + data.user_id
-		    var screenName = data.screen_name
-		    var content = data.content
-		    var commentsNum = data.comments_count
-		    var repostsNum = data.reposts_count
-		    var strNewRow = '<table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  > <tr> <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://img.t.sinajs.cn/t5/style/images/face/male_180.png" width="54" height="54" /></td> <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top"> <a style="color: #006A92;font-weight: bold;" href="' + userUrl + '">' + screenName + '</a> <span>' + content + '</span> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="left" style="color: #7195A7;font-size:11px; "> 来自新浪微博</td> <td align="right" style="color: #7195A7;font-size:11px;">转发(' + repostsNum + ') | 评论(' + commentsNum + ')</td> </tr> </table></td> </tr> </table>'
-		    $("#"+cateId+"").append(strNewRow);
-			}else if(cateId == 'zmt-blog'){
-		    var title = data.title
-		    var sitename = data.sitename
-		    var publishtime = (data.addtime).replace("T"," ")
-		    var url = data.url
-		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
-		    $("#"+cateId+" tbody").append(strNewRow);
-			}else if(cateId == 'hyhd'){
-		    var title = data.title
-		    var sitename = data.sitename
-		    var timeStr = data.time
-		    var url = data.url
-		    //var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
-				var strNewRow = '<tr> <td style="padding-left:40px; "><li><a href="'+url+'"> <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+timeStr+'</span></li> </td> </tr>'
-		    $("#"+cateId+" tbody").append(strNewRow);
-		  }else{
-		    var title = data.title
-		    var sitename = data.sitename
-		    var publishtime = (data.publishtime).replace("T"," ")
-		    var url = data.url
-		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
-		    $("#"+cateId+" tbody").append(strNewRow);
-		  }
-
-
-		});
+      		$.each(json.hits.hits,function(i,v){
+      		  data = v._source
+      		  dataHighLight = v.highlight
+      		  if(cateId == 'zmt-weibo'){
+      		    var userUrl = "http://weibo.com/u/" + data.user_id
+      		    var screenName = data.screen_name
+      		    var content = data.content
+      		    var commentsNum = data.comments_count
+      		    var repostsNum = data.reposts_count
+      		    var strNewRow = '<table width="85%" align="center"  border="0" cellspacing="0" cellpadding="0"  > <tr> <td  width="64"  style="float:left;padding-top:10px;"valign="top" ><img src="http://img.t.sinajs.cn/t5/style/images/face/male_180.png" width="54" height="54" /></td> <td width="591" style="float:left padding-left:30px;font-size:14px;padding-top:10px;font-family:微软雅黑;" valign="top"> <a style="color: #006A92;font-weight: bold;" href="' + userUrl + '">' + screenName + '</a> <span>' + content + '</span> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td align="left" style="color: #7195A7;font-size:11px; "> 来自新浪微博</td> <td align="right" style="color: #7195A7;font-size:11px;">转发(' + repostsNum + ') | 评论(' + commentsNum + ')</td> </tr> </table></td> </tr> </table>'
+      		    $("#"+cateId+"").append(strNewRow);
+      			}else if(cateId == 'zmt-blog'){
+      		    var title = data.title
+      		    var sitename = data.sitename
+      		    var publishtime = (data.addtime).replace("T"," ")
+      		    var url = data.url
+      		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+      		    $("#"+cateId+" tbody").append(strNewRow);
+      			}else if(cateId == 'hyhd'){
+      		    var title = data.title
+      		    var sitename = data.sitename
+      		    var timeStr = data.time
+      		    var url = data.url
+      		    //var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+      				var strNewRow = '<tr> <td style="padding-left:40px; "><li><a href="'+url+'"> <span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span> <span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+timeStr+'</span></li> </td> </tr>'
+      		    $("#"+cateId+" tbody").append(strNewRow);
+      		  }else{
+      		    var title = data.title
+      		    var sitename = data.sitename
+      		    var publishtime = (data.publishtime).replace("T"," ")
+      		    var url = data.url
+      		    var strNewRow = '<tr><td style="padding-left:40px; "><li><a target="_blank" href="'+url+'"><span style="color:#006A92;font-size:15px;font-family:微软雅黑;">'+title+'</span></a><span style="color:#888888;font-size:11px;font-family:微软雅黑;"> '+sitename+'</span></li></td></tr>'
+      		    $("#"+cateId+" tbody").append(strNewRow);
+      		  }
+      		});
 	      }
 	    }, function(err){
 	      console.trace(err.message);
@@ -1014,7 +1039,7 @@ $(document).ready(function(){
 		"_all"
 	)
 
-	var indexName = "web-articles";
+	var indexName = "test-articles";
 	var typeName = "article";
 	var rowNum = 10;
 	for (var i = 0; i<arrCate.length; i++) {
