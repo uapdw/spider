@@ -871,8 +871,16 @@ a{
 <script src="js/utils.js"></script>
 <script>
 $(document).ready(function(){
-  var objDate = new Date();
-	$("#spanDate").text(objDate.toLocaleDateString());
+  function addDate(date,days){ 
+       var d=new Date(date); 
+       d.setDate(d.getDate()+days); 
+       var m=d.getMonth()+1; 
+       return d.getFullYear()+'年'+m+'月'+d.getDate()+'日'; 
+  } 
+
+  var today = new Date();
+  var yesterday = addDate(today,-7);
+	$("#spanDate").text(yesterday + '——' + today.toLocaleDateString());
 
 	var client = $.es.Client({
 		//hosts: '172.20.8.3:9200',
