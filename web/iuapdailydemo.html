@@ -881,7 +881,7 @@ $(document).ready(function(){
   } 
 
   var today = new Date();
-  var yesterday = addDate(today,-7);
+  var yesterday = addDate(today,-3);
 	$("#spanDate").text(yesterday + '——' + today.toLocaleDateString());
 
 	var client = $.es.Client({
@@ -893,7 +893,7 @@ $(document).ready(function(){
 	var searchKeywords = function(cateId,keyword,indexName,typeName,num){
 	  var query = '';
 		var orderStr = 'publishtime:desc,addtime:desc';
-    var filterStr = 'filtered: {filter: {"range": {"publishtime": {"from": "now-7d/d","to":"now"}}}}'
+    var filterStr = 'filtered: {filter: {"range": {"publishtime": {"from": "now-3d/d","to":"now"}}}}'
     var bodyStr = '{query:{match:{title:"'+ keyword +'"},'+filterStr+'}}'
 	  if(cateId == 'zmt-weibo'){
 	    //query = 'content:'+keyword
