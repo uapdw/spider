@@ -65,8 +65,11 @@ class CcidnetSpider(CrawlSpider):
     publishTime = authorStrList[0].split('：')[1]
     pubTime = datetime.datetime.strptime(publishTime,'%Y-%m-%d')
 
-    if pubTime and pubTime.date() not in self.time_range:
-      raise DropItem('publishTime is out of the time range: %s' % publishTime)
+    try:
+      if pubTime and pubTime.date() not in self.time_range:
+        raise DropItem('publishTime is out of the time range: %s' % publishTime)
+    except:
+      return i
 
     i['title'] = xpath.first('//div[@class="nr_cont1 F_Left"]/h2/text()')
     i['url'] = response.url
