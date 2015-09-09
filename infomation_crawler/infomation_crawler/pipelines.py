@@ -170,7 +170,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol', 'article_100ec', 'article_kn58', 'article_myzaker', 'article_s3d4', 'article_tsci', 'article_toutiao', 'article_cbismb','article_qq_finance','article_sohu_it']:
+    if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol', 'article_100ec', 'article_kn58', 'article_myzaker', 'article_s3d4', 'article_tsci', 'article_toutiao', 'article_cbismb','article_qq_finance','article_sohu_it','article_spn_news']:
       return item
 
     print "enter WebArticlePipeLine...."

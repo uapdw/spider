@@ -897,7 +897,7 @@ $(document).ready(function(){
     var bodyStr = '{query:{match:{title:"'+ keyword +'"},'+filterStr+'}}'
 	  if(cateId == 'zmt-weibo'){
 	    //query = 'content:'+keyword
-			bodyStr = '{query:{match:{content:"'+ keyword +'"},'+filterStr+'}}'
+			bodyStr = '{query:{match:{content:"'+ keyword +'"}}}'
 			orderStr = 'publishtime:desc';
 	  }else if(cateId == 'yjbg-gartner'){
 			//query = 'sitename:gartner'
@@ -908,7 +908,7 @@ $(document).ready(function(){
 			orderStr = 'publishtime:desc';
 	  }else if(cateId == 'zmt-blog'){
 	    //query = 'title:'+keyword
-			bodyStr = '{query:{match:{title:"'+ keyword +'"},'+filterStr+'}}'
+			bodyStr = '{query:{match:{title:"'+ keyword +'"}}}'
 			orderStr = 'addtime:desc'
 	  }else if(cateId == 'hyhd'){
 	    //query = 'sitename:csdn'
@@ -1033,8 +1033,9 @@ $(document).ready(function(){
     "用友优普 企业空间",
     "畅捷通",
     "用友超客",
-		"HADOOP 开源 JAVA 数据挖掘 商业分析",
-		"开源 JAVA HADOOP 数据挖掘 商业分析",
+		"用友 用友BQ 用友HCM 用友NC 用友U8 用友U9 用友iUAP 用友电商 用友移动 HADOOP 开源 JAVA 数据挖掘 商业分析",
+    // "用友 用友BQ 用友HCM 用友NC 用友U8 用友U9 用友iUAP 用友电商 用友移动 开源 JAVA HADOOP 数据挖掘 商业分析",
+		"用友",
 		"CIO 俱乐部 IT规划 实施方法论",
 		"_all"
 	)
