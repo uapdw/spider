@@ -170,7 +170,7 @@ class WhpjPipeline(object):
 
 class WebArticlePipeLine(object):
   def process_item(self, item, spider):
-    if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol', 'article_100ec', 'article_kn58', 'article_myzaker', 'article_s3d4', 'article_tsci', 'article_toutiao', 'article_cbismb']:
+    if spider.name not in ['jinghua','newshexun','qudong','sciencechina','yesky','pcpop','gmw','cctime','csdn','it168','chinabyte','zdnet','iresearchNews','dsj','techweb','dataguru','huxiu','chinaCloud','yidonghua','cbinews','ceocio','ctocio','chinacloud','chinamobile','leiphone','ctociocn','199it','sina','tech163','techqq','ifeng','sohu','net_baidu','ciotimes','ccidnet','donews','baidubaijia','cnddr','itbear','itpub','ynet','yos','zol', 'article_100ec', 'article_kn58', 'article_myzaker', 'article_s3d4', 'article_tsci', 'article_toutiao', 'article_cbismb', 'article_doit', 'article_ceweekly', 'article_huanqiu', 'article_xinmin', 'article_gmw', 'article_chinacaixin']:
       return item
 
     print "enter WebArticlePipeLine...."
@@ -210,7 +210,7 @@ class WebBlogPipeLine(object):
     self.transport.close()
 
   def process_item(self, item, spider):
-    if spider.name not in ['iteye']:
+    if spider.name not in ['iteye', 'blog_sina']:
       return item
 
     print "enter WebBlogPipeLine...."
@@ -464,6 +464,41 @@ class DaniangWeiBoPipeLine(object):
       self.client.mutateRow('',row,mutations,None)
 			'''
 			return item
+class WeiboPipeLine(object):
+	def __init__(self):
+		self.host = "172.20.6.61"
+		self.port = 9090
+		self.transport = TBufferedTransport(TSocket(self.host, self.port))
+		self.transport.open()
+		self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+		self.client = Hbase.Client(self.protocol)
+		
+	def __del__(self):
+		self.transport.close()
+		
+	def process_item(self, item, spider):
+		if spider.name not in ['weibo_sina']:
+			return item
+		
+		print "enter WeiboPipeLine...."
+		#print item['userurl']
+		if item['created_at'] == '':
+			raise DropItem("there is no activity item! @@@url=%s" % item['weibourl'])
+		else:
+			row = hashlib.new("md5",item['weibo_url'].encode('utf-8')).hexdigest()
+			mutations = []
+			mutations.append(Mutation(column='weibo:content',value=item['content'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:comments_count',value=item['comments_count'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:created_at',value=item['created_at'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:user_id',value=item['user_id'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:reposts_count',value=item['reposts_count'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:screen_name',value=item['screen_name'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:weibo_url',value=item['weibo_url'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:user_url',value=item['user_url'].encode('utf-8')))
+			mutations.append(Mutation(column='weibo:user_icon',value=item['user_icon'].encode('utf-8')))
+			spider.client.mutateRow('info_public_monitor',row,mutations,None)
+			return item
+
 class DaniangWeiXinPipeLine(object):
 	def __init__(self):
 		self.host = "172.20.6.61"

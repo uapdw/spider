@@ -291,6 +291,17 @@ class WeiBoItem(Item):
 	weibourl = Field()
 	userurl = Field()
 
+class WeiboItem(Item):
+	content = Field()
+	comments_count = Field()
+	created_at = Field()
+	user_id = Field()
+	reposts_count = Field()
+	screen_name = Field()
+	weibo_url = Field()
+	user_url = Field()
+	user_icon = Field()
+
 class WeiXinItem(Item):
 	image = Field()
 	title = Field()
