@@ -42,8 +42,11 @@ class CcidnetSpider(CrawlSpider):
   time_range = [today, yesterday]
 
   rules = (
-    Rule(SgmlLinkExtractor(allow=r'www\.ccidnet\.com/\d{4}/\d{4}/\d+.shtml'), callback='parse_item'),
+    Rule(SgmlLinkExtractor(allow=r'www\.ccidnet\.com/\d{4}/\d{4}/\d+\.shtml'), callback='parse_item'),
+    Rule(SgmlLinkExtractor(allow=r'www\.ccidnet\.com/[A-Za-z]+/[A-Za-z]+/$'), callback='parse_list'),
+    Rule(SgmlLinkExtractor(allow=r'www\.ccidnet\.com/[A-Za-z]+/[A-Za-z]+/\d+\.shtml$'), callback='parse_list'),
   )
+
 
   def __init__(self,**kw):
     super(CcidnetSpider,self).__init__(**kw)
@@ -54,8 +57,32 @@ class CcidnetSpider(CrawlSpider):
     self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
     self.client = Hbase.Client(self.protocol)
 
+
   def __del__(self):
     self.transport.close()
+
+
+  def parse_list(self, response):
+    print "enter parse_list...."
+
+    xpath = XPath(Selector(response))
+
+    urlList = [url for url in (xpath.list('//div[@class="nr_cont1 F_Left"]//div[@class="plist1 "]/div[@class="plist1_p F_Right"]/h2/a/@href') if len(xpath.list('//div[@class="nr_cont1 F_Left"]//div[@class="plist1 "]/div[@class="plist1_p F_Right"]/h2/a/@href'))>0 else xpath.list('//div[@class="nr_cont1 F_Left"]//div[@class="plist11 "]/div[@class="plist11_p F_Left"]/h2/a/@href'))]
+    for url in urlList:
+      yield Request(url, callback=self.parse_item)
+
+    pageList = xpath.list('//div[@class="fy"]/li/a/@href')
+    # print pageList
+
+    if len(pageList) > 0:
+      for url in pageList:
+        if 'javascript' in url:
+          continue
+        else:
+          yield Request(url, callback=self.parse_list)
+    # print pageList
+    # pageList = [url for url in xpath.list('//div[@class="fy"]/')]
+
 
   def parse_item(self, response):
     xpath = XPath(Selector(response))
@@ -69,6 +96,8 @@ class CcidnetSpider(CrawlSpider):
       if pubTime and pubTime.date() not in self.time_range:
         raise DropItem('publishTime is out of the time range: %s' % publishTime)
     except:
+      i['title'] = ''
+      i['url'] = response.url
       return i
 
     i['title'] = xpath.first('//div[@class="nr_cont1 F_Left"]/h2/text()')
