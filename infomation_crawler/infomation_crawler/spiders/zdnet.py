@@ -58,7 +58,13 @@ class ZdnetSpider(CrawlSpider):
     if i['author'] == '':
       i['author'] = len(source)>2 and source[-2] or ''
     
-    dateStr = i['url'].split('/')[4]+i['url'].split('/')[5]
+    if len(i['url'].split('/')) == 7:
+      dateStr = i['url'].split('/')[4]+i['url'].split('/')[5]
+    elif len(i['url'].split('/')) == 6:
+      dateStr = i['url'].split('/')[3]+i['url'].split('/')[4]
+    else:
+      dateStr = '19700101'
+
     i['publishTime'] = datetime.datetime.strftime(datetime.datetime.strptime(dateStr,'%Y%m%d'),'%Y-%m-%d')
 
     # pubTime = len(_info)>0 and _info[0].strip().split()[1] or str('1970-01-01')
