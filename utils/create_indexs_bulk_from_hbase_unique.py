@@ -321,7 +321,7 @@ def main():
   print " "
   
   ic = ESIndexCreator()
-  ic.createAllIndex('test-articles')
+  ic.createAllIndex('web-articles')
   #ic.getAllTablesInfo()
 
 if __name__ == "__main__":
