@@ -58,8 +58,11 @@ class ZdnetSpider(CrawlSpider):
     if i['author'] == '':
       i['author'] = len(source)>2 and source[-2] or ''
     
-    pubTime = len(_info)>1 and _info[1].strip().split()[0] or str(datetime.date.today())
-    i['publishTime'] = pubTime.replace(u'\u5e74','-').replace(u'\u6708','-').replace(u'\u65e5','')
+    dateStr = i['url'].split('/')[4]+i['url'].split('/')[5]
+    i['publishTime'] = datetime.datetime.strftime(datetime.datetime.strptime(dateStr,'%Y%m%d'),'%Y-%m-%d')
+
+    # pubTime = len(_info)>0 and _info[0].strip().split()[1] or str('1970-01-01')
+    # i['publishTime'] = pubTime.replace(u'\u5e74','-').replace(u'\u6708','-').replace(u'\u65e5','')
     
     abstract = sel.xpath('//p[@class="zhai"]/text()').extract()
     i['abstract'] = len(abstract)>0 and abstract[0] or ''
