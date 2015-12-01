@@ -12,3 +12,15 @@ class SpiderItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+
+class HBaseItem(scrapy.Item):
+
+    # hbase 表名
+    table_name = None
+
+    # hbase 列族
+    column_family = 'column'
+
+    # md5后作为主键的列
+    row_key_field = None
