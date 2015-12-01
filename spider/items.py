@@ -5,16 +5,10 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy.item import Item, Field
 
 
-class SpiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
-
-
-class HBaseItem(scrapy.Item):
+class HBaseItem(Item):
 
     # hbase 表名
     table_name = None
@@ -24,3 +18,25 @@ class HBaseItem(scrapy.Item):
 
     # md5后作为主键的列
     row_key_field = None
+
+
+class UradarNewsItem(HBaseItem):
+
+    table_name = 'uradar_news'
+    row_key_field = 'url'
+
+    url = Field()
+    title = Field
+    author = Field()
+    abstract = Field()
+    content = Field()
+    publish_time = Field()
+
+    source = Field()  # 文章来源
+    site_name = Field()
+
+    keywords = Field()
+
+    add_time = Field()
+    news_type = Field()
+    sentiment = Field()
