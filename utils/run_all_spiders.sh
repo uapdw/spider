@@ -3,7 +3,7 @@
 
 echo "run information_crawler spiders...."
 cd /data0/sourcecode/information_crawler/infomation_crawler
-for i in  baidubaijia cbinews ccidnet cctime ceocio chinabyte chinacloud chinamobile ciotimes cnddr csdn csdnactivity ctocio ctociocn dataguru dsj eguan gartner gmw huxiu idc ifeng iresearchNews iresearchReport it168 itbear iteye itpub jinghua leiphone newshexun pcpop qudong sciencechina sina tech163 techqq techweb yesky yidonghua ynet yos zdnet zol article_100ec article_kn58 article_myzaker article_s3d4 article_tsci article_toutiao article_cbismb article_doit article_ceweekly article_huanqiu article_xinmin article_gmw article_chinacaixin blog_sina weibo_sina article_sohu_it article_qq_finance article_spn_news
+for i in cbinews ccidnet cctime ceocio chinabyte chinacloud chinamobile ciotimes cnddr csdn csdnactivity ctocio ctociocn dataguru dsj eguan gartner gmw huxiu idc ifeng iresearchNews iresearchReport it168 itbear iteye itpub jinghua leiphone newshexun pcpop qudong sciencechina sina tech163 techqq techweb yesky yidonghua ynet yos zdnet zol article_100ec article_kn58 article_myzaker article_s3d4 article_tsci article_toutiao article_cbismb article_doit article_ceweekly article_huanqiu article_xinmin article_gmw article_chinacaixin blog_sina weibo_sina article_sohu_it article_qq_finance article_spn_news
 do
 	#curl http://172.20.8.162:6800/schedule.json -d project=infomation_crawler -d spider=${i}
 	scrapy crawl $i
