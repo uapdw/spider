@@ -9,8 +9,9 @@ do
 	scrapy crawl $i
 done
 
-echo "run create_indexs_bulk_from_hbase.py ...."
-/root/.virtualenvs/scrapy0.24.5/bin/python /data0/sourcecode/information_crawler/utils/create_indexs_bulk_from_hbase.py
+echo "run create_indexs_bulk_from_hbase_unique.py ...."
+#/root/.virtualenvs/scrapy0.24.5/bin/python /data0/sourcecode/information_crawler/utils/create_indexs_bulk_from_hbase.py
+/root/.virtualenvs/information_crawler/bin/python /data0/sourcecode/information_crawler/utils/create_indexs_bulk_from_hbase_unique.py
 
 echo "run group3 spiders...."
 cd /data0/sourcecode/information_crawler/group3
