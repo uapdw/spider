@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# http://doc.scrapy.org/en/latest/topics/items.html
-
 from scrapy.item import Item, Field
 
 
@@ -26,7 +21,7 @@ class UradarNewsItem(HBaseItem):
     row_key_field = 'url'
 
     url = Field()
-    title = Field
+    title = Field()
     author = Field()
     abstract = Field()
     content = Field()

@@ -12,6 +12,14 @@ from hbase.ttypes import Mutation
 from spider.items import HBaseItem
 
 
+class StdOutPipeline(object):
+    '''stdout pipeline'''
+
+    def process_item(self, item, spider):
+        print item
+        return item
+
+
 class HBaseItemPipeline(object):
     '''HBase Pipeline'''
 
