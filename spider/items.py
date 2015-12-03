@@ -26,11 +26,11 @@ class UradarNewsItem(HBaseItem):
     abstract = Field()
     content = Field()
     publish_time = Field()
-
     source = Field()  # 文章来源
-    site_name = Field()
-
     keywords = Field()
+
+    source_domain = Field()
+    source_name = Field()
 
     add_time = Field()
     news_type = Field()

@@ -16,8 +16,8 @@ class StdOutPipeline(object):
     '''stdout pipeline'''
 
     def process_item(self, item, spider):
-        print item
-        return item
+        for field in item:
+            print '%s:%s' % (field, item[field])
 
 
 class HBaseItemPipeline(object):

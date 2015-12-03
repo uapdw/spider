@@ -5,7 +5,9 @@ from scrapy.contrib.linkextractors import LinkExtractor
 
 from spider.items import UradarNewsItem
 from spider.extractors import (
-    ItemExtractor, XPathExtractor, text
+    ItemExtractor, XPathExtractor, text,
+    safe_html, RegexExtractor, DateExtractor,
+    now, FixValueExtractor
 )
 
 
@@ -57,18 +59,85 @@ class NewsExtractor(ItemExtractor):
 
     item_class = UradarNewsItem
 
+    subclass_required_attrs = [
+        'title_xpath',
+        'content_xpath',
+        'author_xpath',
+        'publish_time_xpath',
+        'publish_time_format',
+        'source_xpath',
+        'source_domain',
+        'source_name'
+    ]
+
     def __init__(self):
-        if not getattr(self, 'title_xpath', None):
-            raise ValueError(
-                "%s must have a title_xpath" % type(self).__name__
-            )
+        for attr in self.subclass_required_attrs:
+            if not getattr(self, attr, None):
+                raise ValueError(
+                    "%s must have a %s" % (type(self).__name__, attr)
+                )
         self.__generate_field_extractors_mapping()
 
     def __generate_field_extractors_mapping(self):
-        self.field_extractors_mapping = {
-            'url': [lambda response: response.url, text],
-            'title': [XPathExtractor(self.title_xpath), text]
-        }
+        self.field_extractors_mapping = {}
+        m = self.field_extractors_mapping
+        m['url'] = [lambda response: response.url, text]
+        m['title'] = [XPathExtractor(self.title_xpath), text]
+        m['content'] = [XPathExtractor(self.content_xpath), safe_html]
+        if hasattr(self, 'author_re'):
+            m['author'] = [XPathExtractor(self.author_xpath),
+                           text,
+                           RegexExtractor(self.author_re)]
+        else:
+            m['author'] = [XPathExtractor(self.author_xpath),
+                           text]
+        if hasattr(self, 'publish_time_re'):
+            m['publish_time'] = [XPathExtractor(self.publish_time_xpath),
+                                 text,
+                                 RegexExtractor(self.publish_time_re),
+                                 DateExtractor(self.publish_time_format)]
+        else:
+            m['publish_time'] = [XPathExtractor(self.publish_time_xpath),
+                                 text,
+                                 DateExtractor(self.publish_time_format)]
+        if not hasattr(self, 'abstract_xpath'):
+            m['abstract'] = [self.__generate_default_abstract_extractor()]
+        else:
+            if hasattr(self, 'abstract_re'):
+                m['abstract'] = [XPathExtractor(self.abstract_xpath),
+                                 text,
+                                 RegexExtractor(self.abstract_re)]
+            else:
+                m['abstract'] = [XPathExtractor(self.abstract_xpath),
+                                 text]
+        if not hasattr(self, 'keywords_xpath'):
+            m['keywords'] = [self.__generate_default_keywords_extractor()]
+        else:
+            if hasattr(self, 'keywords_re'):
+                m['keywords'] = [XPathExtractor(self.keywords_xpath),
+                                 text,
+                                 RegexExtractor(self.keywords_re)]
+            else:
+                m['keywords'] = [XPathExtractor(self.keywords_xpath),
+                                 text]
+        if hasattr(self, 'source_re'):
+            m['source'] = [XPathExtractor(self.source_xpath),
+                           text,
+                           RegexExtractor(self.source_re)]
+        else:
+            m['source'] = [XPathExtractor(self.source_xpath),
+                           text]
+        m['source_domain'] = [FixValueExtractor(self.source_domain)]
+        m['source_name'] = [FixValueExtractor(self.source_name)]
+        m['add_time'] = [now]
+
+    def __generate_default_abstract_extractor(self):
+        '''默认摘要'''
+        return XPathExtractor('//meta[@name="description"]/@content')
+
+    def __generate_default_keywords_extractor(self):
+        '''默认关键字'''
+        return XPathExtractor('//meta[@name="keywords"]/@content')
 
 
 class SimpleNewsSpider(TargetUrlSpider, NewsExtractor):
