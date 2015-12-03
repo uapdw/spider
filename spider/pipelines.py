@@ -20,6 +20,37 @@ class StdOutPipeline(object):
             print '%s:%s' % (field, item[field])
 
 
+class JSONWriterPipeline(object):
+    def __init__(self, filename='items.jl'):
+        self.file = open(filename, 'wb')
+
+    def __del__(self):
+        self.file.close()
+
+    def process_item(self, item, spider):
+        line = self._genItemLine(item) + "\n\n"
+        self.file.write(line)
+
+    def _genItemLine(self, item):
+        l = []
+        for field in item:
+            v = item[field]
+            if v is None:
+                v = ''
+            elif isinstance(v, str):
+                pass
+            elif isinstance(v, int):
+                v = str(v)
+            elif isinstance(v, unicode):
+                v = v.encode('utf-8')
+            elif (isinstance(v, datetime.datetime)
+                    or isinstance(v, datetime.date)):
+                v = v.strftime("%Y-%m-%d %H:%M:%S")
+
+            l.append('%s:%s' % (field, v))
+        return '\n'.join(l)
+
+
 class HBaseItemPipeline(object):
     '''HBase Pipeline'''
 

@@ -20,7 +20,7 @@ class CSDNNewsSpider(NewsSpider):
     author_xpath = '//*[@class="tit_bar"]'
     author_re = u'.*?作者\s*(\S+).*'
     publish_time_xpath = '//*[@class="tit_bar"]'
-    publish_time_re = u'.*?发表于\s*(\d+-\d+-\d+ \d+:\d+).*'
+    publish_time_re = u'.*?发表于\s*(\d+-\d+-\d+ \d+:\d+|\S+).*'
     publish_time_format = '%Y-%m-%d %H:%M'
     source_xpath = '//*[@class="tit_bar"]'
     source_re = u'.*?来源\s*(\S+)\|.*'

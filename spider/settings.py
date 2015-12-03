@@ -12,5 +12,5 @@ fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
 ITEM_PIPELINES = {
-    'spider.pipelines.StdOutPipeline': 1
+    'spider.pipelines.JSONWriterPipeline': 1
 }

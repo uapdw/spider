@@ -114,9 +114,6 @@ class DateExtractor():
         try:
             value = datetime.datetime.strptime(datetime_str, self.time_format)
         except:
-            pass
-
-        if value is None:
             value = self.__parse_ago(datetime_str)
 
         return value
@@ -126,7 +123,7 @@ class DateExtractor():
             match = matcher.match(datetime_str)
             if match:
                 return datetime.datetime.now() + relativedelta(**{
-                    unit: match.group(1)
+                    unit: -int(match.group(1))
                 })
 
 
