@@ -21,10 +21,21 @@ class StdOutPipeline(object):
 
 
 class JSONWriterPipeline(object):
-    def __init__(self, filename='items.jl'):
-        self.file = open(filename, 'wb')
 
-    def __del__(self):
+    def __init__(self, filename):
+        self.filename = filename
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            filename='items.jl'
+        )
+
+    def open_spider(self, spider):
+        self.file = open(self.filename, 'wb')
+
+    def close_spider(self, spider):
+        print 'counter ', self.counter
         self.file.close()
 
     def process_item(self, item, spider):
@@ -54,13 +65,25 @@ class JSONWriterPipeline(object):
 class HBaseItemPipeline(object):
     '''HBase Pipeline'''
 
-    def __init__(self):
-        self.host = "172.20.6.61"
-        self.port = 9090
-        self.transport = TBufferedTransport(TSocket(self.host, self.port))
-        self.transport.open()
-        self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-        self.client = Hbase.Client(self.protocol)
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            host=crawler.settings.get('HBASE_HOST'),
+            port=crawler.settings.get('HBASE_PORT')
+        )
+
+    def open_spider(self, spider):
+        transport = TBufferedTransport(TSocket(self.host, self.port))
+        transport.open()
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        self.client = Hbase.Client(protocol)
+
+    def close_spider(self, spider):
+        self.client.close()
 
     def process_item(self, item, spider):
         if not isinstance(item, HBaseItem):
