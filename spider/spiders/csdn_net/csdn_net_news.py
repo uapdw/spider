@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from spider.spiders.base_spider import SimpleNewsSpider
+from spider.spiders.base_spider import NewsSpider
 
 
-class CSDNNewsSpider(SimpleNewsSpider):
+class CSDNNewsSpider(NewsSpider):
+    '''CSDN新闻爬虫'''
 
     name = 'csdn_net_news'
     allowed_domains = ['csdn.net']

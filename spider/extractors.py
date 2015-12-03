@@ -2,6 +2,8 @@
 
 import re
 import datetime
+import inspect
+
 from dateutil.relativedelta import relativedelta
 from w3lib.html import remove_tags, remove_tags_with_content
 
@@ -129,6 +131,8 @@ class DateExtractor():
 
 
 class RegexExtractor():
+    '''正则表达式extractor'''
+
     def __init__(self, pattern):
         self.matcher = re.compile(pattern, re.S)
 
@@ -143,31 +147,74 @@ class RegexExtractor():
             )
 
 
-class ItemExtractor(object):
-    '''从response中生成item
-    field_extractors_mapping，字段和字段extractor列表的映射
-    item_class，item的类型
-    新建item_class实例，遍历field_extractors_mapping中映射，顺序执行extractor生成字段值
+class PipelineExtractor(object):
+    '''队列extractor
+    顺序执行多个extractor
     '''
 
-    def __init__(self):
-        if not getattr(self, 'field_extractors_mapping', None):
-            raise ValueError(
-                "%s must have a field_extractors_mapping" % type(self).__name__
-            )
-        if not getattr(self, 'item_class', None):
-            raise ValueError(
-                "%s must have a nonempty item_class" % type(self).__name__
-            )
+    def __init__(self, extractors):
+        self.extractors = extractors
+
+    def __call__(self, value):
+        for extractor in self.extractors:
+            value = extractor(value)
+        return value
+
+
+class XPathTypeRegexExtractor(PipelineExtractor):
+    '''分xpath、类型、正则表达式、其他extractor四部解析一个字段
+    '''
+
+    def __init__(self, field_xpath, field_type_extractor=text,
+                 field_re=None, other_extractors=None):
+
+        extractor_list = []
+        if field_re is not None:
+            extractor_list.extend([
+                XPathExtractor(field_xpath),
+                field_type_extractor,
+                RegexExtractor(field_re),
+            ])
+        else:
+            extractor_list.extend([
+                XPathExtractor(field_xpath),
+                field_type_extractor
+            ])
+
+        if other_extractors:
+            for extractor in other_extractors:
+                extractor_list.append(extractor)
+
+        PipelineExtractor.__init__(self, extractor_list)
+
+
+class ItemExtractor(object):
+    '''从response中生成item
+
+    field_extractor_mapping，字段和字段extractor列表的映射
+    value可以是固定值、函数、callable、函数和callable的混合iterable
+
+    item_class，item的类型
+    '''
+
+    def __init__(self, item_class, field_extractor_mapping):
+        self.item_class = item_class
+        self.field_extractor_mapping = field_extractor_mapping
 
     def __call__(self, response):
         if response is None:
             return None
 
         i = self.item_class()
-        for field, extractors in self.field_extractors_mapping.iteritems():
-            value = response
-            for extractor in extractors:
-                value = extractor(value)
+        for field, extractor in self.field_extractor_mapping.iteritems():
+            if isinstance(extractor, list):
+                value = PipelineExtractor(extractor)(response)
+            elif hasattr(extractor, '__call__'):
+                value = extractor(response)
+            elif inspect.isfunction(extractor):
+                value = extractor(response)
+            else:
+                value = extractor
+
             i[field] = value
         return i

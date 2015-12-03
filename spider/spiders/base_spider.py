@@ -4,15 +4,12 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 
 from spider.items import UradarNewsItem
-from spider.extractors import (
-    ItemExtractor, XPathExtractor, text,
-    safe_html, RegexExtractor, DateExtractor,
-    now, FixValueExtractor
-)
+from spider.extractors import (text, safe_html, DateExtractor,
+                               now, ItemExtractor, XPathTypeRegexExtractor)
 
 
-class TargetUrlSpider(CrawlSpider):
-    '''目标链接爬虫
+class TargetUrlCallbackMappingSpider(CrawlSpider):
+    '''目标链接回调映射爬虫
     url_callback_mapping中设置，目标链接正则:这类链接的callback函数
     爬虫从start_urls开始抓取，遍历在allowed_domains以内的链接
     直到链接匹配目标链接正则表达式，请求目标链接，调用对应的callback函数
@@ -31,7 +28,7 @@ class TargetUrlSpider(CrawlSpider):
             )
         self.__generate_rules()
 
-        super(TargetUrlSpider, self).__init__()
+        super(TargetUrlCallbackMappingSpider, self).__init__()
 
     def __generate_rules(self):
         '''生成scrapy.contrib.spiders.CrawlSpider中的rules
@@ -52,10 +49,36 @@ class TargetUrlSpider(CrawlSpider):
         self.rules = tuple(rule_list)
 
 
-class NewsExtractor(ItemExtractor):
-    '''新闻extractor
-    需要子类有title_xpath字段
+class TargetUrlsCallbackSpider(TargetUrlCallbackMappingSpider):
+    '''目标链接回调爬虫
+    url_callback_mapping中设置，目标链接正则:这类链接的callback函数
+    爬虫从start_urls开始抓取，遍历在allowed_domains以内的链接
+    直到链接匹配目标链接正则表达式，请求目标链接，调用对应的callback函数
     '''
+
+    target_urls = None
+    target_url_callback = None
+
+    def __init__(self):
+        if not getattr(self, 'target_urls', None):
+            raise ValueError(
+                "%s must have a target_urls" % type(self).__name__
+            )
+        if not getattr(self, 'target_url_callback', None):
+            raise ValueError(
+                "%s must have a nonempty target_url_callback" %
+                type(self).__name__
+            )
+
+        self.url_callback_mapping = {
+            url: self.target_url_callback for url in self.target_urls
+        }
+
+        super(TargetUrlsCallbackSpider, self).__init__()
+
+
+class NewsSpider(TargetUrlsCallbackSpider):
+    '''新闻爬虫'''
 
     item_class = UradarNewsItem
 
@@ -70,92 +93,71 @@ class NewsExtractor(ItemExtractor):
         'source_name'
     ]
 
+    default_abstract_xpath = '//meta[@name="description"]/@content'
+    default_keywords_xpath = '//meta[@name="keywords"]/@content'
+
     def __init__(self):
+        self.target_url_callback = 'parse_news'
+        TargetUrlsCallbackSpider.__init__(self)
+
         for attr in self.subclass_required_attrs:
             if not getattr(self, attr, None):
                 raise ValueError(
                     "%s must have a %s" % (type(self).__name__, attr)
                 )
-        self.__generate_field_extractors_mapping()
 
-    def __generate_field_extractors_mapping(self):
-        self.field_extractors_mapping = {}
-        m = self.field_extractors_mapping
-        m['url'] = [lambda response: response.url, text]
-        m['title'] = [XPathExtractor(self.title_xpath), text]
-        m['content'] = [XPathExtractor(self.content_xpath), safe_html]
-        if hasattr(self, 'author_re'):
-            m['author'] = [XPathExtractor(self.author_xpath),
-                           text,
-                           RegexExtractor(self.author_re)]
-        else:
-            m['author'] = [XPathExtractor(self.author_xpath),
-                           text]
-        if hasattr(self, 'publish_time_re'):
-            m['publish_time'] = [XPathExtractor(self.publish_time_xpath),
-                                 text,
-                                 RegexExtractor(self.publish_time_re),
-                                 DateExtractor(self.publish_time_format)]
-        else:
-            m['publish_time'] = [XPathExtractor(self.publish_time_xpath),
-                                 text,
-                                 DateExtractor(self.publish_time_format)]
-        if not hasattr(self, 'abstract_xpath'):
-            m['abstract'] = [self.__generate_default_abstract_extractor()]
-        else:
-            if hasattr(self, 'abstract_re'):
-                m['abstract'] = [XPathExtractor(self.abstract_xpath),
-                                 text,
-                                 RegexExtractor(self.abstract_re)]
-            else:
-                m['abstract'] = [XPathExtractor(self.abstract_xpath),
-                                 text]
-        if not hasattr(self, 'keywords_xpath'):
-            m['keywords'] = [self.__generate_default_keywords_extractor()]
-        else:
-            if hasattr(self, 'keywords_re'):
-                m['keywords'] = [XPathExtractor(self.keywords_xpath),
-                                 text,
-                                 RegexExtractor(self.keywords_re)]
-            else:
-                m['keywords'] = [XPathExtractor(self.keywords_xpath),
-                                 text]
-        if hasattr(self, 'source_re'):
-            m['source'] = [XPathExtractor(self.source_xpath),
-                           text,
-                           RegexExtractor(self.source_re)]
-        else:
-            m['source'] = [XPathExtractor(self.source_xpath),
-                           text]
-        m['source_domain'] = [FixValueExtractor(self.source_domain)]
-        m['source_name'] = [FixValueExtractor(self.source_name)]
-        m['add_time'] = [now]
-
-    def __generate_default_abstract_extractor(self):
-        '''默认摘要'''
-        return XPathExtractor('//meta[@name="description"]/@content')
-
-    def __generate_default_keywords_extractor(self):
-        '''默认关键字'''
-        return XPathExtractor('//meta[@name="keywords"]/@content')
-
-
-class SimpleNewsSpider(TargetUrlSpider, NewsExtractor):
-
-    def __init__(self):
-        if not getattr(self, 'target_urls', None):
-            raise ValueError(
-                "%s must have a target_urls" % type(self).__name__
-            )
-
-        self.url_callback_mapping = {
-            url: 'parse_news' for url in self.target_urls
-        }
-
-        TargetUrlSpider.__init__(self)
-        NewsExtractor.__init__(self)
+        self.extract = ItemExtractor(
+            self.item_class,
+            self.__generate_field_extractors_mapping()
+        )
 
     def parse_news(self, response):
-        extract = self
-        i = extract(response)
+        i = self.extract(response)
         return i
+
+    def __generate_field_extractors_mapping(self):
+        m = {}
+
+        m['url'] = lambda response: response.url
+
+        m['title'] = XPathTypeRegexExtractor(self.title_xpath, text)
+
+        m['content'] = XPathTypeRegexExtractor(self.content_xpath, safe_html)
+
+        m['author'] = XPathTypeRegexExtractor(self.author_xpath, text,
+                                              getattr(self, 'author_re', None))
+
+        m['publish_time'] = XPathTypeRegexExtractor(
+            self.publish_time_xpath,
+            text,
+            getattr(self, 'publish_time_re', None),
+            [DateExtractor(self.publish_time_format)])
+
+        if not hasattr(self, 'abstract_xpath'):
+            m['abstract'] = XPathTypeRegexExtractor(
+                self.default_abstract_xpath
+            )
+        else:
+            m['abstract'] = XPathTypeRegexExtractor(
+                self.abstract_xpath, text,
+                getattr(self, 'abstract_re', None))
+
+        if not hasattr(self, 'keywords_xpath'):
+            m['keywords'] = XPathTypeRegexExtractor(
+                self.default_keywords_xpath
+            )
+        else:
+            m['keywords'] = XPathTypeRegexExtractor(
+                self.keywords_xpath, text,
+                getattr(self, 'keywords_re', None))
+
+        m['source'] = XPathTypeRegexExtractor(
+            self.source_xpath, text,
+            getattr(self, 'source_re', None))
+
+        m['source_domain'] = self.source_domain
+        m['source_name'] = self.source_name
+
+        m['add_time'] = [now]
+
+        return m
