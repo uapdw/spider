@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from scrapy.contrib.loader.processor import Join, MapCompose, TakeFirst
-from w3lib.html import remove_tags
-
 from scrapy.item import Item, Field
-from spider.extractors import DateExtractor, PipelineExtractor, safe_html
 
 
 class HBaseItem(Item):
@@ -25,13 +21,13 @@ class UradarNewsItem(HBaseItem):
     row_key_field = 'url'
 
     url = Field()
-    title = Field(input_processor=MapCompose(remove_tags))
-    author = Field(input_processor=MapCompose(remove_tags))
-    abstract = Field(input_processor=MapCompose(remove_tags))
-    content = Field(input_processor=MapCompose(safe_html))
+    title = Field()
+    author = Field()
+    abstract = Field()
+    content = Field()
     publish_time = Field()
-    source = Field(input_processor=MapCompose(remove_tags))  # 文章来源
-    keywords = Field(input_processor=MapCompose(remove_tags))
+    source = Field()  # 文章来源
+    keywords = Field()
 
     source_domain = Field()
     source_name = Field()
