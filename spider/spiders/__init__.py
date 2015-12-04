@@ -7,7 +7,7 @@ from scrapy.contrib.linkextractors import LinkExtractor
 from scrapy.contrib.loader.processor import TakeFirst, MapCompose
 
 from spider.loader import ItemLoader
-from spider.items import UradarNewsItem
+from spider.items import UradarNewsItem, UradarBlogItem
 from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
                                       RegexProcessor, safe_html)
 
@@ -84,8 +84,6 @@ class TargetUrlsCallbackSpider(TargetUrlCallbackMappingSpider):
 class NewsSpider(TargetUrlsCallbackSpider):
     '''新闻爬虫'''
 
-    item_class = UradarNewsItem
-
     subclass_required_attrs = [
         'title_xpath',
         'content_xpath',
@@ -112,6 +110,89 @@ class NewsSpider(TargetUrlsCallbackSpider):
 
     def parse_news(self, response):
         l = ItemLoader(item=UradarNewsItem(), response=response)
+
+        l.default_output_processor = TakeFirst()
+
+        l.add_value('url', response.url)
+
+        l.add_xpath('title', self.title_xpath, MapCompose(text))
+
+        l.add_xpath('content', self.content_xpath, MapCompose(safe_html))
+
+        # author_re可选
+        auther_re = getattr(self, 'author_re', None)
+        if auther_re is None:
+            l.add_xpath('author', self.author_xpath, MapCompose(text))
+        else:
+            l.add_xpath('author', self.author_xpath, MapCompose(text),
+                        MapCompose(RegexProcessor(auther_re)))
+
+        # publish_time_re可选
+        publish_time_re = getattr(self, 'publish_time_re', None)
+        if publish_time_re is None:
+            l.add_xpath('publish_time', self.publish_time_xpath,
+                        MapCompose(PipelineProcessor(
+                                   text,
+                                   DateProcessor(self.publish_time_format))))
+        else:
+            l.add_xpath('publish_time', self.publish_time_xpath,
+                        MapCompose(PipelineProcessor(
+                                   text,
+                                   RegexProcessor(publish_time_re),
+                                   DateProcessor(self.publish_time_format))))
+
+        # abstract默认使用meta中description
+        l.add_xpath('abstract', self.abstract_xpath, MapCompose(text))
+
+        # keywords默认使用meta中keywords
+        l.add_xpath('keywords', self.keywords_xpath, MapCompose(text))
+
+        # source_re可选
+        source_re = getattr(self, 'source_re', None)
+        if source_re is None:
+            l.add_xpath('source', self.source_xpath, MapCompose(text))
+        else:
+            l.add_xpath('source', self.source_xpath, MapCompose(text),
+                        MapCompose(RegexProcessor(source_re)))
+
+        l.add_value('source_domain', self.source_domain)
+        l.add_value('source_name', self.source_name)
+
+        l.add_value('add_time', datetime.datetime.now())
+
+        i = l.load_item()
+        return i
+
+
+class BlogSpider(TargetUrlsCallbackSpider):
+    '''新闻爬虫'''
+
+    subclass_required_attrs = [
+        'title_xpath',
+        'content_xpath',
+        'author_xpath',
+        'publish_time_xpath',
+        'publish_time_format',
+        'source_xpath',
+        'source_domain',
+        'source_name'
+    ]
+
+    abstract_xpath = '//meta[@name="description"]/@content'
+    keywords_xpath = '//meta[@name="keywords"]/@content'
+
+    def __init__(self):
+        self.target_url_callback = 'parse_blog'
+        TargetUrlsCallbackSpider.__init__(self)
+
+        for attr in self.subclass_required_attrs:
+            if not getattr(self, attr, None):
+                raise ValueError(
+                    "%s must have a %s" % (type(self).__name__, attr)
+                )
+
+    def parse_blog(self, response):
+        l = ItemLoader(item=UradarBlogItem(), response=response)
 
         l.default_output_processor = TakeFirst()
 

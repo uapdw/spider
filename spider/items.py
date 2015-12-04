@@ -35,3 +35,23 @@ class UradarNewsItem(HBaseItem):
     add_time = Field()
     news_type = Field()
     sentiment = Field()
+
+
+class UradarBlogItem(HBaseItem):
+
+    table_name = 'uradar_blog'
+    row_key_field = 'url'
+
+    url = Field()
+    title = Field()
+    author = Field()
+    abstract = Field()
+    content = Field()
+    publish_time = Field()
+    source = Field()
+    keywords = Field()
+
+    source_domain = Field()
+    source_name = Field()
+
+    add_time = Field()
