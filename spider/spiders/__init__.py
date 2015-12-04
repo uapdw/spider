@@ -173,7 +173,6 @@ class BlogSpider(TargetUrlsCallbackSpider):
         'author_xpath',
         'publish_time_xpath',
         'publish_time_format',
-        'source_xpath',
         'source_domain',
         'source_name'
     ]
@@ -231,12 +230,13 @@ class BlogSpider(TargetUrlsCallbackSpider):
         l.add_xpath('keywords', self.keywords_xpath, MapCompose(text))
 
         # source_re可选
-        source_re = getattr(self, 'source_re', None)
-        if source_re is None:
-            l.add_xpath('source', self.source_xpath, MapCompose(text))
-        else:
-            l.add_xpath('source', self.source_xpath, MapCompose(text),
-                        MapCompose(RegexProcessor(source_re)))
+        if getattr(self, 'source_xpath', None) is not None:
+            source_re = getattr(self, 'source_re', None)
+            if source_re is None:
+                l.add_xpath('source', self.source_xpath, MapCompose(text))
+            else:
+                l.add_xpath('source', self.source_xpath, MapCompose(text),
+                            MapCompose(RegexProcessor(source_re)))
 
         l.add_value('source_domain', self.source_domain)
         l.add_value('source_name', self.source_name)
