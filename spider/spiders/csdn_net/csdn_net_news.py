@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from spider.spiders.base_spider import NewsSpider
+from spider.spiders import NewsSpider
 
 
 class CSDNNewsSpider(NewsSpider):

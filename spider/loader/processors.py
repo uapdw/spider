@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+'''补充https://github.com/scrapy/scrapy的loader/processors目录'''
+
 import re
 import datetime
 import inspect
@@ -24,38 +26,15 @@ _MATCHER_TIMEUNIT_MAPPING = {
 }
 
 
-class XPathExtractor():
-    def __init__(self, xpath, join_str=None):
+class XPathProcessor():
+    def __init__(self, xpath):
         self.xpath = xpath
-        self.join_str = join_str
 
     def __call__(self, response):
         if response is None:
             return None
 
-        extract_list = response.selector.xpath(self.xpath).extract()
-        if not extract_list or len(extract_list) == 0:
-            return ''
-
-        if self.join_str is None:
-            return extract_list[0]
-        else:
-            return self.join_str.join(extract_list)
-
-
-def now(response):
-    '''现在，用于生成addtime'''
-    return datetime.datetime.now()
-
-
-class FixValueExtractor():
-    '''固定值，用于source_name、source_domain等固定值'''
-
-    def __init__(self, fix_value):
-        self.fix_value = fix_value
-
-    def __call__(self, response):
-        return self.fix_value
+        return response.selector.xpath(self.xpath).extract()
 
 
 def text(html_part):
@@ -96,8 +75,8 @@ def safe_html(html_part):
     return value
 
 
-class DateExtractor():
-    '''日期读取器
+class DateProcessor():
+    '''日期处理器
     如果匹配给定的format则返回匹配值
     否则按照相对日期（例如：3小时前）匹配
     '''
@@ -114,11 +93,11 @@ class DateExtractor():
         try:
             value = datetime.datetime.strptime(datetime_str, self.time_format)
         except:
-            value = self.__parse_ago(datetime_str)
+            value = self._parse_ago(datetime_str)
 
         return value
 
-    def __parse_ago(self, datetime_str):
+    def _parse_ago(self, datetime_str):
         for matcher, unit in self.ago_dict.iteritems():
             match = matcher.match(datetime_str)
             if match:
@@ -127,11 +106,14 @@ class DateExtractor():
                 })
 
 
-class RegexExtractor():
-    '''正则表达式extractor'''
+class RegexProcessor():
+    '''正则表达式processor
+    返回group的list或None
+    '''
 
-    def __init__(self, pattern):
+    def __init__(self, pattern, join_str=u''):
         self.matcher = re.compile(pattern, re.S)
+        self.join_str = join_str
 
     def __call__(self, html_part):
         if html_part is None:
@@ -139,50 +121,23 @@ class RegexExtractor():
 
         result = self.matcher.search(html_part)
         if result:
-            return u''.join(
-                [g for g in result.groups() or result.group() if result]
-            )
+            return self.join_str.join([g for g in result.groups()])
+        else:
+            return None
 
 
-class PipelineExtractor(object):
-    '''队列extractor
-    顺序执行多个extractor
+class PipelineProcessor(object):
+    '''队列processor
+    顺序执行多个processor
     '''
 
-    def __init__(self, extractors):
-        self.extractors = extractors
+    def __init__(self, *processors):
+        self.processors = processors
 
     def __call__(self, value):
-        for extractor in self.extractors:
-            value = extractor(value)
+        for processor in self.processors:
+            value = processor(value)
         return value
-
-
-class XPathTypeRegexExtractor(PipelineExtractor):
-    '''分xpath、类型、正则表达式、其他extractor四部解析一个字段
-    '''
-
-    def __init__(self, field_xpath, field_type_extractor=text,
-                 field_re=None, other_extractors=None):
-
-        extractor_list = []
-        if field_re is not None:
-            extractor_list.extend([
-                XPathExtractor(field_xpath),
-                field_type_extractor,
-                RegexExtractor(field_re),
-            ])
-        else:
-            extractor_list.extend([
-                XPathExtractor(field_xpath),
-                field_type_extractor
-            ])
-
-        if other_extractors:
-            for extractor in other_extractors:
-                extractor_list.append(extractor)
-
-        PipelineExtractor.__init__(self, extractor_list)
 
 
 class ItemExtractor(object):
@@ -205,7 +160,7 @@ class ItemExtractor(object):
         i = self.item_class()
         for field, extractor in self.field_extractor_mapping.iteritems():
             if isinstance(extractor, list):
-                value = PipelineExtractor(extractor)(response)
+                value = PipelineProcessor(extractor)(response)
             elif hasattr(extractor, '__call__'):
                 value = extractor(response)
             elif inspect.isfunction(extractor):
