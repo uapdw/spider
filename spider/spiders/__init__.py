@@ -4,7 +4,7 @@ import datetime
 
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
-from scrapy.contrib.loader.processor import TakeFirst, MapCompose
+from scrapy.contrib.loader.processor import TakeFirst, MapCompose, Join
 
 from spider.loader import ItemLoader
 from spider.items import UradarNewsItem, UradarBlogItem
@@ -117,7 +117,7 @@ class NewsSpider(TargetUrlsCallbackSpider):
 
         l.add_xpath('title', self.title_xpath, MapCompose(text))
 
-        l.add_xpath('content', self.content_xpath, MapCompose(safe_html))
+        l.add_xpath('content', self.content_xpath, MapCompose(safe_html), Join('\n'))
 
         # author_re可选
         auther_re = getattr(self, 'author_re', None)
