@@ -39,6 +39,7 @@ class JSONWriterPipeline(object):
         self.file.close()
 
     def process_item(self, item, spider):
+        item.validate()
         line = self._genItemLine(item) + "\n\n"
         self.file.write(line)
 
@@ -88,6 +89,8 @@ class HBaseItemPipeline(object):
     def process_item(self, item, spider):
         if not isinstance(item, HBaseItem):
             return
+
+        item.validate()
 
         table_name = item.table_name
         row_key_field = item.row_key_field
