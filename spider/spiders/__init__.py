@@ -117,7 +117,8 @@ class NewsSpider(TargetUrlsCallbackSpider):
 
         l.add_xpath('title', self.title_xpath, MapCompose(text))
 
-        l.add_xpath('content', self.content_xpath, MapCompose(safe_html), Join('\n'))
+        l.add_xpath('content', self.content_xpath, MapCompose(safe_html),
+                    Join('\n'))
 
         # author_re可选
         auther_re = getattr(self, 'author_re', None)
