@@ -15,8 +15,8 @@ class CSDNNewsSpider(NewsSpider):
     ]
 
     title_xpath = '//h1[@class="title"]'
-    content_xpath = '//div[@class="content"]/div\
-                    [@class="left"]/div[@class="detail"]'
+    content_xpath = '//div[@class="content"]/div[@class="left"]\
+                     /div[@class="detail"]/div[@class="con news_content"]'
     author_xpath = '//*[@class="tit_bar"]'
     author_re = u'.*?作者\s*(\S+).*'
     publish_time_xpath = '//*[@class="tit_bar"]'
