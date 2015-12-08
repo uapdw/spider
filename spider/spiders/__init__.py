@@ -87,7 +87,6 @@ class NewsSpider(TargetUrlsCallbackSpider):
     subclass_required_attrs = [
         'title_xpath',
         'content_xpath',
-        'author_xpath',
         'publish_time_xpath',
         'publish_time_format',
         'source_xpath',
@@ -120,13 +119,15 @@ class NewsSpider(TargetUrlsCallbackSpider):
         l.add_xpath('content', self.content_xpath, MapCompose(safe_html),
                     Join('\n'))
 
-        # author_re可选
-        auther_re = getattr(self, 'author_re', None)
-        if auther_re is None:
-            l.add_xpath('author', self.author_xpath, MapCompose(text))
-        else:
-            l.add_xpath('author', self.author_xpath, MapCompose(text),
-                        MapCompose(RegexProcessor(auther_re)))
+        # author可选
+        auther_xpath = getattr(self, 'author_xpath', None)
+        if auther_xpath is not None:
+            auther_re = getattr(self, 'author_re', None)
+            if auther_re is None:
+                l.add_xpath('author', self.author_xpath, MapCompose(text))
+            else:
+                l.add_xpath('author', self.author_xpath, MapCompose(text),
+                            MapCompose(RegexProcessor(auther_re)))
 
         # publish_time_re可选
         publish_time_re = getattr(self, 'publish_time_re', None)
