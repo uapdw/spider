@@ -66,3 +66,23 @@ class UradarBlogItem(HBaseItem):
     source_name = Field()
 
     add_time = Field()
+
+
+class UradarActivityItem(HBaseItem):
+
+    table_name = 'uradar_activity'
+    row_key_field = 'url'
+    required_fields = ['url', 'title', 'publish_time']
+
+    url = Field()
+    activity_id = Field()
+    title = Field()
+    time = Field()
+    location = Field()
+    trad = Field()
+    keywords = Field()
+
+    source_domain = Field()
+    source_name = Field()
+
+    add_time = Field()
