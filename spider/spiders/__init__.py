@@ -2,9 +2,9 @@
 
 import datetime
 
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors import LinkExtractor
-from scrapy.contrib.loader.processor import TakeFirst, MapCompose, Join
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+from scrapy.loader.processors import TakeFirst, MapCompose, Join
 
 from spider.loader import ItemLoader
 from spider.items import UradarNewsItem, UradarBlogItem
