@@ -5,7 +5,7 @@ from spider.spiders import NewsSpider
 
 class SapNewsSpider(NewsSpider):
 
-    u"""新浪新闻爬虫"""
+    u"""SAP新闻爬虫"""
 
     name = 'sap_com_news'
     allowed_domains = ['global.sap.com']
