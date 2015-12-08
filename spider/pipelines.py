@@ -35,7 +35,6 @@ class JSONWriterPipeline(object):
         self.file = open(self.filename, 'wb')
 
     def close_spider(self, spider):
-        print 'counter ', self.counter
         self.file.close()
 
     def process_item(self, item, spider):
