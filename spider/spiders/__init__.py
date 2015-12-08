@@ -89,7 +89,6 @@ class NewsSpider(TargetUrlsCallbackSpider):
         'content_xpath',
         'publish_time_xpath',
         'publish_time_format',
-        'source_xpath',
         'source_domain',
         'source_name'
     ]
@@ -137,11 +136,22 @@ class NewsSpider(TargetUrlsCallbackSpider):
                                    text,
                                    DateProcessor(self.publish_time_format))))
         else:
-            l.add_xpath('publish_time', self.publish_time_xpath,
-                        MapCompose(PipelineProcessor(
-                                   text,
-                                   RegexProcessor(publish_time_re),
-                                   DateProcessor(self.publish_time_format))))
+            publish_time_re_join = getattr(self, 'publish_time_re_join', None)
+            if publish_time_re_join is None:
+                l.add_xpath('publish_time', self.publish_time_xpath,
+                            MapCompose(PipelineProcessor(
+                                text,
+                                RegexProcessor(publish_time_re),
+                                DateProcessor(self.publish_time_format))))
+            else:
+                l.add_xpath('publish_time', self.publish_time_xpath,
+                            MapCompose(PipelineProcessor(
+                                text,
+                                RegexProcessor(
+                                    publish_time_re,
+                                    join_str=self.publish_time_re_join
+                                ),
+                                DateProcessor(self.publish_time_format))))
 
         # abstract默认使用meta中description
         l.add_xpath('abstract', self.abstract_xpath, MapCompose(text))
@@ -149,13 +159,15 @@ class NewsSpider(TargetUrlsCallbackSpider):
         # keywords默认使用meta中keywords
         l.add_xpath('keywords', self.keywords_xpath, MapCompose(text))
 
-        # source_re可选
-        source_re = getattr(self, 'source_re', None)
-        if source_re is None:
-            l.add_xpath('source', self.source_xpath, MapCompose(text))
-        else:
-            l.add_xpath('source', self.source_xpath, MapCompose(text),
-                        MapCompose(RegexProcessor(source_re)))
+        # source可选
+        source_xpath = getattr(self, 'source_xpath', None)
+        if source_xpath:
+            source_re = getattr(self, 'source_re', None)
+            if source_re is None:
+                l.add_xpath('source', self.source_xpath, MapCompose(text))
+            else:
+                l.add_xpath('source', self.source_xpath, MapCompose(text),
+                            MapCompose(RegexProcessor(source_re)))
 
         l.add_value('source_domain', self.source_domain)
         l.add_value('source_name', self.source_name)
