@@ -4,7 +4,7 @@ from spider.spiders import NewsSpider
 
 
 class PeopleComCnNewsSpider(NewsSpider):
-    '''新浪新闻爬虫'''
+    '''人民网新闻爬虫'''
 
     name = 'people_com_cn_news'
     allowed_domains = ['people.com.cn']
