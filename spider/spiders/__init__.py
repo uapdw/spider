@@ -129,29 +129,32 @@ class NewsSpider(TargetUrlsCallbackSpider):
                             MapCompose(RegexProcessor(auther_re)))
 
         # publish_time_re可选
+
+        processor_list = [text]
+
         publish_time_re = getattr(self, 'publish_time_re', None)
-        if publish_time_re is None:
-            l.add_xpath('publish_time', self.publish_time_xpath,
-                        MapCompose(PipelineProcessor(
-                                   text,
-                                   DateProcessor(self.publish_time_format))))
-        else:
-            publish_time_re_join = getattr(self, 'publish_time_re_join', None)
-            if publish_time_re_join is None:
-                l.add_xpath('publish_time', self.publish_time_xpath,
-                            MapCompose(PipelineProcessor(
-                                text,
-                                RegexProcessor(publish_time_re),
-                                DateProcessor(self.publish_time_format))))
-            else:
-                l.add_xpath('publish_time', self.publish_time_xpath,
-                            MapCompose(PipelineProcessor(
-                                text,
-                                RegexProcessor(
-                                    publish_time_re,
-                                    join_str=self.publish_time_re_join
-                                ),
-                                DateProcessor(self.publish_time_format))))
+        if publish_time_re is not None:
+            processor_list.append(
+                RegexProcessor(
+                    publish_time_re,
+                    join_str=getattr(self, 'publish_time_re_join', u'')
+                )
+            )
+
+        publish_time_filter = getattr(self, 'publish_time_filter', None)
+        if publish_time_filter is not None:
+            processor_list.append(
+                publish_time_filter
+            )
+
+        processor_list.append(DateProcessor(self.publish_time_format))
+
+        l.add_xpath('publish_time', self.publish_time_xpath,
+                    MapCompose(
+                        PipelineProcessor(
+                            *processor_list
+                        )
+                    ))
 
         # abstract默认使用meta中description
         l.add_xpath('abstract', self.abstract_xpath, MapCompose(text))
