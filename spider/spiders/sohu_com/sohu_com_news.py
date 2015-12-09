@@ -24,4 +24,4 @@ class SohuNewsSpider(NewsSpider):
     source_re = u'.*?来源：\s*(\S+).*'
 
     source_domain = 'sohu.com'
-    source_name = '搜狐'
+    source_name = u'搜狐'
