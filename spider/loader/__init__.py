@@ -2,7 +2,7 @@
 
 '''补充https://github.com/scrapy/scrapy的loader目录'''
 
-from scrapy.contrib.loader import ItemLoader as ScrapyItemLoader
+from scrapy.loader import ItemLoader as ScrapyItemLoader
 
 
 class ItemLoader(ScrapyItemLoader):
