@@ -1,3 +1,4 @@
 *.pyc
 items.jl
 *.swp
+utils/dist/*.tar.gz
