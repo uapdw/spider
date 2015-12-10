@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class N100ecNewsSpider(NewsSpider):
-    '''中国电子商务研究中心新闻爬虫'''
+
+    u"""中国电子商务研究中心新闻爬虫"""
 
     name = '100ec_cn_news'
     allowed_domains = ['100ec.cn']

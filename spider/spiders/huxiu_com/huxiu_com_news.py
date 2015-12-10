@@ -16,7 +16,8 @@ from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
 
 
 class HuxiuNewsSpider(Spider):
-    '''虎嗅网新闻'''
+
+    u"""虎嗅网新闻"""
 
     name = 'huxiu_com_news'
     allowed_domains = ['huxiu.com']

@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class CctimeNewsSpider(NewsSpider):
-    '''飞象网新闻爬虫'''
+
+    u"""飞象网新闻爬虫"""
 
     name = 'cctime_com_news'
     allowed_domains = ['cctime.com']

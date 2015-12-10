@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class N36dsjNewsSpider(NewsSpider):
-    '''36dsj新闻爬虫'''
+
+    u"""36dsj新闻爬虫"""
 
     name = '36dsj_com_news'
     allowed_domains = ['36dsj.com']

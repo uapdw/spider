@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class ZolNewsSpider(NewsSpider):
-    '''中关村在线新闻爬虫'''
+
+    u"""中关村在线新闻爬虫"""
 
     name = 'zol_com_cn_news'
     allowed_domains = ['zol.com.cn']

@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class DataTsciComCnNewsSpider(NewsSpider):
-    '''深度数据新闻爬虫'''
+
+    u"""深度数据新闻爬虫"""
 
     name = 'data_tsci_com_cn_news'
     allowed_domains = ['data.tsci.com.cn']

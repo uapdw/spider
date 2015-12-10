@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class IFengNewsSpider(NewsSpider):
-    '''凤凰新闻爬虫'''
+
+    u"""凤凰新闻爬虫"""
 
     name = 'ifeng_com_news'
     allowed_domains = ['ifeng.com']
@@ -25,4 +26,4 @@ class IFengNewsSpider(NewsSpider):
     source_xpath = '//*[@itemprop="publisher" or @id="source_baidu"]'
 
     source_domain = 'ifeng.com'
-    source_name = '凤凰网'
+    source_name = u'凤凰网'

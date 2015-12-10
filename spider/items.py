@@ -72,15 +72,16 @@ class UradarActivityItem(HBaseItem):
 
     table_name = 'uradar_activity'
     row_key_field = 'url'
-    required_fields = ['url', 'title', 'publish_time']
+    required_fields = ['url', 'title', 'time']
 
     url = Field()
-    activity_id = Field()
     title = Field()
-    time = Field()
+    start_time = Field()
+    end_time = Field()
     location = Field()
     trad = Field()
     keywords = Field()
+    content = Field()
 
     source_domain = Field()
     source_name = Field()

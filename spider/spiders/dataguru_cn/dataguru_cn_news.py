@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class DataguruNewsSpider(NewsSpider):
-    '''炼数成金新闻爬虫'''
+
+    u"""炼数成金新闻爬虫"""
 
     name = 'dataguru_cn_news'
     allowed_domains = ['dataguru.cn']

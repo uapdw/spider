@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class WWW163NewsSpider(NewsSpider):
-    '''网易新闻爬虫'''
+
+    u"""网易新闻爬虫"""
 
     name = '163_com_news'
     allowed_domains = ['163.com']
@@ -25,4 +26,4 @@ class WWW163NewsSpider(NewsSpider):
     source_re = u'.*?来源：\s*(\S+).*'
 
     source_domain = '163.com'
-    source_name = '网易'
+    source_name = u'网易'

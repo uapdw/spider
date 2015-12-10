@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class Kn58NewsSpider(NewsSpider):
-    '''微客网新闻爬虫'''
+
+    u"""微客网新闻爬虫"""
 
     name = 'kn58_com_news'
     allowed_domains = ['kn58.com']

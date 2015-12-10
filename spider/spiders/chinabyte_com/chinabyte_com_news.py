@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class ChinabyteNewsSpider(NewsSpider):
-    '''搜狐新闻爬虫'''
+
+    u"""搜狐新闻爬虫"""
 
     name = 'chinabyte_com_news'
     allowed_domains = ['chinabyte.com']

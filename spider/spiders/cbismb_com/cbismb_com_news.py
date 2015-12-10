@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class CbismbNewsSpider(NewsSpider):
-    '''中小企业IT网新闻爬虫'''
+
+    u"""中小企业IT网新闻爬虫"""
 
     name = 'cbismb_com_news'
     allowed_domains = ['cbismb.com']

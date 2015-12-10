@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class SinaNewsSpider(NewsSpider):
-    '''新浪新闻爬虫'''
+
+    u"""新浪新闻爬虫"""
 
     name = 'sina_com_cn_news'
     allowed_domains = ['sina.com.cn']
@@ -26,4 +27,4 @@ class SinaNewsSpider(NewsSpider):
     source_xpath = '//*[@id="media_name" or @data-sudaclick="media_name"]'
 
     source_domain = 'sina.com.cn'
-    source_name = '新浪'
+    source_name = u'新浪'

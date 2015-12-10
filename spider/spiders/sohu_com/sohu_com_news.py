@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class SohuNewsSpider(NewsSpider):
-    '''搜狐新闻爬虫'''
+
+    u"""搜狐新闻爬虫"""
 
     name = 'sohu_com_news'
     allowed_domains = ['sohu.com']

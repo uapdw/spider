@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class CcidnetNewsSpider(NewsSpider):
-    '''赛迪网新闻爬虫'''
+
+    u"""赛迪网新闻爬虫"""
 
     name = 'ccidnet_com_news'
     allowed_domains = ['ccidnet.com']

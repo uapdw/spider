@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class IdcNewsSpider(NewsSpider):
-    '''idc新闻爬虫'''
+
+    u"""idc新闻爬虫"""
 
     name = 'idc_com_cn_news'
     allowed_domains = ['idc.com.cn']
