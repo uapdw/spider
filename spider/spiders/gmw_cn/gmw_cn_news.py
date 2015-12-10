@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class GmwNewsSpider(NewsSpider):
-    '''光明网新闻爬虫'''
+
+    u"""光明网新闻爬虫"""
 
     name = 'gmw_cn_news'
     allowed_domains = ['gmw.cn']

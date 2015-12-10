@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class N199itNewsSpider(NewsSpider):
-    '''199it新闻爬虫'''
+
+    u"""199it新闻爬虫"""
 
     name = '199it_com_news'
     allowed_domains = ['199it.com']

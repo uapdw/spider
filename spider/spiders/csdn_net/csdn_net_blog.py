@@ -4,7 +4,8 @@ from spider.spiders import BlogSpider
 
 
 class CSDNBlogSpider(BlogSpider):
-    '''CSDN博客爬虫'''
+
+    u"""CSDN博客爬虫"""
 
     name = 'csdn_net_blog'
     allowed_domains = ['csdn.net']

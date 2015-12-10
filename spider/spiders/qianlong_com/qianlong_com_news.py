@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class QianLongNewsSpider(NewsSpider):
-    '''千龙网新闻爬虫'''
+
+    u"""千龙网新闻爬虫"""
 
     name = 'qianlong_com_news'
     allowed_domains = ['qianlong.com']
@@ -23,4 +24,4 @@ class QianLongNewsSpider(NewsSpider):
     source_xpath = '//*[@class="source"]'
 
     source_domain = 'qianlong.com'
-    source_name = '千龙网'
+    source_name = u'千龙网'

@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class CSDNNewsSpider(NewsSpider):
-    '''CSDN新闻爬虫'''
+
+    u"""CSDN新闻爬虫"""
 
     name = 'csdn_net_news'
     allowed_domains = ['csdn.net']

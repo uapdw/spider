@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class TechwebNewsSpider(NewsSpider):
-    '''TechWeb新闻爬虫'''
+
+    u"""TechWeb新闻爬虫"""
 
     name = 'techweb_com_cn_news'
     allowed_domains = ['techweb.com.cn']

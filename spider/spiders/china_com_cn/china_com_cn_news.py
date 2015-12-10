@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class ChinaComCnNewsSpider(NewsSpider):
-    '''中国网新闻爬虫'''
+
+    u"""中国网新闻爬虫"""
 
     name = 'china_com_cn_news'
     allowed_domains = ['china.com.cn']
@@ -27,4 +28,4 @@ class ChinaComCnNewsSpider(NewsSpider):
     source_re = u'.*?来源：\s*(\S+).*'
 
     source_domain = 'china.com.cn'
-    source_name = '中国网'
+    source_name = u'中国网'

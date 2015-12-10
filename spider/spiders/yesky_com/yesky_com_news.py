@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class YeskyComNewsSpider(NewsSpider):
-    '''天极网新闻爬虫'''
+
+    u"""天极网新闻爬虫"""
 
     name = 'yesky_com_news'
     allowed_domains = ['yesky.com']
@@ -23,4 +24,4 @@ class YeskyComNewsSpider(NewsSpider):
     source_xpath = '//*[@class="detail"]/span[1]'
 
     source_domain = 'yesky.com'
-    source_name = '天极网'
+    source_name = u'天极网'

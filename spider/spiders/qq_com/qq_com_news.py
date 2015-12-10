@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class QQNewsSpider(NewsSpider):
-    '''腾讯新闻爬虫'''
+
+    u"""腾讯新闻爬虫"""
 
     name = 'qq_com_news'
     allowed_domains = ['qq.com']
@@ -23,4 +24,4 @@ class QQNewsSpider(NewsSpider):
     abstract_xpath = '//meta[@name="Description"]/@content'
 
     source_domain = 'qq.com'
-    source_name = '腾讯网'
+    source_name = u'腾讯网'

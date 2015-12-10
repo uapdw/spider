@@ -11,7 +11,8 @@ from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
 
 
 class SogouWeixinSpider(CrawlSpider):
-    '''搜狗微信爬虫'''
+
+    u"""搜狗微信爬虫"""
 
     name = 'sogou_com_weixin'
 

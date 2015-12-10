@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class CtocioNewsSpider(NewsSpider):
-    '''IT经理网新闻爬虫'''
+
+    u"""IT经理网新闻爬虫"""
 
     name = 'ctocio_com_news'
     allowed_domains = ['ctocio.com']

@@ -4,7 +4,8 @@ from spider.spiders import NewsSpider
 
 
 class S3d4NewsSpider(NewsSpider):
-    '''说三道四新闻爬虫'''
+
+    u"""说三道四新闻爬虫"""
 
     name = 's3d4_cn_news'
     allowed_domains = ['s3d4.cn']
