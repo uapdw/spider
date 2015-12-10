@@ -85,7 +85,6 @@ class NewsSpider(TargetUrlsCallbackSpider):
     '''新闻爬虫'''
 
     subclass_required_attrs = [
-        'title_xpath',
         'content_xpath',
         'publish_time_xpath',
         'publish_time_format',
@@ -93,6 +92,7 @@ class NewsSpider(TargetUrlsCallbackSpider):
         'source_name'
     ]
 
+    title_xpath = '//title'
     abstract_xpath = '//meta[@name="description"]/@content'
     keywords_xpath = '//meta[@name="keywords"]/@content'
 
