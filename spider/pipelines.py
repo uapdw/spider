@@ -77,13 +77,13 @@ class HBaseItemPipeline(object):
         )
 
     def open_spider(self, spider):
-        transport = TBufferedTransport(TSocket(self.host, self.port))
-        transport.open()
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        self.transport = TBufferedTransport(TSocket(self.host, self.port))
+        self.transport.open()
+        protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
         self.client = Hbase.Client(protocol)
 
     def close_spider(self, spider):
-        self.client.close()
+        self.transport.close()
 
     def process_item(self, item, spider):
         if not isinstance(item, HBaseItem):
@@ -102,7 +102,7 @@ class HBaseItemPipeline(object):
     def _genMutations(self, item, column_family):
         mutations = []
         for field in item.fields:
-            value = item[field]
+            value = item.get(field)
             if value:
                 if isinstance(value, datetime.datetime):
                     value = value.strftime("%Y-%m-%d %H:%M:%S")
