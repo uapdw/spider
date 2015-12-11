@@ -17,7 +17,7 @@ class CSDNActivitySpider(CrawlSpider):
 
     u"""CSDN活动爬虫"""
 
-    name = 'csdn_activity_news'
+    name = 'csdn_net_activity'
     allowed_domains = ['csdn.net']
     start_urls = ['http://huiyi.csdn.net/']
 
