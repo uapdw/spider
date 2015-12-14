@@ -10,7 +10,7 @@ from scrapy.http import Request
 from spider.items import UradarNewsItem
 
 
-class GartnerSpider(CrawlSpider):
+class GartnerNewsSpider(CrawlSpider):
     name = 'gartner_com_news'
     allowed_domains = ['gartner.com']
     SCROLLCOUNT = 0
@@ -18,7 +18,7 @@ class GartnerSpider(CrawlSpider):
     SCROLLPREMIUM = 0
 
     def __init__(self, crawl=None, *args, **kwargs):
-        super(GartnerSpider, self).__init__(*args, **kwargs)
+        super(GartnerNewsSpider, self).__init__(*args, **kwargs)
         self.start_urls = [
             'http://www.gartner.com/search/site/freecontent/simple',
             'http://www.gartner.com/search/site/premiumresearch/sort?sortType=\
@@ -26,7 +26,7 @@ class GartnerSpider(CrawlSpider):
         ]
 
         if(cmp(crawl, 'all') == 0):
-            GartnerSpider.SCROLLCOUNT = 5
+            GartnerNewsSpider.SCROLLCOUNT = 5
 
     def parse_item(self, response):
         sel = Selector(response)
