@@ -6,6 +6,8 @@ import re
 import datetime
 import inspect
 
+from lxml import html, etree
+from urlparse import urljoin
 from dateutil.relativedelta import relativedelta
 from w3lib.html import remove_tags, remove_tags_with_content
 
@@ -76,6 +78,33 @@ def safe_html(html_part):
     value = remove_tags(value, which_ones=_REMOVE_TAGS)
 
     return value
+
+
+class SafeHtml():
+
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+    def __call__(self, html_part):
+
+        html_part = safe_html(html_part)
+
+        html_part = html_part.strip()
+
+        tree = html.fragment_fromstring(html_part, create_parent=True)
+
+        for node in tree.xpath('//*[@src]'):
+            url = node.get('src')
+            url = urljoin(self.base_url, url)
+            node.set('src', url)
+        for node in tree.xpath('//*[@href]'):
+            url = node.get('href')
+            url = urljoin(self.base_url, url)
+            node.set('href', url)
+
+        data = etree.tostring(tree, pretty_print=False, encoding='unicode')
+
+        return data
 
 
 class DateProcessor():

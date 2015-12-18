@@ -9,7 +9,7 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.items import UradarNewsItem, UradarBlogItem
 from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
-                                      RegexProcessor, safe_html)
+                                      RegexProcessor, SafeHtml)
 
 
 class TargetUrlCallbackMappingSpider(CrawlSpider):
@@ -115,8 +115,8 @@ class NewsSpider(TargetUrlsCallbackSpider):
 
         l.add_xpath('title', self.title_xpath, MapCompose(text))
 
-        l.add_xpath('content', self.content_xpath, MapCompose(safe_html),
-                    Join('\n'))
+        l.add_xpath('content', self.content_xpath,
+                    MapCompose(SafeHtml(response.url)), Join('\n'))
 
         # author可选
         auther_xpath = getattr(self, 'author_xpath', None)
@@ -216,7 +216,8 @@ class BlogSpider(TargetUrlsCallbackSpider):
 
         l.add_xpath('title', self.title_xpath, MapCompose(text))
 
-        l.add_xpath('content', self.content_xpath, MapCompose(safe_html))
+        l.add_xpath('content', self.content_xpath,
+                    MapCompose(SafeHtml(response.url)))
 
         # author_re可选
         auther_re = getattr(self, 'author_re', None)
