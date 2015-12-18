@@ -1,233 +1,279 @@
--- MySQL dump 10.13  Distrib 5.6.23, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: uspider_manager
--- ------------------------------------------------------
--- Server version	5.6.24-log
+package com.ufida.report.anareport.expand;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
---
--- Table structure for table `ae_role`
---
+import nc.pub.smart.metadata.Field;
 
-DROP TABLE IF EXISTS `ae_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ae_role` (
-  `pk_role` varchar(30) NOT NULL,
-  `rolename` varchar(20) NOT NULL,
-  `rolecaption` varchar(200) DEFAULT NULL,
-  `comments` varchar(200) DEFAULT NULL,
-  `createtime` varchar(20) DEFAULT NULL,
-  `modifytime` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`pk_role`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+import com.ufida.report.anareport.IFldCountType;
+import com.ufida.report.anareport.data.AbsRowData;
+import com.ufida.report.anareport.data.DetailRowData;
+import com.ufida.report.anareport.data.GroupDataSet;
+import com.ufida.report.anareport.data.GroupRowData;
+import com.ufida.report.anareport.data.MemoryRowData;
+import com.ufida.report.anareport.data.RowDataArray;
+import com.ufida.report.anareport.data.RowDataComparator;
+import com.ufida.report.anareport.model.AnaDataSetTool;
+import com.ufida.report.anareport.model.AnaRepField;
+import com.ufida.report.anareport.model.AreaDataModel;
+import com.ufida.report.anareport.model.ElseField;
+import com.ufida.report.anareport.model.FieldCountDef;
+import com.ufida.report.anareport.model.TopNSetInfo;
+import com.ufida.report.anareport.util.FreeFieldConverter;
+import com.ufida.report.anareport.util.SortArrayUtil;
 
---
--- Dumping data for table `ae_role`
---
+public class ListTopNProcessor extends AbsGroupDataProcessor {
+	private ArrayList<Integer> al_procLvl = null;
 
-LOCK TABLES `ae_role` WRITE;
-/*!40000 ALTER TABLE `ae_role` DISABLE KEYS */;
-INSERT INTO `ae_role` VALUES ('hg1pcuinerekkgmdnf8g','admin','ÁÆ°ÁêÜÂëò','ÁÆ°ÁêÜÂëòËßíËâ≤','2015-11-19 18:56:08',NULL),('p4il8l26yq441mnfwwke','developer','ÂºÄÂèëËÄÖ','ÂºÄÂèëËÄÖËßíËâ≤','2015-11-19 18:56:08',NULL);
-/*!40000 ALTER TABLE `ae_role` ENABLE KEYS */;
-UNLOCK TABLES;
+	public ListTopNProcessor(AreaDataModel areaModel) {
+		super(areaModel);
+		al_procLvl = new ArrayList<Integer>();
+	}
 
---
--- Table structure for table `ae_user`
---
+	@Override
+	protected boolean isEnabledProc(AnaRepField fld) {
+		TopNSetInfo topN = (TopNSetInfo) fld.getTopNInfo();
+		if (topN != null && topN.isEnabled()) {
+			FieldCountDef def = fld.getFieldCountDef();
+			if (def != null && !def.hasRangeField())// ∂‘”⁄◊ÓÕ‚Œßµƒ°∞∫œº∆°±£¨Œﬁ∑®¥¶¿ÌTopN
+				return false;
+			int procLvl = getProcLvl(fld);
+			if (al_procLvl.contains(procLvl)) {// Õ¨“ª∏ˆº∂¥Œ…œ÷ªƒ‹”–“ª∏ˆ…˙–ß
+				topN.setEnabled(false);
+				return false;
+			} else {
+				al_procLvl.add(procLvl);
+				return true;
+			}
+		}
+		return false;
+	}
 
-DROP TABLE IF EXISTS `ae_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ae_user` (
-  `pk_user` varchar(30) NOT NULL,
-  `username` varchar(20) NOT NULL,
-  `usercaption` varchar(200) DEFAULT NULL,
-  `password` varchar(200) NOT NULL,
-  `comments` varchar(200) DEFAULT NULL,
-  `creator` varchar(30) DEFAULT NULL,
-  `createtime` varchar(20) DEFAULT NULL,
-  `modifier` varchar(30) DEFAULT NULL,
-  `modifytime` varchar(20) DEFAULT NULL,
-  `logintime` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`pk_user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+	@Override
+	protected ProcRowDatas processRowDatas(GroupDataSet grpDataSet, AbsRowData parentRow, RowDataArray rowData,
+			AnaRepField fld, int[] lvlCount, int plvl, String col) {
+		TopNSetInfo topN = (TopNSetInfo) fld.getTopNInfo();
 
---
--- Dumping data for table `ae_user`
---
+		// Ω¯––≈≈–Ú		
+		RowDataComparator comp = new RowDataComparator(grpDataSet, col, topN.isASC());
+		List<AbsRowData> sortedRows = new ArrayList<AbsRowData>();
+		if(rowData == null){
+			return null ;
+		}
+		int len = rowData.length();
+		for(int i = 0;i<len;i++){
+			sortedRows.add(rowData.get(i));
+		}
+		SortArrayUtil.sortList(sortedRows, comp);
+		
+		//int[] idx = SortArrayUtil.sortArrayData(rowData, new RowDataComparator(grpDataSet, col, topN.isASC()));
+		int idxLen = (sortedRows == null) ? 0 : sortedRows.size();//(idx == null) ? 0 : idx.length;
+		int datalen = topN.isExtendN() ? topN.getN() : Math.min(topN.getN(), idxLen);// ±£¡Ùµƒ ˝æ›–– ˝
+		datalen = Math.max(0, datalen);// »∑±£≤ª «∏∫ ˝
 
-LOCK TABLES `ae_user` WRITE;
-/*!40000 ALTER TABLE `ae_user` DISABLE KEYS */;
-INSERT INTO `ae_user` VALUES ('2nvr3z0th110cffgaztk','admin','ÁÆ°ÁêÜÂëò','admin','','4v12unpppeynlgkwo8pf','2015-11-20 08:48:38',NULL,NULL,NULL),('0fvakmtmn39xslumt25h','dev1','Âº†‰∏â','dev1','','4v12unpppeynlgkwo8pf','2015-11-20 08:49:10',NULL,NULL,NULL),('5652a903c70d028620f6d2c4','dev2','ÊùéÂõõ','dev2','','2nvr3z0th110cffgaztk','2015-11-23 13:49:55','5652a903c70d028620f6d2c4','2015-11-24 16:48:17',NULL),('565424a4c70d3f3231f55b1f','biancm','Ëæπ‰º†Áåõ','biancm','','2nvr3z0th110cffgaztk','2015-11-24 16:49:40',NULL,NULL,NULL),('56581312c70d6793494425d6','dev3','Áéã‰∫î','dev3','','565424a4c70d3f3231f55b1f','2015-11-27 16:23:46',NULL,NULL,NULL),('565bf613c70d6a05beaf9fc9','dev4','È©¨ÂÖ≠','dev4','','2nvr3z0th110cffgaztk','2015-11-30 15:09:07',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `ae_user` ENABLE KEYS */;
-UNLOCK TABLES;
+		int retLen = (topN.isShowElse() && (datalen < idxLen || topN.isExtendN())) ? datalen + 1 : datalen;// ¥Ê‘⁄∆‰À˚ ˝æ›ªÚ’ﬂ“™«ø––’ºŒª ±£¨∂º“™‘ˆº”“ª––
+		// …Ë÷√∑µªÿ ˝æ›––
+		RowDataArray rows = new RowDataArray(retLen);
+		for (int i = 0; i < datalen; i++) {
+			AbsRowData data = null;
+			if (i < idxLen)
+				data = sortedRows.get(i);
+			else
+				data = createNullRow(grpDataSet, idxLen == 0 ? parentRow : rowData.get(0), plvl - 1);
+			rows.setRowData(i, data);
+		}
+		// °∞∆‰À˚°±
+		if (retLen > datalen) {
+			AbsRowData data = null;
+			if (idxLen > datalen)
+				data = getElseRow(grpDataSet, parentRow, rowData, sortedRows, datalen, fld);
+			else
+				data = createNullElseRow(grpDataSet, idxLen == 0 ? parentRow : rowData.get(0), fld);
+			rows.setRowData(datalen, data);
+		}
+		RowDataArray rmvRows = null;
+		if (datalen < idxLen) {// ”–…·∆˙µÙµƒ ˝æ›
+			rmvRows = new RowDataArray(idxLen - datalen);
+			for (int i = datalen; i < idxLen; i++) {
+				rmvRows.setRowData(i - datalen, sortedRows.get(i));
+			}
+		}
 
---
--- Table structure for table `ae_user_group`
---
+		ProcRowDatas result = new ProcRowDatas(rows, rmvRows);
+		return result;
+	}
 
-DROP TABLE IF EXISTS `ae_user_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ae_user_group` (
-  `pk_group` varchar(30) NOT NULL,
-  `groupname` varchar(50) NOT NULL,
-  `comments` varchar(200) DEFAULT NULL,
-  `creator` varchar(30) DEFAULT NULL,
-  `createtime` varchar(20) DEFAULT NULL,
-  `modifier` varchar(30) DEFAULT NULL,
-  `modifytime` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`pk_group`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+	/**
+	 * edit by guogang 2009-3-3 ÷ß≥÷TopN∆‰À˚◊÷∂Œµƒ∏˜÷÷…Ë÷√,∏¸∏¥‘”µƒ¥¶¿Ì???
+	 * 
+	 * @i18n miufo00335=∆‰À˚
+	 */
+	private AbsRowData getElseRow(GroupDataSet grpDataSet, AbsRowData parentRow, RowDataArray rowData,List<AbsRowData> sortedRows,
+			int begin, AnaRepField fld) {
+		AbsRowData first = rowData.get(0);
+		TopNSetInfo topN = (TopNSetInfo) fld.getTopNInfo();
 
---
--- Dumping data for table `ae_user_group`
---
+		if (first.isDetailData()) {// √˜œ∏ ˝æ›µƒ°∞∆‰À˚°±
+			DetailRowData row = (DetailRowData) first;
+			ArrayList<FieldCountDef> al_aggr = new ArrayList<FieldCountDef>();// ÷∏±Í◊÷∂ŒµƒÕ≥º∆…Ë÷√
+			ArrayList<Integer> al_idx = new ArrayList<Integer>(); // ÷∏±Í◊÷∂Œµƒ–Ú∫≈
+			MemoryRowData data = new MemoryRowData(row.getMetaData(), null);
+			Field[] flds = row.getMetaData().getFields();
+			ElseField elseField = null;
+//			List<ElseField> elseFields = topN.getElseFields() ;
+//			FreeFieldConverter converter = m_areaModel.getAreaFields(false).getFieldConverter() ;
+//			//∏ƒŒ™¥”TopNInfo÷–—≠ª∑≤È’“
+//			for (int i = 0; i < elseFields.size(); i++) {
+//				ElseField elseField = elseFields.get(i) ;
+//				String fieldName = converter.getConvertName(elseField.getFieldName()) ;
+//				if(fieldName != null){
+//					for (int j = 0; j < flds.length; j++) {
+//						if(fieldName.equalsIgnoreCase(flds[j].getFldname())){
+//							if(!elseField.isCount() && elseField.getShowName() != null){
+//								data.setData(j, elseField.getShowName());
+//							}else if(elseField.isCount()){
+//								al_aggr.add(new FieldCountDef(flds[j], elseField.getCountType()));
+//								al_idx.add(j);
+//							}
+//						}
+//					}
+//				}
+//			}
+			for (int i = 0; i < flds.length; i++) {
+				elseField = getElseField(topN,flds[i].getFldname());
+				if (elseField != null && !elseField.isCount() && elseField.getShowName() != null) {
+					data.setData(i, elseField.getShowName());
+				} else {
 
-LOCK TABLES `ae_user_group` WRITE;
-/*!40000 ALTER TABLE `ae_user_group` DISABLE KEYS */;
-INSERT INTO `ae_user_group` VALUES ('56581371c70d6793494425da','BA‰∏öÂä°ÈÉ®','','565424a4c70d3f3231f55b1f','2015-11-27 16:25:21',NULL,NULL),('5657d399c70db922ec0b9848','AEÂºÄÂèëÈÉ®','','565424a4c70d3f3231f55b1f','2015-11-27 11:52:57',NULL,NULL);
-/*!40000 ALTER TABLE `ae_user_group` ENABLE KEYS */;
-UNLOCK TABLES;
+					// if (DataTypeConstant.isNumberType(flds[i].getDataType()))
+					// if (flds[i].getExtType() != RptProvider.DIMENSION) {
+					if (elseField != null && elseField.isCount()) {
+						al_aggr.add(new FieldCountDef(flds[i], elseField.getCountType()));
+						al_idx.add(i);
+					} else {
+						//√ª…Ëµƒª∞£¨≤ª‘Ÿ◊‘∂Ø‘ˆº”£¨ÕÍ»´∞¥’’topN…Ë÷√∂‘ª∞øÚ÷–µƒ…Ë÷√¿¥…Ë÷√ zhongkm
+						/*if (DataTypeConstant.isNumberType(flds[i].getDataType())) {
+							al_aggr.add(new FieldCountDef(flds[i], IFldCountType.TYPE_SUM));// ÷∏±Íƒ¨»œÕ≥º∆∑Ω Ω «sum£¨∫Û–¯”¶∏√¥¶¿Ì”√ªßø……Ë÷√
+							al_idx.add(i);
+						}*/
+					}
+					// }
+				}
+			}
+			if (al_idx.size() > 0) {
+				//‘ˆº”Œ®“ªº∆ ˝µƒ¥¶¿Ì
+				Map<Integer, Set> coutDistinctMap = new HashMap<Integer, Set>();
+				for (int i = begin; i < sortedRows.size(); i++) {
+					row = (DetailRowData) sortedRows.get(i);//(DetailRowData) rowData.get(idx[i]);
+					for (int j = 0; j < al_idx.size(); j++) {
+						int m = al_idx.get(j);
+						String fName = al_aggr.get(j).getMainFldName();
+						Object rowValue = null;
+						if (al_aggr.get(j).getCountType() == IFldCountType.TYPE_COUNT)
+							rowValue = 1;
+						else if (al_aggr.get(j).getCountType() == IFldCountType.TYPE_COUNT_DISTINCT) {// Œ®“ªº∆ ˝
+							Object o = row.getData(fName);
+							Set set = coutDistinctMap.get(j);
+							if (set == null)
+								set = new TreeSet();
+							if (o != null && set.add(o)) {
+								coutDistinctMap.put(j, set);
+								rowValue = 1;
+							} else
+								rowValue = 0;
+						} else
+							rowValue = row.getData(fName);
 
---
--- Table structure for table `ae_user_group_related`
---
+						Object value = AnaDataSetTool.calcValue(data.getData(m), rowValue, al_aggr.get(j)
+								.getCountType());
+						data.setData(m, value);
+					}					
+				}
+				coutDistinctMap.clear();
+				int count = sortedRows.size() - begin;//idx.length - begin;
+				for (int j = 0; j < al_idx.size(); j++) {// ∂‘”⁄∆Ωæ˘ ˝£¨Ω¯––≥˝∑®
+					int m = al_idx.get(j);
+					Object dataValue = null;
+					if (al_aggr.get(j).getCountType() == IFldCountType.TYPE_AVAGE) {
+						dataValue = data.getData(m);
+						if (dataValue != null)
+							data.setData(m, (Double.parseDouble(dataValue.toString()) / count));
+					}
+				}
+			}
+			data.setGroupDatas(first.getGroupDatas());
+			return data;
+		} else {// ∑÷◊È ˝æ›µƒ°∞∆‰À˚°±
+			GroupRowData row = new GroupRowData(grpDataSet, (GroupRowData) first,
+					((GroupRowData) first).getGrpLvl() - 1);
+			FieldCountDef count = fld.getFieldCountDef();
+			FreeFieldConverter converter = m_areaModel.getAreaFields(false).getFieldConverter() ;
+			if (count != null) {
+				String grpFld = count.getRangeFldName();
+				ElseField elseField = topN.getElseField(grpFld);
+				if (elseField != null && !elseField.isCount() && elseField.getShowName() != null) {
+					grpDataSet.setData(row, converter.getConvertName(grpFld), elseField.getShowName());
+				}
+			}else if(fld.getField() != null){
+				String grpFld = fld.getField().getExpression();
+				ElseField elseField = topN.getElseField(grpFld);
+				if (elseField != null && !elseField.isCount() && elseField.getShowName() != null) {
+					grpDataSet.setData(row, converter.getConvertName(grpFld), elseField.getShowName());
+				}
+			}
+			for (int i = begin; i < sortedRows.size(); i++) {
+				row = m_areaModel.getDSTool().appendAggrData(grpDataSet, (GroupRowData) row, sortedRows.get(i),false);//rowData.get(idx[i]), false);
+			}
+			return row;
+		}
+	}
 
-DROP TABLE IF EXISTS `ae_user_group_related`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ae_user_group_related` (
-  `pk_related` varchar(30) NOT NULL,
-  `pk_user` varchar(30) NOT NULL,
-  `pk_user_group` varchar(30) NOT NULL,
-  `createtime` varchar(20) DEFAULT NULL,
-  `modifytime` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`pk_related`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+	private AbsRowData createNullElseRow(GroupDataSet grpDataSet, AbsRowData row, AnaRepField fld) {
+		if(row == null)
+			return createNullRow(grpDataSet, row, 1);
 
---
--- Dumping data for table `ae_user_group_related`
---
-
-LOCK TABLES `ae_user_group_related` WRITE;
-/*!40000 ALTER TABLE `ae_user_group_related` DISABLE KEYS */;
-INSERT INTO `ae_user_group_related` VALUES ('565812d9c70d6793494425d3','5652a903c70d028620f6d2c4','5657d399c70db922ec0b9848','2015-11-27 16:22:49',NULL),('565bf644c70d6a05beaf9fcc','0fvakmtmn39xslumt25h','56581371c70d6793494425da','2015-11-30 15:09:56',NULL),('5658134ac70d6793494425d9','56581312c70d6793494425d6','5657d399c70db922ec0b9848','2015-11-27 16:24:42',NULL),('565bf626c70d6a05beaf9fcb','565bf613c70d6a05beaf9fc9','56581371c70d6793494425da','2015-11-30 15:09:26',NULL);
-/*!40000 ALTER TABLE `ae_user_group_related` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ae_user_role_related`
---
-
-DROP TABLE IF EXISTS `ae_user_role_related`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ae_user_role_related` (
-  `pk_related` varchar(30) NOT NULL,
-  `pk_user` varchar(30) NOT NULL,
-  `pk_role` varchar(30) NOT NULL,
-  `createtime` varchar(20) DEFAULT NULL,
-  `modifytime` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`pk_related`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ae_user_role_related`
---
-
-LOCK TABLES `ae_user_role_related` WRITE;
-/*!40000 ALTER TABLE `ae_user_role_related` DISABLE KEYS */;
-INSERT INTO `ae_user_role_related` VALUES ('48g7s6ke01zrmm2l7hcy','2nvr3z0th110cffgaztk','hg1pcuinerekkgmdnf8g','2015-11-20 08:48:38',NULL),('i0qjb477nuyfitzvtp83','0fvakmtmn39xslumt25h','p4il8l26yq441mnfwwke','2015-11-20 08:49:10',NULL),('565424a4c70d3f3231f55b20','565424a4c70d3f3231f55b1f','hg1pcuinerekkgmdnf8g','2015-11-24 16:49:40',NULL),('5652a903c70d028620f6d2c5','5652a903c70d028620f6d2c4','p4il8l26yq441mnfwwke','2015-11-23 13:49:55',NULL),('56581312c70d6793494425d7','56581312c70d6793494425d6','p4il8l26yq441mnfwwke','2015-11-27 16:23:46',NULL),('565bf613c70d6a05beaf9fca','565bf613c70d6a05beaf9fc9','p4il8l26yq441mnfwwke','2015-11-30 15:09:07',NULL);
-/*!40000 ALTER TABLE `ae_user_role_related` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `spider_info`
---
-
-DROP TABLE IF EXISTS `spider_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `spider_info` (
-  `spider_id` varchar(30) DEFAULT NULL,
-  `name` varchar(200) DEFAULT NULL,
-  `tag` varchar(1000) DEFAULT NULL,
-  `source_type` varchar(200) DEFAULT NULL,
-  `source_url` varchar(2000) DEFAULT NULL,
-  `source_site` varchar(1000) DEFAULT NULL,
-  `code_path` varchar(2000) DEFAULT NULL,
-  `note` varchar(1000) DEFAULT NULL,
-  `creator` varchar(30) DEFAULT NULL,
-  `creation_time` timestamp NULL DEFAULT NULL,
-  `modifier` varchar(30) DEFAULT NULL,
-  `modify_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `project` varchar(200) DEFAULT NULL,
-  `result_store_desc` varchar(2000) DEFAULT NULL,
-  `enable` int(11) DEFAULT NULL,
-  `schedule_config` varchar(1000) DEFAULT NULL,
-  `alert_receiver` varchar(1000) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `spider_info`
---
-
-LOCK TABLES `spider_info` WRITE;
-/*!40000 ALTER TABLE `spider_info` DISABLE KEYS */;
-INSERT INTO `spider_info` VALUES ('56543d82c70d4716dcf691ae','csdnÊñ∞ÈóªÊ†èÁõÆÁà¨Ëô´','csdn','news','csdn.net/1.html','csdn.net','/uspider_manager/DB/sql/mysql/uspider_manager.sql','ÊµãËØï','5652a903c70d028620f6d2c4','2015-11-24 10:37:04','2nvr3z0th110cffgaztk','2015-11-27 01:37:34','UAPÊîØÊåÅÈÉ®','news@HBase1',1,'manual','biancm@yonyou.com'),('5657c189c70d5a975fd558a3','sohuÁà¨Ëô´','','bbs','sohu.com/1.hml','sohu.com','sohuSpider','','2nvr3z0th110cffgaztk','2015-11-27 02:35:53','2nvr3z0th110cffgaztk','2015-11-27 02:35:53','Â§ßÂ®òÊ∞¥È•∫','',0,'manual',''),('5657bfe5c70d5a975fd558a2','sinaÊñ∞ÈóªÁà¨Ëô´','','ecommerce','sina.com.cn/1/2.html','sina.com.cn','sinaSpider','','2nvr3z0th110cffgaztk','2015-11-27 02:28:53','565424a4c70d3f3231f55b1f','2015-12-02 03:52:09','Â§ßÂ®òÊ∞¥È•∫','',1,'once_a_day',''),('56581a0dc70dd2a499b4d32d','ËÖæËÆØÊñ∞ÈóªÁà¨Ëô´','','blog','qq.com/1.html','qq.com','qqSpider','','0fvakmtmn39xslumt25h','2015-11-27 08:53:33','565424a4c70d3f3231f55b1f','2015-12-02 03:51:02','UAPÊîØÊåÅÈÉ®','',1,'once_a_day',''),('565d4c38c70dbc9c50c61a4b','bb','','stock','bb','bb','bb','','565424a4c70d3f3231f55b1f','2015-12-01 07:28:56','565424a4c70d3f3231f55b1f','2015-12-02 07:44:44','bb','',1,'once_a_day',''),('565d1377c70d7c9bf0d87b76','aa3','','bbs','aa','aa','aa','','565424a4c70d3f3231f55b1f','2015-12-01 03:26:47','565424a4c70d3f3231f55b1f','2015-12-02 07:44:58','Â§ßÂ®òÊ∞¥È•∫','',1,'manual',''),('565d4c42c70dbc9c50c61a4c','cc2','','news','cc','cc','cc','','565424a4c70d3f3231f55b1f','2015-12-01 07:29:06','565424a4c70d3f3231f55b1f','2015-12-02 07:51:53','cc','',1,'loop',''),('565d4c4cc70dbc9c50c61a4d','dd8','','news','dd','dd','dd','','565424a4c70d3f3231f55b1f','2015-12-01 07:29:16','565424a4c70d3f3231f55b1f','2015-12-02 08:53:14','dd','',1,'once_a_day',''),('565d4c57c70dbc9c50c61a4e','ee','','news','ee','ee','ee','','565424a4c70d3f3231f55b1f','2015-12-01 07:29:27','565424a4c70d3f3231f55b1f','2015-12-02 06:28:02','ee','',0,'loop',''),('565d4c7bc70dbc9c50c61a4f','ff2','','news','ff','ff2','ff','','565424a4c70d3f3231f55b1f','2015-12-01 07:30:03','565424a4c70d3f3231f55b1f','2015-12-02 08:52:53','ff','',1,'loop',''),('565d4c8bc70dbc9c50c61a50','gg2','','news','gg','csdn.net','__init__','','565424a4c70d3f3231f55b1f','2015-12-01 07:30:19','565424a4c70d3f3231f55b1f','2015-12-03 10:29:03','gg','',1,'loop',''),('565d4c95c70dbc9c50c61a51','hh2','','news','hh','csdn.net','csdn_net_news','','565424a4c70d3f3231f55b1f','2015-12-01 07:30:29','565424a4c70d3f3231f55b1f','2015-12-03 10:22:19','hh','',1,'loop',''),('565e5c6bc70d927749f42a15','xx','','news','xx','xx','','','565424a4c70d3f3231f55b1f','2015-12-02 02:50:19','565424a4c70d3f3231f55b1f','2015-12-02 06:27:27','xx','',1,'loop',''),('565e6b32c70d927749f42a16','yy2','','news','yy','yy','yy','','565424a4c70d3f3231f55b1f','2015-12-02 03:53:22','565424a4c70d3f3231f55b1f','2015-12-02 08:33:26','yy','',1,'loop','');
-/*!40000 ALTER TABLE `spider_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `spider_status`
---
-
-DROP TABLE IF EXISTS `spider_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `spider_status` (
-  `status_id` varchar(30) DEFAULT NULL,
-  `spider_id` varchar(30) DEFAULT NULL,
-  `last_run_time` timestamp NULL DEFAULT NULL,
-  `last_run_host` varchar(200) DEFAULT NULL,
-  `success` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `spider_status`
---
-
-LOCK TABLES `spider_status` WRITE;
-/*!40000 ALTER TABLE `spider_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `spider_status` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2015-12-03 20:51:23
+		TopNSetInfo topN = (TopNSetInfo) fld.getTopNInfo();
+		if (row.isDetailData()) {// √˜œ∏ ˝æ›µƒ°∞∆‰À˚°±
+			MemoryRowData data = new MemoryRowData(row.getMetaData(), null);
+			Field[] flds = row.getMetaData().getFields();
+			ElseField elseField = null;
+			for (int i = 0; i < flds.length; i++) {
+				elseField = getElseField(topN,flds[i].getFldname());
+				if (elseField != null && !elseField.isCount() && elseField.getShowName() != null) {
+					data.setData(i, elseField.getShowName());
+				}
+			}
+			return data;
+		} else {// ∑÷◊È ˝æ›µƒ°∞∆‰À˚°±
+			GroupRowData data = new GroupRowData(grpDataSet, (GroupRowData) row,
+					((GroupRowData) row).getGrpLvl() - 1);
+			FieldCountDef count = fld.getFieldCountDef();
+			if (count != null) {
+				String grpFld = count.getRangeFldName();
+				ElseField elseField = topN.getElseField(grpFld);
+				FreeFieldConverter converter = m_areaModel.getAreaFields(false).getFieldConverter() ;
+				if (elseField != null && !elseField.isCount() && elseField.getShowName() != null) {
+					grpDataSet.setData(data, converter.getConvertName(grpFld), elseField.getShowName());
+				}
+			}
+			return data;
+		}
+	}
+	//Õ®π˝±√˚≤È’“
+	private ElseField getElseField(TopNSetInfo topN,String fldName){
+		List<ElseField> elseFields = topN.getElseFields() ;
+		FreeFieldConverter converter = m_areaModel.getAreaFields(false).getFieldConverter() ;
+		for (int i = 0; i < elseFields.size(); i++) {
+			ElseField elseField = elseFields.get(i) ;
+			String fieldName = converter.getConvertName(elseField.getFieldName()) ;
+			if(fieldName != null && fieldName.equalsIgnoreCase(fldName)){
+				return elseField ;
+			}
+		}
+		return null ;
+	}
+}
