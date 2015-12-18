@@ -9,13 +9,25 @@ import inspect
 from lxml import html, etree
 from urlparse import urljoin
 from dateutil.relativedelta import relativedelta
-from w3lib.html import remove_tags, remove_tags_with_content
+from w3lib.html import remove_tags, remove_tags_with_content, remove_comments
 
 # 空白正则表达式
 _WHITE_SPACE = re.compile("\s+", re.U)
 
 # html中需要删除的标签
 _REMOVE_TAGS = ('script', 'input', 'style')
+
+# html中需要替换的标签
+_REPLACE_TAGS = {
+    'h1': 'strong',
+    'h2': 'strong',
+    'h3': 'strong',
+    'h4': 'strong',
+    'h5': 'strong',
+    'h6': 'strong',
+    'b': 'strong',
+    'i': 'em',
+}
 
 _MATCHER_TIMEUNIT_MAPPING = {
     re.compile(u'(\d+)秒(以|)前', re.U): 'seconds',
@@ -77,6 +89,9 @@ def safe_html(html_part):
     # remove_tags_with_content、remove_tags一起使用来删除标签
     value = remove_tags(value, which_ones=_REMOVE_TAGS)
 
+    # 删除注释
+    value = remove_comments(value)
+
     return value
 
 
@@ -93,14 +108,56 @@ class SafeHtml():
 
         tree = html.fragment_fromstring(html_part, create_parent=True)
 
-        for node in tree.xpath('//*[@src]'):
-            url = node.get('src')
-            url = urljoin(self.base_url, url)
-            node.set('src', url)
-        for node in tree.xpath('//*[@href]'):
-            url = node.get('href')
-            url = urljoin(self.base_url, url)
-            node.set('href', url)
+        for node in tree.iterchildren():
+            # 将src中url替换为绝对路径
+            if node.get('src'):
+                url = node.get('src')
+                url = urljoin(self.base_url, url)
+                node.set('src', url)
+
+            # 将href中url替换为绝对路径
+            if node.get('href'):
+                url = node.get('href')
+                url = urljoin(self.base_url, url)
+                node.set('href', url)
+
+            # 删除便签中的id属性
+            if node.get('id'):
+                del node.attrib['id']
+
+            # 删除便签中的class属性
+            if node.get('class'):
+                del node.attrib['class']
+
+            # 替换标签
+            if node.tag in _REPLACE_TAGS:
+                replace_tag = _REPLACE_TAGS[node.tag]
+                node.tag = replace_tag
+
+        # # 将src中url替换为绝对路径
+        # for node in tree.xpath('//*[@src]'):
+        #     url = node.get('src')
+        #     url = urljoin(self.base_url, url)
+        #     node.set('src', url)
+
+        # # 将href中url替换为绝对路径
+        # for node in tree.xpath('//*[@href]'):
+        #     url = node.get('href')
+        #     url = urljoin(self.base_url, url)
+        #     node.set('href', url)
+
+        # # 删除便签中的id属性
+        # for node in tree.xpath('//*[@id]'):
+        #     del node.attrib['id']
+
+        # # 删除便签中的class属性
+        # for node in tree.xpath('//*[@class]'):
+        #     del node.attrib['class']
+
+        # # 替换标签
+        # for tag, replace_tag in _REPLACE_TAGS.iteritems():
+        #     for node in tree.xpath('//%s' % tag):
+        #         node.tag = replace_tag
 
         data = etree.tostring(tree, pretty_print=False, encoding='unicode')
 
