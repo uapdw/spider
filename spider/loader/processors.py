@@ -15,7 +15,7 @@ from w3lib.html import remove_tags, remove_tags_with_content, remove_comments
 _WHITE_SPACE = re.compile("\s+", re.U)
 
 # html中需要删除的标签
-_REMOVE_TAGS = ('script', 'input', 'style')
+_REMOVE_TAGS = ('script', 'input', 'style', 'link')
 
 # html中需要替换的标签
 _REPLACE_TAGS = {
