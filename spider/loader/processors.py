@@ -13,7 +13,7 @@ from w3lib.html import remove_tags, remove_tags_with_content
 _WHITE_SPACE = re.compile("\s+", re.U)
 
 # html中需要删除的标签
-_REMOVE_TAGS = ('script', 'img', 'input', 'style')
+_REMOVE_TAGS = ('script', 'input', 'style')
 
 _MATCHER_TIMEUNIT_MAPPING = {
     re.compile(u'(\d+)秒(以|)前', re.U): 'seconds',
@@ -71,6 +71,9 @@ def safe_html(html_part):
     value = remove_tags_with_content(
         html_part,
         which_ones=_REMOVE_TAGS)
+
+    # remove_tags_with_content、remove_tags一起使用来删除标签
+    value = remove_tags(value, which_ones=_REMOVE_TAGS)
 
     return value
 
