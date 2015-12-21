@@ -87,9 +87,7 @@ class NewsSpider(TargetUrlsCallbackSpider):
     subclass_required_attrs = [
         'content_xpath',
         'publish_time_xpath',
-        'publish_time_format',
-        'source_domain',
-        'source_name'
+        'publish_time_format'
     ]
 
     title_xpath = '//title'
@@ -105,6 +103,18 @@ class NewsSpider(TargetUrlsCallbackSpider):
                 raise ValueError(
                     "%s must have a %s" % (type(self).__name__, attr)
                 )
+
+        if not getattr(self, 'site_domain', None) and \
+                not getattr(self, 'source_domain', None):
+            raise ValueError(
+                "%s must have a site_domain" % (type(self).__name__, attr)
+            )
+
+        if not getattr(self, 'site_name', None) and \
+                not getattr(self, 'source_name', None):
+            raise ValueError(
+                "%s must have a site_name" % (type(self).__name__, attr)
+            )
 
     def parse_news(self, response):
         l = ItemLoader(item=UradarNewsItem(), response=response)
@@ -172,8 +182,12 @@ class NewsSpider(TargetUrlsCallbackSpider):
                 l.add_xpath('source', self.source_xpath, MapCompose(text),
                             MapCompose(RegexProcessor(source_re)))
 
-        l.add_value('source_domain', self.source_domain)
-        l.add_value('source_name', self.source_name)
+        l.add_value('site_domain', getattr(self, 'site_domain', None))
+        l.add_value('site_name', getattr(self, 'site_name', None))
+
+        # 兼容原有爬虫
+        l.add_value('site_domain', getattr(self, 'source_domain', None))
+        l.add_value('site_name', getattr(self, 'source_name', None))
 
         l.add_value('add_time', datetime.datetime.now())
 
@@ -189,9 +203,7 @@ class BlogSpider(TargetUrlsCallbackSpider):
         'content_xpath',
         'author_xpath',
         'publish_time_xpath',
-        'publish_time_format',
-        'source_domain',
-        'source_name'
+        'publish_time_format'
     ]
 
     abstract_xpath = '//meta[@name="description"]/@content'
@@ -206,6 +218,18 @@ class BlogSpider(TargetUrlsCallbackSpider):
                 raise ValueError(
                     "%s must have a %s" % (type(self).__name__, attr)
                 )
+
+        if not getattr(self, 'site_domain', None) and \
+                not getattr(self, 'source_domain', None):
+            raise ValueError(
+                "%s must have a site_domain" % (type(self).__name__, attr)
+            )
+
+        if not getattr(self, 'site_name', None) and \
+                not getattr(self, 'source_name', None):
+            raise ValueError(
+                "%s must have a site_name" % (type(self).__name__, attr)
+            )
 
     def parse_blog(self, response):
         l = ItemLoader(item=UradarBlogItem(), response=response)
@@ -256,8 +280,12 @@ class BlogSpider(TargetUrlsCallbackSpider):
                 l.add_xpath('source', self.source_xpath, MapCompose(text),
                             MapCompose(RegexProcessor(source_re)))
 
-        l.add_value('source_domain', self.source_domain)
-        l.add_value('source_name', self.source_name)
+        l.add_value('site_domain', getattr(self, 'site_domain', None))
+        l.add_value('site_name', getattr(self, 'site_name', None))
+
+        # 兼容原有爬虫
+        l.add_value('site_domain', getattr(self, 'source_domain', None))
+        l.add_value('site_name', getattr(self, 'source_name', None))
 
         l.add_value('add_time', datetime.datetime.now())
 

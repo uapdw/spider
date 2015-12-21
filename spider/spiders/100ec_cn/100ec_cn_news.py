@@ -24,5 +24,5 @@ class N100ecNewsSpider(NewsSpider):
     source_xpath = '//*[@class="public f_hong"]'
     source_re = u'.*?(\S+)\s*\d{4}年\d{2}月\d{2}日\d{2}:\d{2}.*'
 
-    source_domain = '100ec.com'
-    source_name = u'中国电子商务研究中心'
+    site_domain = '100ec.com'
+    site_name = u'中国电子商务研究中心'

@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
 
-from spider.items import UradarNewsItem
+from spider.items import UradarReportItem
 
 
 class GartnerNewsSpider(CrawlSpider):
@@ -35,8 +35,8 @@ class GartnerNewsSpider(CrawlSpider):
         content = sel.xpath('//div[@id="doc-body"]').extract()
         i['content'] = len(content) > 0 and content[0] or ''
 
-        i['source_domain'] = 'gartner.com'
-        i['source_name'] = 'gartner'
+        i['site_domain'] = 'gartner.com'
+        i['site_name'] = 'gartner'
         i['add_time'] = datetime.datetime.now()
 
         return i
@@ -47,7 +47,7 @@ class GartnerNewsSpider(CrawlSpider):
         reportContents = sel.xpath(
             '//table[@class="table searchResults"]/tbody/tr')[0:]
         for report in reportContents:
-            i = UradarNewsItem()
+            i = UradarReportItem()
 
             i['url'] = report.xpath('td/div/h3/a/@href').extract()[0]
 

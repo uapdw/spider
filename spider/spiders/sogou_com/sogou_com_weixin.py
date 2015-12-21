@@ -5,7 +5,7 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.loader.processors import TakeFirst, MapCompose, Join
 
 from spider.loader import ItemLoader
-from spider.items import UradarNewsItem
+from spider.items import UradarWeixinItem
 from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
                                       safe_html)
 
@@ -48,7 +48,7 @@ class SogouWeixinSpider(CrawlSpider):
 
     def parse_weixin(self, response):
 
-        l = ItemLoader(item=UradarNewsItem(), response=response)
+        l = ItemLoader(item=UradarWeixinItem(), response=response)
         l.default_output_processor = TakeFirst()
 
         l.add_value('url', response.url)
@@ -83,8 +83,8 @@ class SogouWeixinSpider(CrawlSpider):
         l.add_xpath('keywords', '//meta[@name="keywords"]/@content',
                     MapCompose(text))
 
-        l.add_value('source_domain', 'sogou.com')
-        l.add_value('source_name', u'搜狗')
+        l.add_value('site_domain', 'sogou.com')
+        l.add_value('site_name', u'搜狗')
 
         i = l.load_item()
         return i

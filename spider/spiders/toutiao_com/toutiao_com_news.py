@@ -95,8 +95,8 @@ class ArticleToutiaoSpider(Spider):
         l.add_xpath('keywords', '//meta[@name="keywords"]/@content',
                     MapCompose(text))
 
-        l.add_value('source_domain', 'toutiao.com')
-        l.add_value('source_name', u'今日头条')
+        l.add_value('site_domain', 'toutiao.com')
+        l.add_value('site_name', u'今日头条')
 
         i = l.load_item()
         return i

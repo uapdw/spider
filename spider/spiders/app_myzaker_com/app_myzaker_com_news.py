@@ -117,8 +117,8 @@ class ZakerNewsSpider(Spider):
 
         i['keywords'] = xpath.first('//meta[@name="keywords"]/@content')
         i['content'] = xpath.first('//*[@id="content_text"]')
-        i['source_domain'] = 'app.myzaker.com'
-        i['source_name'] = 'Zaker'
+        i['site_domain'] = 'app.myzaker.com'
+        i['site_name'] = 'Zaker'
         i['add_time'] = datetime.datetime.now()
 
         return i

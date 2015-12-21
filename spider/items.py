@@ -24,9 +24,9 @@ class HBaseItem(Item):
                 raise DropItem('not field %s' % required_field)
 
 
-class UradarNewsItem(HBaseItem):
+class UradarArticleItem(HBaseItem):
 
-    table_name = 'uradar_news'
+    table_name = 'uradar_article'
     row_key_field = 'url'
     required_fields = ['url', 'title', 'content', 'publish_time']
 
@@ -39,33 +39,37 @@ class UradarNewsItem(HBaseItem):
     source = Field()  # 文章来源
     keywords = Field()
 
-    source_domain = Field()
-    source_name = Field()
+    article_type = Field()  # 文章类型
+    site_domain = Field()
+    site_name = Field()
 
     add_time = Field()
     news_type = Field()
     sentiment = Field()
 
 
-class UradarBlogItem(HBaseItem):
+class UradarNewsItem(UradarArticleItem):
 
-    table_name = 'uradar_blog'
-    row_key_field = 'url'
-    required_fields = ['url', 'title', 'content', 'publish_time']
+    def __init__(self):
+        super(UradarNewsItem, self).__init__(article_type='1')
 
-    url = Field()
-    title = Field()
-    author = Field()
-    abstract = Field()
-    content = Field()
-    publish_time = Field()
-    source = Field()
-    keywords = Field()
 
-    source_domain = Field()
-    source_name = Field()
+class UradarBlogItem(UradarArticleItem):
 
-    add_time = Field()
+    def __init__(self):
+        super(UradarBlogItem, self).__init__(article_type='3')
+
+
+class UradarWeixinItem(UradarArticleItem):
+
+    def __init__(self):
+        super(UradarWeixinItem, self).__init__(article_type='2')
+
+
+class UradarReportItem(UradarArticleItem):
+
+    def __init__(self):
+        super(UradarReportItem, self).__init__(article_type='4')
 
 
 class UradarActivityItem(HBaseItem):

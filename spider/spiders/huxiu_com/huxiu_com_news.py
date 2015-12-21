@@ -138,8 +138,8 @@ class HuxiuNewsSpider(Spider):
         l.add_xpath('keywords', '//meta[@name="keywords"]/@content',
                     MapCompose(text))
 
-        l.add_value('source_domain', 'huxiu.com')
-        l.add_value('source_name', u'虎嗅网')
+        l.add_value('site_domain', 'huxiu.com')
+        l.add_value('site_name', u'虎嗅网')
 
         i = l.load_item()
         return i
