@@ -16,7 +16,7 @@ class N100ecNewsSpider(NewsSpider):
     ]
 
     title_xpath = '//*[@class="newsview"]/h2'
-    content_xpath = '//*[@class="newsview"]'
+    content_xpath = '//*[@class="nr"]'
     publish_time_xpath = '//*[@class="public f_hong"]'
     publish_time_re = u'.*(\d{4})年(\d{2})月(\d{2})日(\d{2}:\d{2}).*'
     publish_time_re_join = '-'
