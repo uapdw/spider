@@ -16,7 +16,7 @@ class CbinewsNewsSpider(NewsSpider):
     ]
 
     title_xpath = '//*[@id="cont_title"]'
-    content_xpath = '//*[@id="the_content"]'
+    content_xpath = '//*[@id="the_content"]/p'
     author_xpath = '//*[@class="textsource"]'
     author_re = u'.*?作者：\s*(\S+).*'
     publish_time_xpath = '//*[@class="textsource"]'
