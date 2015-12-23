@@ -72,7 +72,7 @@ class GartnerNewsSpider(CrawlSpider):
             if len(pubTime) > 0:
                 t = time.strptime(pubTime[0].strip(), "%d %B %Y")
                 y, m, d = t[0:3]
-                i['publish_time'] = datetime.date(y, m, d)
+                i['publish_time'] = datetime.datetime(y, m, d)
 
             items.append(i)
 
