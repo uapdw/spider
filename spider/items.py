@@ -44,7 +44,6 @@ class UradarArticleItem(HBaseItem):
     site_name = Field()
 
     add_time = Field()
-    news_type = Field()
     sentiment = Field()
 
 
