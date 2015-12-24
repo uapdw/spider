@@ -70,7 +70,7 @@ def text(html_part):
     return _WHITE_SPACE.sub(u' ', value).strip()
 
 
-def safe_html(html_part):
+def _safe_html(html_part):
     '''去掉html中一些标签(script、input等)
     @type  html_part: unicode
     @param html_part: html的一部分，或者一段文本
@@ -102,7 +102,7 @@ class SafeHtml():
 
     def __call__(self, html_part):
 
-        html_part = safe_html(html_part)
+        html_part = _safe_html(html_part)
 
         html_part = html_part.strip()
 
