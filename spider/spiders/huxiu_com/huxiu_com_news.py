@@ -12,7 +12,7 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.items import UradarNewsItem
 from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
-                                      safe_html)
+                                      SafeHtml)
 
 
 class HuxiuNewsSpider(Spider):
@@ -117,7 +117,7 @@ class HuxiuNewsSpider(Spider):
 
         l.add_xpath('title', '//*[@class="article-wrap"]/h1', MapCompose(text))
         l.add_xpath('content', '//*[@id="article_content"]',
-                    MapCompose(safe_html), Join('\n'))
+                    MapCompose(SafeHtml(response.url)), Join('\n'))
 
         l.add_xpath('author',
                     '//*[@class="author-name"]',

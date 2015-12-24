@@ -12,6 +12,7 @@ from scrapy.selector import Selector
 from scrapy.http import Request
 from scrapy import Spider
 from spider.items import UradarNewsItem
+from spider.loader.processors import SafeHtml
 
 
 class ZakerNewsSpider(Spider):
@@ -116,7 +117,12 @@ class ZakerNewsSpider(Spider):
             i['publish_time'] = ''
 
         i['keywords'] = xpath.first('//meta[@name="keywords"]/@content')
+
         i['content'] = xpath.first('//*[@id="content_text"]')
+        # 过滤内容
+        s = SafeHtml(response.url)
+        i['content'] = s(i['content'])
+
         i['site_domain'] = 'app.myzaker.com'
         i['site_name'] = 'Zaker'
         i['add_time'] = datetime.datetime.now()

@@ -12,7 +12,7 @@ from scrapy.loader.processors import TakeFirst, MapCompose
 
 from spider.loader import ItemLoader
 from spider.items import UradarNewsItem
-from spider.loader.processors import (text, safe_html,
+from spider.loader.processors import (text, SafeHtml,
                                       DateProcessor, PipelineProcessor)
 
 
@@ -77,7 +77,7 @@ class ArticleToutiaoSpider(Spider):
         l.add_xpath('title', '//*[@class="title"]/h1', MapCompose(text))
 
         l.add_xpath('content', '//*[@class="article-content"]',
-                    MapCompose(safe_html))
+                    MapCompose(SafeHtml(response.url)))
 
         l.add_xpath('publish_time', '//*[@class="time"]', MapCompose(
             PipelineProcessor(

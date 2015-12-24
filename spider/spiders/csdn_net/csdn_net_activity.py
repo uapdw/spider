@@ -10,7 +10,7 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.items import UradarActivityItem
 from spider.loader.processors import (text, PipelineProcessor,
-                                      RegexProcessor, safe_html)
+                                      RegexProcessor, SafeHtml)
 
 
 class CSDNActivitySpider(CrawlSpider):
@@ -42,7 +42,7 @@ class CSDNActivitySpider(CrawlSpider):
                     MapCompose(text))
 
         l.add_xpath('content', '//*[@class="guests-intro"]',
-                    MapCompose(safe_html), Join('\n'))
+                    MapCompose(SafeHtml(response.url)), Join('\n'))
 
         l.add_xpath('location', '//*[@class="con"]/dd',
                     MapCompose(PipelineProcessor(

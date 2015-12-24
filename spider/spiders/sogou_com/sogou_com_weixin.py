@@ -7,7 +7,7 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.items import UradarWeixinItem
 from spider.loader.processors import (text, DateProcessor, PipelineProcessor,
-                                      safe_html)
+                                      SafeHtml)
 
 
 class SogouWeixinSpider(CrawlSpider):
@@ -57,7 +57,7 @@ class SogouWeixinSpider(CrawlSpider):
                     MapCompose(text))
 
         l.add_xpath('content', '//*[@class="rich_media_content "]',
-                    MapCompose(safe_html), Join('\n'))
+                    MapCompose(SafeHtml(response.url)), Join('\n'))
 
         l.add_xpath('author',
                     '//*[@class="rich_media_meta rich_media_meta_text"][2]',

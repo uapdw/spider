@@ -8,6 +8,7 @@ from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
 
 from spider.items import UradarReportItem
+from spider.loader.processors import SafeHtml
 
 
 class GartnerNewsSpider(CrawlSpider):
@@ -34,6 +35,10 @@ class GartnerNewsSpider(CrawlSpider):
 
         content = sel.xpath('//div[@id="doc-body"]').extract()
         i['content'] = len(content) > 0 and content[0] or ''
+
+        # content内容过滤
+        s = SafeHtml(response.url)
+        i['content'] = s(i['content'])
 
         i['site_domain'] = 'gartner.com'
         i['site_name'] = 'gartner'
