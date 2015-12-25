@@ -108,7 +108,7 @@ class SafeHtml():
 
         tree = html.fragment_fromstring(html_part, create_parent=True)
 
-        for node in tree.iterchildren():
+        for node in tree.iterdescendants():
             # 将src中url替换为绝对路径
             if node.get('src'):
                 url = node.get('src')
