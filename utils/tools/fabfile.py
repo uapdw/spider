@@ -8,7 +8,17 @@ __author__ = 'zhangxind'
 env.user = 'root'
 env.colorize_errors = True
 env.roledefs = {
-  'spider-test': ['172.20.8.162']
+  'spider-test': ['172.20.8.162'],
+  'spider-worker': [
+    '172.20.3.101',
+    '172.20.3.102',
+    # '172.20.3.103',
+    # '172.20.3.104',
+    # '172.20.3.105',
+    # '172.20.3.106',
+    # '172.20.3.107',
+    # '172.20.3.108'
+  ]
 }
 
 _TAR_FILE = 'dist-spider.tar.gz'
@@ -25,8 +35,8 @@ def getNewCode():
 
 
 def build():
-  includes = ['hbase', '*.txt', '*.cfg', 'spider']
-  excludes = ['*.pyc']
+  includes = ['hbase', '*.txt', '*.cfg', 'spider', 'utils']
+  excludes = ['*.pyc','*.tar.gz']
   with settings(warn_only=True):
     if local('test -f %s' % _DIST_FILE_PATH).return_code == 0:
       print 'Remove dist file.'
@@ -63,11 +73,21 @@ def copyFile():
       run('chown -R root:root %s' % newDir)
 
 
+def copySupervisorConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_spider_worker.conf /etc/supervisor')
 
-def deploy():
+
+def reloadSupervisor():
+  run('supervisorctl reload')
+
+
+def deploySpiderWorker():
   getNewCode()
   build()
   copyFile()
+  copySupervisorConf()
+  reloadSupervisor()
+
 
 
 def testEnv():
