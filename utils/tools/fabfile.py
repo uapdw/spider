@@ -18,6 +18,12 @@ env.roledefs = {
     # '172.20.3.106',
     # '172.20.3.107',
     # '172.20.3.108'
+  ],
+  'spider-beat': [
+    '172.20.3.102',
+  ],
+  'flower': [
+    '172.20.3.102',
   ]
 }
 
@@ -30,8 +36,8 @@ _TARGET_TMP_FILE = '/tmp/%s' % _TAR_FILE
 
 
 def getNewCode():
-  with lcd(_CODE_DIR):
-    local('git pull origin develop')
+    with lcd(_CODE_DIR):
+        local('git pull origin develop')
 
 
 def build():
@@ -73,27 +79,48 @@ def copyFile():
       run('chown -R root:root %s' % newDir)
 
 
-def copySupervisorConf():
+def copySupervisorWorkerConf():
     run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_spider_worker.conf /etc/supervisor')
 
 
+def copySupervisorBeatConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_spider_beat.conf /etc/supervisor')
+
+
+def copySupervisorFlowerConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_flower.conf /etc/supervisor')
+
+
 def reloadSupervisor():
-  run('supervisorctl reload')
+    run('supervisorctl reload')
+
+
+def deploySpider():
+    getNewCode()
+    build()
+    copyFile()
 
 
 def deploySpiderWorker():
-  getNewCode()
-  build()
-  copyFile()
-  copySupervisorConf()
-  reloadSupervisor()
+    getNewCode()
+    build()
+    copyFile()
+    copySupervisorWorkerConf()
+    reloadSupervisor()
 
+
+def deploySpiderBeat():
+    copySupervisorBeatConf()
+    reloadSupervisor()
+
+
+def deployFlower():
+    copySupervisorFlowerConf()
+    reloadSupervisor()
 
 
 def testEnv():
-  print "Executing on %(host)s as %(user)s" % env
-
-
+    print "Executing on %(host)s as %(user)s" % env
 
 
 

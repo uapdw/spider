@@ -54,7 +54,8 @@ def sendSpiderTask(funcName, spiderList):
     print '#'*50
 
 
-@periodic_task(run_every=crontab(minute=0, hour=0))
+# @periodic_task(run_every=crontab(minute='0', hour=0))
+@periodic_task(run_every=crontab(minute='*/2'))
 def runSpiderAtMidNight():
     spiderList = session.execute("SELECT spider_id, code_path, schedule_config FROM spider_info where enable=1 and schedule_config = 'once_a_day' and (status = 'init' or status = 'success' or status = 'failed')").fetchall()
     sendSpiderTask('runSpiderAtMidNight', spiderList)
@@ -81,7 +82,7 @@ def runSpider(self, spiderId, spiderName):
 
     print "run spider: %s ...." % spiderName
     # subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
-    time.sleep(300)
+    time.sleep(70)
 
     endTime = datetime.datetime.now()
     strEndTime = datetime.datetime.strftime(endTime, '%Y-%m-%d %H:%M:%S')
