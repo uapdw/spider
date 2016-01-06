@@ -81,8 +81,8 @@ def runSpider(self, spiderId, spiderName):
     session.execute("insert into spider_run_history (history_id, spider_id, start_time, run_host, run_status) values('%s', '%s', '%s', '%s', '%s')" % (jobId, spiderId, strStartTime, hostName, 'running'))
 
     print "run spider: %s ...." % spiderName
-    # subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
-    time.sleep(70)
+    subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
+    # time.sleep(70)
 
     endTime = datetime.datetime.now()
     strEndTime = datetime.datetime.strftime(endTime, '%Y-%m-%d %H:%M:%S')
