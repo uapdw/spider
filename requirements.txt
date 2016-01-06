@@ -1,6 +1,5 @@
 amqp==1.4.8
 anyjson==0.3.3
-APScheduler==3.0.5
 Babel==2.1.1
 backports-abc==0.4
 backports.ssl-match-hostname==3.4.0.2
@@ -22,7 +21,6 @@ idna==2.0
 ipaddress==1.0.15
 kombu==3.0.30
 lxml==3.5.0
-mysql-connector-python==2.0.4
 paramiko==1.16.0
 pyasn1==0.1.9
 pyasn1-modules==0.0.8
