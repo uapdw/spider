@@ -12,8 +12,8 @@ fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
 ITEM_PIPELINES = {
-    'spider.pipelines.JSONWriterPipeline': 1
-    # 'spider.pipelines.HBaseItemPipeline': 1
+    #'spider.pipelines.JSONWriterPipeline': 1
+    'spider.pipelines.HBaseItemPipeline': 1
 }
 
 DOWNLOAD_DELAY = 1

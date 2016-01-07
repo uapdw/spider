@@ -1,4 +1,0 @@
-# deploy command:
-
-fab -R spider-test deploy
-

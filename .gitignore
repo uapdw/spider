@@ -3,3 +3,4 @@ items.jl
 *.swp
 utils/dist/*.tar.gz
 *.sublime*
+celerybeat-schedule
