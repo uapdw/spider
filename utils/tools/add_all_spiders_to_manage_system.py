@@ -16,6 +16,13 @@ from scrapy.utils.project import get_project_settings
 from scrapy.spiderloader import SpiderLoader
 
 
+"""添加所有爬虫到爬虫管理系统
+现在source_type都是news，不是的需要改过来
+source_site用allowed_domains第一个，但是爬虫管理系统校验时把它当目录来用
+所以要和目录名一致才行
+"""
+
+
 Base = declarative_base()
 
 
