@@ -32,5 +32,5 @@ LOG_LEVEL = 'INFO'
 LOG_STDOUT = True
 LOG_FILE = '/data0/log/scrapy.log'
 
-HBASE_HOST = '172.20.3.107'
+HBASE_HOST = '172.20.6.61'
 HBASE_PORT = 9090
