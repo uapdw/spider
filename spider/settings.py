@@ -12,8 +12,9 @@ fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
 ITEM_PIPELINES = {
-    #'spider.pipelines.JSONWriterPipeline': 1
-    'spider.pipelines.HBaseItemPipeline': 1
+    # 'spider.pipelines.JSONWriterPipeline': 1,
+    'spider.pipelines.HBaseItemPipeline': 1,
+    'spider.pipelines.SolrItemPipeline': 2
 }
 
 DOWNLOAD_DELAY = 1
@@ -23,3 +24,6 @@ DOWNLOAD_TIMEOUT = 10
 
 HBASE_HOST = '172.20.6.61'
 HBASE_PORT = 9090
+SOLR_HOST = '172.20.8.87'
+SOLR_PORT = 8983
+SOLR_INDEX = 'uradar_article'
