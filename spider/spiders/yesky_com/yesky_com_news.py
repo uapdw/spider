@@ -15,7 +15,7 @@ class YeskyComNewsSpider(NewsSpider):
         'yesky.com/\d+/\d+.shtml'
     ]
 
-    title_xpath = '//*[@class="title"]'
+    title_xpath = '//*[@class="title"]/h1'
     content_xpath = '//*[@class="article"]'
     author_xpath = '//*[@class="editor"]'
     author_re = u'.*?作者：\s*(\S+).*'
