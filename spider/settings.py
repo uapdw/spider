@@ -12,9 +12,9 @@ fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
 ITEM_PIPELINES = {
-    'spider.pipelines.JSONWriterPipeline': 1,
-    # 'spider.pipelines.HBaseItemPipeline': 1,
-    # 'spider.pipelines.SolrItemPipeline': 2
+    #'spider.pipelines.JSONWriterPipeline': 1,
+     'spider.pipelines.HBaseItemPipeline': 1,
+     'spider.pipelines.SolrItemPipeline': 2
 }
 
 REACTOR_THREADPOOL_MAXSIZE = 20
@@ -35,8 +35,8 @@ DEPTH_LIMIT = 3
 DEPTH_STATS_VERBOSE = True
 
 LOG_LEVEL = 'INFO'
-LOG_STDOUT = True
-LOG_FILE = '/data0/log/scrapy.log'
+LOG_STDOUT = False
+LOG_FILE = '/tmp/scrapy.log'
 
 
 HBASE_HOST = '172.20.6.61'
