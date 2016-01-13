@@ -12,15 +12,19 @@ fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
 ITEM_PIPELINES = {
-    # 'spider.pipelines.JSONWriterPipeline': 1,
-    'spider.pipelines.HBaseItemPipeline': 1,
+    'spider.pipelines.JSONWriterPipeline': 1,
+    # 'spider.pipelines.HBaseItemPipeline': 1,
     # 'spider.pipelines.SolrItemPipeline': 2
 }
 
-DOWNLOAD_DELAY = 1
-CONCURRENT_REQUESTS_PER_DOMAIN = 8
-CONCURRENT_REQUESTS = 16
-DOWNLOAD_TIMEOUT = 10
+CONCURRENT_REQUESTS = 100
+REACTOR_THREADPOOL_MAXSIZE = 20
+LOG_LEVEL = 'INFO'
+COOKIES_ENABLED = False
+RETRY_ENABLED = False
+DOWNLOAD_TIMEOUT = 15
+REDIRECT_ENABLED = False
+AJAXCRAWL_ENABLED = True
 
 HBASE_HOST = '172.20.6.61'
 HBASE_PORT = 9090
