@@ -8,7 +8,7 @@ __author__ = 'zhangxind'
 env.user = 'root'
 env.colorize_errors = True
 env.roledefs = {
-  'spider-test': ['172.20.8.162'],
+  'spider-test': ['172.20.8.163'],
   'spider-worker': [
     '172.20.14.80',
     '172.20.14.93',

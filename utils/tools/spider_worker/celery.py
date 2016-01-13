@@ -54,8 +54,7 @@ def sendSpiderTask(funcName, spiderList):
     print '#'*50
 
 
-# @periodic_task(run_every=crontab(minute='0', hour=0))
-@periodic_task(run_every=crontab(minute='*/2'))
+@periodic_task(run_every=crontab(minute=0, hour=0))
 def runSpiderAtMidNight():
     spiderList = session.execute("SELECT spider_id, code_path, schedule_config FROM spider_info where enable=1 and schedule_config = 'once_a_day' and (status = 'init' or status = 'success' or status = 'failed')").fetchall()
     sendSpiderTask('runSpiderAtMidNight', spiderList)
