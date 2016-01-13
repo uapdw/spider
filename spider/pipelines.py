@@ -156,7 +156,7 @@ class HBaseItemPipeline(object):
         )
 
     def open_spider(self, spider):
-        self.transport = TBufferedTransport(TSocket(self.host, self.port))
+        self.transport = TBufferedTransport(TSocket(self.host, self.port), 40960)
         self.transport.open()
         protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
         self.client = Hbase.Client(protocol)
