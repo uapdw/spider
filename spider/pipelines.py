@@ -103,11 +103,11 @@ class SolrItemPipeline(object):
 
         doc = self._gen_doc(item)
 
-        # 检查重复
+        # 检查重复, 删除重复记录
         query = 'title_nt:"%s"' % doc['title_nt']
         result = self.solr.search(query, start=0, rows=1)
         if len(result.docs) > 0:
-            return
+            self.solr.delete(id=result.docs[0]['signatureID'])
 
         self.solr.add([doc])
 
