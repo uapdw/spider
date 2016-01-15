@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import hashlib
 import datetime
 
@@ -41,29 +42,23 @@ class JSONWriterPipeline(object):
         self.file.close()
 
     def process_item(self, item, spider):
-        item.validate()
-        line = self._genItemLine(item) + "\n\n"
+
+        if isinstance(item, HBaseItem):
+            item.validate()
+
+        line = self._genItemLine(item) + "\n"
         self.file.write(line)
         return item
 
     def _genItemLine(self, item):
-        l = []
+        item_dict = {}
         for field in item:
             v = item[field]
-            if v is None:
-                v = ''
-            elif isinstance(v, str):
-                pass
-            elif isinstance(v, int):
-                v = str(v)
-            elif isinstance(v, unicode):
-                v = v.encode('utf-8')
-            elif (isinstance(v, datetime.datetime)
+            if (isinstance(v, datetime.datetime)
                     or isinstance(v, datetime.date)):
                 v = v.strftime("%Y-%m-%d %H:%M:%S")
-
-            l.append('%s:%s' % (field, v))
-        return '\n'.join(l)
+            item_dict[field] = v
+        return json.dumps(item_dict)
 
 
 class SolrItemPipeline(object):
