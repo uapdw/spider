@@ -14,6 +14,7 @@ class UradarUrlSpider(Spider):
     u"""UradarUrl爬虫
     爬虫内注册(url的正则表达式,Item的Loader类)，对匹配的url进行item解析，
     响应中所有的url都返回一个请求
+    运行方式：scrapy crawl uradar_url -a config_path=<path of config>
     """
 
     name = 'uradar_url'
@@ -45,7 +46,6 @@ class UradarUrlSpider(Spider):
             allow=('.*'),
             allow_domains=self.allowed_domains
         )
-        import pdb;pdb.set_trace()
 
     def parse(self, response):
 
@@ -65,4 +65,3 @@ class UradarUrlSpider(Spider):
         ret_list.extend([Request(link) for link in links])
 
         return ret_list
-
