@@ -229,7 +229,7 @@ class PipelineProcessor(object):
         return value
 
 
-class ItemExtractor(object):
+"""class ItemExtractor(object):
     '''从response中生成item
 
     field_extractor_mapping，字段和字段extractor列表的映射
@@ -258,4 +258,4 @@ class ItemExtractor(object):
                 value = extractor
 
             i[field] = value
-        return i
+        return i"""
