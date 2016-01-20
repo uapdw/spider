@@ -54,24 +54,34 @@ def transport_spiders():
             ignore_list.append(name)
             continue
 
-        for target_url in target_urls:
-            url_loader_dict[target_url] = re.sub(
-                'Spider', 'Loader', spider.__name__)
-
         try:
             source = inspect.getsource(spider)
         except:
             ignore_list.append(name)
             continue
 
+        loader_class_name = re.sub('Spider', 'Loader', spider.__name__)
         # 爬虫文件所在目录名
         parent_package = spider.__module__.split('.')[-2]
+
+        # 如果以数字开头前面加n
+        if re.match('\d+\S*', name):
+            name = 'n' + name
+        if re.match('\d+\S*', parent_package):
+            parent_package = 'n' + parent_package
+
+        # -替换为_
+        name = re.sub('-', '_', name)
+        parent_package = re.sub('-', '_', parent_package)
+
+        for target_url in target_urls:
+            url_loader_dict[target_url] = loader_class_name
 
         import_list.append(
             {
                 'path': parent_package,
                 'file': name,
-                'class': re.sub('Spider', 'Loader', spider.__name__)
+                'class': loader_class_name
             }
         )
 
@@ -104,7 +114,7 @@ def transport_spiders():
             item['file'],
             item['class']
         ))
-    init_file.write("\n__all__ = [\n\t%s\n]" % ',\n\t'.join(
+    init_file.write("\n__all__ = [\n    %s\n]" % ',\n    '.join(
         ["'%s'" % item['class'] for item in import_list]
     ))
     init_file.flush()

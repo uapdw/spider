@@ -9,63 +9,6 @@ from spider.loader.processors import (SafeHtml, text, DateProcessor,
                                       RegexProcessor, PipelineProcessor)
 from spider.items import UradarNewsItem, UradarBlogItem
 
-from spider.loader.loaders.it168_com.it168_com_news import It168NewsLoader
-from spider.loader.loaders.data_tsci_com_cn.data_tsci_com_cn_news import DataTsciComCnNewsLoader
-from spider.loader.loaders.qudong_com.qudong_com_news import QudongNewsLoader
-from spider.loader.loaders.kn58_com.kn58_com_news import Kn58NewsLoader
-from spider.loader.loaders.csdn_net.csdn_net_news import CSDNNewsLoader
-from spider.loader.loaders.csdn_net.csdn_net_blog import CSDNBlogLoader
-from spider.loader.loaders.techweb_com_cn.techweb_com_cn_news import TechwebNewsLoader
-from spider.loader.loaders.cnsoftnews_com.cnsoftnews_com_news import CnsoftNewsLoader
-from spider.loader.loaders.ctocio_com.ctocio_com_news import CtocioNewsLoader
-from spider.loader.loaders.199it_com.199it_com_news import N199itNewsLoader
-from spider.loader.loaders.qq_com.qq_com_news import QQNewsLoader
-from spider.loader.loaders.cnii_com_cn.cnii_com_cn_news import CniiComCnNewsLoader
-from spider.loader.loaders.leiphone_com.leiphone_com_news import LeiphoneNewsLoader
-from spider.loader.loaders.zol_com_cn.zol_com_cn_news import ZolNewsLoader
-from spider.loader.loaders.e-works_net_cn.eworks_net_cn_news import EworksNewsLoader
-from spider.loader.loaders.sootoo_com.sootoo_com_news import SootooNewsLoader
-from spider.loader.loaders.vsharing_com.vsharing_com_news import VsharingNewsLoader
-from spider.loader.loaders.people_com_cn.people_com_cn_news import PeopleComCnNewsLoader
-from spider.loader.loaders.163_com.163_com_news import WWW163NewsLoader
-from spider.loader.loaders.zjol_com_cn.zjol_com_cn_news import ZJOLComCnNewsLoader
-from spider.loader.loaders.idc_com_cn.idc_com_cn_news import IdcNewsLoader
-from spider.loader.loaders.eastday_com.eastday_com_news import EastDayNewsLoader
-from spider.loader.loaders.caijing_com_cn.caijing_com_cn_news import CaijingNewsLoader
-from spider.loader.loaders.ccidnet_com.ccidnet_com_news import CcidnetNewsLoader
-from spider.loader.loaders.chinabyte_com.chinabyte_com_news import ChinabyteNewsLoader
-from spider.loader.loaders.ciotimes_com.ciotimes_com_news import CiotimesNewsLoader
-from spider.loader.loaders.xinhuanet_com.xinhuanet_com_news import XinhuanetNewsLoader
-from spider.loader.loaders.china_com_cn.china_com_cn_news import ChinaComCnNewsLoader
-from spider.loader.loaders.pcpop_com.pcpop_com_news import PcpopNewsLoader
-from spider.loader.loaders.sap_com.sap_com_news import SapNewsLoader
-from spider.loader.loaders.spn_com_cn.spn_com_cn_news import SPNComNewsLoader
-from spider.loader.loaders.enorth_com_cn.enorth_com_cn_news import ENorthNewsLoader
-from spider.loader.loaders.100ec_cn.100ec_cn_news import N100ecNewsLoader
-from spider.loader.loaders.cbinews_com.cbinews_com_news import CbinewsNewsLoader
-from spider.loader.loaders.36dsj_com.36dsj_com_news import N36dsjNewsLoader
-from spider.loader.loaders.sina_com_cn.sina_com_cn_news import SinaNewsLoader
-from spider.loader.loaders.ycwb_com.ycwb_com_news import YCWBNewsLoader
-from spider.loader.loaders.cbismb_com.cbismb_com_news import CbismbNewsLoader
-from spider.loader.loaders.gmw_cn.gmw_cn_news import GmwNewsLoader
-from spider.loader.loaders.sohu_com.sohu_com_news import SohuNewsLoader
-from spider.loader.loaders.china_com.china_com_news import ChinaNewsLoader
-from spider.loader.loaders.ccw_com_cn.ccw_com_cn_news import CcwNewsLoader
-from spider.loader.loaders.cqnews_net.cqnews_net_news import CqNewsNetNewsLoader
-from spider.loader.loaders.china-cloud_com.china-cloud_com_news import ChinaCloudNewsLoader
-from spider.loader.loaders.yidonghua_com.yidonghua_com_news import YidonghuaNewsLoader
-from spider.loader.loaders.dataguru_cn.dataguru_cn_news import DataguruNewsLoader
-from spider.loader.loaders.s3d4_cn.s3d4_cn_news import S3d4NewsLoader
-from spider.loader.loaders.topoint_com_cn.topoint_com_cn_news import TopointNewsLoader
-from spider.loader.loaders.cctime_com.cctime_com_news import CctimeNewsLoader
-from spider.loader.loaders.zdnet_com_cn.zdnet_com_cn_news import ZdnetNewsLoader
-from spider.loader.loaders.ynet_com.ynet_com_news import YnetNewsLoader
-from spider.loader.loaders.hexun_com.hexun_com_news import HexunNewsLoader
-from spider.loader.loaders.yesky_com.yesky_com_news import YeskyComNewsLoader
-from spider.loader.loaders.qianlong_com.qianlong_com_news import QianLongNewsLoader
-from spider.loader.loaders.ifeng_com.ifeng_com_news import IFengNewsLoader
-from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoader
-
 
 class NewsLoader(object):
     '''新闻爬虫'''
@@ -273,61 +216,119 @@ class BlogLoader(object):
         return i
 
 
+from spider.loader.loaders.it168_com.it168_com_news import It168NewsLoader
+from spider.loader.loaders.data_tsci_com_cn.data_tsci_com_cn_news import DataTsciComCnNewsLoader
+from spider.loader.loaders.qudong_com.qudong_com_news import QudongNewsLoader
+from spider.loader.loaders.kn58_com.kn58_com_news import Kn58NewsLoader
+from spider.loader.loaders.csdn_net.csdn_net_news import CSDNNewsLoader
+from spider.loader.loaders.csdn_net.csdn_net_blog import CSDNBlogLoader
+from spider.loader.loaders.techweb_com_cn.techweb_com_cn_news import TechwebNewsLoader
+from spider.loader.loaders.cnsoftnews_com.cnsoftnews_com_news import CnsoftNewsLoader
+from spider.loader.loaders.ctocio_com.ctocio_com_news import CtocioNewsLoader
+from spider.loader.loaders.n199it_com.n199it_com_news import N199itNewsLoader
+from spider.loader.loaders.qq_com.qq_com_news import QQNewsLoader
+from spider.loader.loaders.cnii_com_cn.cnii_com_cn_news import CniiComCnNewsLoader
+from spider.loader.loaders.leiphone_com.leiphone_com_news import LeiphoneNewsLoader
+from spider.loader.loaders.zol_com_cn.zol_com_cn_news import ZolNewsLoader
+from spider.loader.loaders.e_works_net_cn.eworks_net_cn_news import EworksNewsLoader
+from spider.loader.loaders.sootoo_com.sootoo_com_news import SootooNewsLoader
+from spider.loader.loaders.vsharing_com.vsharing_com_news import VsharingNewsLoader
+from spider.loader.loaders.people_com_cn.people_com_cn_news import PeopleComCnNewsLoader
+from spider.loader.loaders.n163_com.n163_com_news import WWW163NewsLoader
+from spider.loader.loaders.zjol_com_cn.zjol_com_cn_news import ZJOLComCnNewsLoader
+from spider.loader.loaders.idc_com_cn.idc_com_cn_news import IdcNewsLoader
+from spider.loader.loaders.eastday_com.eastday_com_news import EastDayNewsLoader
+from spider.loader.loaders.caijing_com_cn.caijing_com_cn_news import CaijingNewsLoader
+from spider.loader.loaders.ccidnet_com.ccidnet_com_news import CcidnetNewsLoader
+from spider.loader.loaders.chinabyte_com.chinabyte_com_news import ChinabyteNewsLoader
+from spider.loader.loaders.ciotimes_com.ciotimes_com_news import CiotimesNewsLoader
+from spider.loader.loaders.xinhuanet_com.xinhuanet_com_news import XinhuanetNewsLoader
+from spider.loader.loaders.china_com_cn.china_com_cn_news import ChinaComCnNewsLoader
+from spider.loader.loaders.pcpop_com.pcpop_com_news import PcpopNewsLoader
+from spider.loader.loaders.sap_com.sap_com_news import SapNewsLoader
+from spider.loader.loaders.spn_com_cn.spn_com_cn_news import SPNComNewsLoader
+from spider.loader.loaders.enorth_com_cn.enorth_com_cn_news import ENorthNewsLoader
+from spider.loader.loaders.n100ec_cn.n100ec_cn_news import N100ecNewsLoader
+from spider.loader.loaders.cbinews_com.cbinews_com_news import CbinewsNewsLoader
+from spider.loader.loaders.n36dsj_com.n36dsj_com_news import N36dsjNewsLoader
+from spider.loader.loaders.sina_com_cn.sina_com_cn_news import SinaNewsLoader
+from spider.loader.loaders.ycwb_com.ycwb_com_news import YCWBNewsLoader
+from spider.loader.loaders.cbismb_com.cbismb_com_news import CbismbNewsLoader
+from spider.loader.loaders.gmw_cn.gmw_cn_news import GmwNewsLoader
+from spider.loader.loaders.sohu_com.sohu_com_news import SohuNewsLoader
+from spider.loader.loaders.china_com.china_com_news import ChinaNewsLoader
+from spider.loader.loaders.ccw_com_cn.ccw_com_cn_news import CcwNewsLoader
+from spider.loader.loaders.cqnews_net.cqnews_net_news import CqNewsNetNewsLoader
+from spider.loader.loaders.china_cloud_com.china_cloud_com_news import ChinaCloudNewsLoader
+from spider.loader.loaders.yidonghua_com.yidonghua_com_news import YidonghuaNewsLoader
+from spider.loader.loaders.dataguru_cn.dataguru_cn_news import DataguruNewsLoader
+from spider.loader.loaders.s3d4_cn.s3d4_cn_news import S3d4NewsLoader
+from spider.loader.loaders.topoint_com_cn.topoint_com_cn_news import TopointNewsLoader
+from spider.loader.loaders.cctime_com.cctime_com_news import CctimeNewsLoader
+from spider.loader.loaders.zdnet_com_cn.zdnet_com_cn_news import ZdnetNewsLoader
+from spider.loader.loaders.ynet_com.ynet_com_news import YnetNewsLoader
+from spider.loader.loaders.hexun_com.hexun_com_news import HexunNewsLoader
+from spider.loader.loaders.yesky_com.yesky_com_news import YeskyComNewsLoader
+from spider.loader.loaders.qianlong_com.qianlong_com_news import QianLongNewsLoader
+from spider.loader.loaders.ifeng_com.ifeng_com_news import IFengNewsLoader
+from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoader
+
+
 __all__ = [
-	'It168NewsLoader',
-	'DataTsciComCnNewsLoader',
-	'QudongNewsLoader',
-	'Kn58NewsLoader',
-	'CSDNNewsLoader',
-	'CSDNBlogLoader',
-	'TechwebNewsLoader',
-	'CnsoftNewsLoader',
-	'CtocioNewsLoader',
-	'N199itNewsLoader',
-	'QQNewsLoader',
-	'CniiComCnNewsLoader',
-	'LeiphoneNewsLoader',
-	'ZolNewsLoader',
-	'EworksNewsLoader',
-	'SootooNewsLoader',
-	'VsharingNewsLoader',
-	'PeopleComCnNewsLoader',
-	'WWW163NewsLoader',
-	'ZJOLComCnNewsLoader',
-	'IdcNewsLoader',
-	'EastDayNewsLoader',
-	'CaijingNewsLoader',
-	'CcidnetNewsLoader',
-	'ChinabyteNewsLoader',
-	'CiotimesNewsLoader',
-	'XinhuanetNewsLoader',
-	'ChinaComCnNewsLoader',
-	'PcpopNewsLoader',
-	'SapNewsLoader',
-	'SPNComNewsLoader',
-	'ENorthNewsLoader',
-	'N100ecNewsLoader',
-	'CbinewsNewsLoader',
-	'N36dsjNewsLoader',
-	'SinaNewsLoader',
-	'YCWBNewsLoader',
-	'CbismbNewsLoader',
-	'GmwNewsLoader',
-	'SohuNewsLoader',
-	'ChinaNewsLoader',
-	'CcwNewsLoader',
-	'CqNewsNetNewsLoader',
-	'ChinaCloudNewsLoader',
-	'YidonghuaNewsLoader',
-	'DataguruNewsLoader',
-	'S3d4NewsLoader',
-	'TopointNewsLoader',
-	'CctimeNewsLoader',
-	'ZdnetNewsLoader',
-	'YnetNewsLoader',
-	'HexunNewsLoader',
-	'YeskyComNewsLoader',
-	'QianLongNewsLoader',
-	'IFengNewsLoader',
-	'CeocioNewsLoader'
+    'It168NewsLoader',
+    'DataTsciComCnNewsLoader',
+    'QudongNewsLoader',
+    'Kn58NewsLoader',
+    'CSDNNewsLoader',
+    'CSDNBlogLoader',
+    'TechwebNewsLoader',
+    'CnsoftNewsLoader',
+    'CtocioNewsLoader',
+    'N199itNewsLoader',
+    'QQNewsLoader',
+    'CniiComCnNewsLoader',
+    'LeiphoneNewsLoader',
+    'ZolNewsLoader',
+    'EworksNewsLoader',
+    'SootooNewsLoader',
+    'VsharingNewsLoader',
+    'PeopleComCnNewsLoader',
+    'WWW163NewsLoader',
+    'ZJOLComCnNewsLoader',
+    'IdcNewsLoader',
+    'EastDayNewsLoader',
+    'CaijingNewsLoader',
+    'CcidnetNewsLoader',
+    'ChinabyteNewsLoader',
+    'CiotimesNewsLoader',
+    'XinhuanetNewsLoader',
+    'ChinaComCnNewsLoader',
+    'PcpopNewsLoader',
+    'SapNewsLoader',
+    'SPNComNewsLoader',
+    'ENorthNewsLoader',
+    'N100ecNewsLoader',
+    'CbinewsNewsLoader',
+    'N36dsjNewsLoader',
+    'SinaNewsLoader',
+    'YCWBNewsLoader',
+    'CbismbNewsLoader',
+    'GmwNewsLoader',
+    'SohuNewsLoader',
+    'ChinaNewsLoader',
+    'CcwNewsLoader',
+    'CqNewsNetNewsLoader',
+    'ChinaCloudNewsLoader',
+    'YidonghuaNewsLoader',
+    'DataguruNewsLoader',
+    'S3d4NewsLoader',
+    'TopointNewsLoader',
+    'CctimeNewsLoader',
+    'ZdnetNewsLoader',
+    'YnetNewsLoader',
+    'HexunNewsLoader',
+    'YeskyComNewsLoader',
+    'QianLongNewsLoader',
+    'IFengNewsLoader',
+    'CeocioNewsLoader'
 ]
