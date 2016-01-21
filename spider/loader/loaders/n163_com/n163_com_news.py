@@ -16,7 +16,7 @@ class WWW163NewsLoader(NewsLoader):
     ]
 
     title_xpath = '//h1[@id="h1title"]'
-    content_xpath = '//div[@class="end-text"]'
+    content_xpath = '//div[@class="end-text"]/*[not(@class="demoBox")]'
     author_xpath = '//*[contains(@class, "ep-source")]/*[@class="left"]'
     author_re = u'.*?作者：\s*(\S+).*'
     publish_time_xpath = '//*[contains(@class, "ep-time-soure")]'
