@@ -4,12 +4,8 @@ import json
 import hashlib
 import datetime
 
-from thrift.transport.TSocket import TSocket
-from thrift.transport.TTransport import TBufferedTransport
-from thrift.protocol import TBinaryProtocol
-from hbase import Hbase
-from hbase.ttypes import Mutation
 import pysolr
+import happybase
 
 from spider.items import HBaseItem
 from spider.loader.processors import text
@@ -146,13 +142,10 @@ class HBaseItemPipeline(object):
         )
 
     def open_spider(self, spider):
-        self.transport = TBufferedTransport(TSocket(self.host, self.port))
-        self.transport.open()
-        protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-        self.client = Hbase.Client(protocol)
+        self.connection = happybase.Connection(self.host, self.port)
 
     def close_spider(self, spider):
-        self.transport.close()
+        self.connection.close()
 
     def process_item(self, item, spider):
         if not isinstance(item, HBaseItem):
@@ -166,12 +159,14 @@ class HBaseItemPipeline(object):
 
         row = hashlib.new("md5", item[row_key_field]).hexdigest()
         mutations = self._genMutations(item, column_family)
-        self.client.mutateRow(table_name, row, mutations, None)
+
+        table = self.connection.table(table_name)
+        table.put(row, mutations)
 
         return item
 
     def _genMutations(self, item, column_family):
-        mutations = []
+        mutations = {}
         for field in item.fields:
             value = item.get(field)
             if value:
@@ -180,9 +175,7 @@ class HBaseItemPipeline(object):
                 else:
                     value = value.encode('utf-8')
 
-            mutation = Mutation(
-                column='%s:%s' % (column_family, field),
-                value=value
-            )
-            mutations.append(mutation)
+            column = '%s:%s' % (column_family, field)
+            value = value
+            mutations[column] = value
         return mutations
