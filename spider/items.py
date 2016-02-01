@@ -30,6 +30,37 @@ class HBaseItem(Item):
                 publish_time > datetime.datetime.now():
             raise DropItem('invalid publish_time %s' % publish_time)
 
+    def get_row_key(self):
+        return self[self.row_key_field]
+
+
+class UradarBBSItem(HBaseItem):
+    table_name = 'uradar_bbs'
+    required_fields = ['thread_id', 'post_id', 'url', 'title', 'content',
+                       'publish_time']
+
+    thread_id = Field()
+    post_id = Field()
+
+    url = Field()
+    title = Field()
+    abstract = Field()
+    keywords = Field()
+    content = Field()
+    author = Field()
+    publish_time = Field()
+
+    source = Field()
+
+    site_domain = Field()
+    site_name = Field()
+
+    sentiment = Field()
+
+    def get_row_key(self):
+        return '%s_%s_%s' % (self['site_domain'], self['thread_id'],
+                             self['post_id'])
+
 
 class UradarArticleItem(HBaseItem):
 

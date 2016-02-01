@@ -272,6 +272,7 @@ from spider.loader.loaders.yesky_com.yesky_com_news import YeskyComNewsLoader
 from spider.loader.loaders.qianlong_com.qianlong_com_news import QianLongNewsLoader
 from spider.loader.loaders.ifeng_com.ifeng_com_news import IFengNewsLoader
 from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoader
+from spider.loader.loaders.autohome_com_cn.autohome_com_cn_bbs import AutohomeComCnBBSLoader
 
 
 __all__ = [
@@ -330,5 +331,6 @@ __all__ = [
     'YeskyComNewsLoader',
     'QianLongNewsLoader',
     'IFengNewsLoader',
-    'CeocioNewsLoader'
+    'CeocioNewsLoader',
+    'AutohomeComCnBBSLoader'
 ]

@@ -103,8 +103,8 @@ class SolrItemPipeline(object):
         doc = {}
 
         # id和hbase中row key相同
-        row_key_field = item.row_key_field
-        doc['id'] = hashlib.new("md5", item[row_key_field]).hexdigest()
+        row_key = item.get_row_key()
+        doc['id'] = hashlib.new("md5", row_key).hexdigest()
 
         for field in item.fields:
             value = item.get(field)
@@ -154,10 +154,10 @@ class HBaseItemPipeline(object):
         item.validate()
 
         table_name = item.table_name
-        row_key_field = item.row_key_field
+        row_key = item.get_row_key()
         column_family = item.column_family
 
-        row = hashlib.new("md5", item[row_key_field]).hexdigest()
+        row = hashlib.new("md5", row_key).hexdigest()
         mutations = self._genMutations(item, column_family)
 
         table = self.connection.table(table_name)
