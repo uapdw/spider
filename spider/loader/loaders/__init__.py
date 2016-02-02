@@ -274,6 +274,7 @@ from spider.loader.loaders.ifeng_com.ifeng_com_news import IFengNewsLoader
 from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoader
 from spider.loader.loaders.autohome_com_cn.autohome_com_cn_bbs import AutohomeComCnBBSLoader
 from spider.loader.loaders.xcar_com_cn.xcar_com_cn_bbs import XcarComCnBBSLoader
+from spider.loader.loaders.sina_com_cn.sina_com_cn_bbs import SinaComCnBBSLoader
 
 __all__ = [
     'It168NewsLoader',
@@ -333,5 +334,6 @@ __all__ = [
     'IFengNewsLoader',
     'CeocioNewsLoader',
     'AutohomeComCnBBSLoader',
-    'XcarComCnBBSLoader'
+    'XcarComCnBBSLoader',
+    'SinaComCnBBSLoader'
 ]
