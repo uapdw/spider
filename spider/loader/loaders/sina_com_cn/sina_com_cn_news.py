@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from spider.loader.loaders import NewsLoader
+from spider.loader.loaders import NewsLoader, MergeLoader
 
 
-class SinaNewsLoader(NewsLoader):
+class SinaNewsLoader(MergeLoader):
+
+    def __init__(self):
+        super(SinaNewsLoader, self).__init__([
+            SinaNewsLoader1(),
+            SinaNewsLoader2()
+        ])
+
+
+class SinaNewsLoader1(NewsLoader):
 
     u"""新浪新闻爬虫"""
 
@@ -25,6 +34,25 @@ class SinaNewsLoader(NewsLoader):
     publish_time_re = u'.*?(\d{4})年(\d{2})月(\d{2})日\s*(\d{2}:\d{2}).*'
     publish_time_format = '%Y%m%d%H:%M'
     source_xpath = '//*[@id="media_name" or @data-sudaclick="media_name"]'
+
+    source_domain = 'sina.com.cn'
+    source_name = u'新浪'
+
+
+class SinaNewsLoader2(NewsLoader):
+
+    u"""新浪新闻"""
+
+    target_urls = [
+        '.*sina\.com\.cn/news/\S+/\d{4}-\d{2}-\d{2}/detail-\S+\.shtml'
+    ]
+
+    title_xpath = '//*[@id="artibodyTitle"]'
+    content_xpath = '//*[@id="articleContent"]'
+    author_xpath = '//*[@class="time-source"]/text()[2]'
+    publish_time_xpath = '//*[@class="time-source"]/text()[1]'
+    publish_time_format = '%Y-%m-%d %H:%M:%S'
+    source_xpath = '//*[@class="time-source"]/a/text()'
 
     source_domain = 'sina.com.cn'
     source_name = u'新浪'

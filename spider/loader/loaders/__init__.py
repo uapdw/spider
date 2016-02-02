@@ -7,7 +7,26 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.loader.processors import (SafeHtml, text, DateProcessor,
                                       RegexProcessor, PipelineProcessor)
-from spider.items import UradarNewsItem, UradarBlogItem
+from spider.items import UradarNewsItem, UradarBlogItem, HBaseItem
+
+
+class MergeLoader(object):
+
+    def __init__(self, loader_list):
+        self.loader_list = loader_list
+
+    def load(self, response):
+        for loader in self.loader_list:
+            try:
+                i = loader.load(response)
+
+                if isinstance(i, HBaseItem):
+                    i.validate()
+
+                if i is not None:
+                    return i
+            except:
+                continue
 
 
 class NewsLoader(object):
@@ -273,7 +292,8 @@ from spider.loader.loaders.qianlong_com.qianlong_com_news import QianLongNewsLoa
 from spider.loader.loaders.ifeng_com.ifeng_com_news import IFengNewsLoader
 from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoader
 from spider.loader.loaders.autohome_com_cn.autohome_com_cn_bbs import AutohomeComCnBBSLoader
-
+from spider.loader.loaders.xcar_com_cn.xcar_com_cn_bbs import XcarComCnBBSLoader
+from spider.loader.loaders.sina_com_cn.sina_com_cn_bbs import SinaComCnBBSLoader
 
 __all__ = [
     'It168NewsLoader',
@@ -332,5 +352,7 @@ __all__ = [
     'QianLongNewsLoader',
     'IFengNewsLoader',
     'CeocioNewsLoader',
-    'AutohomeComCnBBSLoader'
+    'AutohomeComCnBBSLoader',
+    'XcarComCnBBSLoader',
+    'SinaComCnBBSLoader'
 ]
