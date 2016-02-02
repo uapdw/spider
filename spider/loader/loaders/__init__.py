@@ -7,7 +7,26 @@ from scrapy.loader.processors import TakeFirst, MapCompose, Join
 from spider.loader import ItemLoader
 from spider.loader.processors import (SafeHtml, text, DateProcessor,
                                       RegexProcessor, PipelineProcessor)
-from spider.items import UradarNewsItem, UradarBlogItem
+from spider.items import UradarNewsItem, UradarBlogItem, HBaseItem
+
+
+class MergeLoader(object):
+
+    def __init__(self, loader_list):
+        self.loader_list = loader_list
+
+    def load(self, response):
+        for loader in self.loader_list:
+            try:
+                i = loader.load(response)
+
+                if isinstance(i, HBaseItem):
+                    i.validate()
+
+                if i is not None:
+                    return i
+            except:
+                continue
 
 
 class NewsLoader(object):
