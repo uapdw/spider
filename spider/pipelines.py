@@ -60,30 +60,35 @@ class JSONWriterPipeline(object):
 class SolrItemPipeline(object):
     '''Solr Pipeline'''
 
-    def __init__(self, host, port, index):
+    def __init__(self, host, port):
         self.host = host
         self.port = port
-        self.index = index
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('SOLR_HOST'),
-            port=crawler.settings.get('SOLR_PORT'),
-            index=crawler.settings.get('SOLR_INDEX')
+            port=crawler.settings.get('SOLR_PORT')
         )
 
     def open_spider(self, spider):
-        self.solr = pysolr.Solr(
-            'http://%s:%s/solr/%s' % (
-                self.host,
-                self.port,
-                self.index
-            )
-        )
+        self.solr_dict = {}
 
     def close_spider(self, spider):
         pass
+
+    def get_solr(self, index_name):
+        if index_name in self.solr_dict:
+            return self.solr_dict[index_name]
+        else:
+            self.solr_dict[index_name] = pysolr.Solr(
+                'http://%s:%s/solr/%s' % (
+                    self.host,
+                    self.port,
+                    index_name
+                )
+            )
+            return self.solr_dict[index_name]
 
     def process_item(self, item, spider):
 
@@ -92,10 +97,12 @@ class SolrItemPipeline(object):
 
         item.validate()
 
+        solr = self.get_solr(item.table_name)
+
         doc = self._gen_doc(item)
 
         # 更新、新增doc
-        self.solr.add([doc])
+        solr.add([doc])
 
         return item
 
