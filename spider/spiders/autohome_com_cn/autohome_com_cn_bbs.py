@@ -9,7 +9,7 @@ from spider.loader.loaders import AutohomeComCnBBSLoader
 class AutohomeComCnBBSSpider(CrawlSpider):
     u"""汽车之家论坛爬虫"""
 
-    name = 'autohome_com_cn_news'
+    name = 'autohome_com_cn_bbs'
 
     allowed_domains = ['club.autohome.com.cn']
 
