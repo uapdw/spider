@@ -15,9 +15,9 @@ class AutohomeNewsSpider(CrawlSpider):
 
     start_url_pattern = 'http://www.autohome.com.cn/%s'
 
-    list_url_pattern = 'http://www.autohome.com.cn/%s/[23]/'
+    list_url_pattern = 'http://www.autohome.com.cn/%s/\d+/'
 
-    target_url_pattern = 'http://www.autohome.com.cn/%s/\d+/\d+.html'
+    target_url_pattern = 'http://www.autohome.com.cn/%s/\d+/\d+(-\d+)?.html'
 
     categories = ['all', 'news', 'drive', 'tech']
 
@@ -34,15 +34,27 @@ class AutohomeNewsSpider(CrawlSpider):
                     )
                 )
             )
-            rules.append(
-                Rule(
-                    LinkExtractor(
-                        allow=(self.target_url_pattern % category),
-                        allow_domains=self.allowed_domains
-                    ),
-                    callback=self.parse_target
+            if category == 'all':
+                rules.append(
+                    Rule(
+                        LinkExtractor(
+                            allow=('http://www.autohome.com.cn/\w+/\d+/\d+(-\d+)?.html'),
+                            allow_domains=self.allowed_domains
+                        ),
+                        callback=self.parse_target
+                    )
                 )
-            )
+            else:
+                rules.append(
+                    Rule(
+                        LinkExtractor(
+                            allow=(self.target_url_pattern % category),
+                            allow_domains=self.allowed_domains
+                        ),
+                        callback=self.parse_target
+                    )
+                )
+
         self._rules = tuple(rules)
 
     def parse_target(self, response):

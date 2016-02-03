@@ -17,9 +17,10 @@ class AutohomeSouSpider(CrawlSpider):
 
     start_url_pattern = 'http://sou.autohome.com.cn/%s?q=%s'
 
-    list_url_pattern = 'http://sou.autohome.com.cn/%s?q=%s&page=[23]'
+    list_url_pattern = 'http://sou.autohome.com.cn/%s\?q=%s.*&page=[2]&.*'
 
-    categories = ['zonghe', 'luntan', 'wenzhang', 'zhidao']
+#     categories = ['zonghe', 'luntan', 'wenzhang', 'zhidao']
+    categories = ['luntan']
 
     keywords = [u'北汽', u'b40', u'北京汽车', u'传动效率', u'动力', u'整车', u'外观', u'内饰', u'越野']
 
@@ -49,7 +50,7 @@ class AutohomeSouSpider(CrawlSpider):
         rules.append(
             Rule(
                 LinkExtractor(
-                    allow=('http://club.autohome.com.cn/bbs/threadqa-\w+-\d+-\d+-1.html'),
+                    allow=('http://zhidao.autohome.com.cn/question/\d+.html'),
                     allow_domains=self.allowed_domains,
                 ),
                 callback=self.parse_bbs
@@ -58,7 +59,7 @@ class AutohomeSouSpider(CrawlSpider):
         rules.append(
             Rule(
                 LinkExtractor(
-                    allow=('http://www.autohome.com.cn/\w+/\d+/\d+\.html'),
+                    allow=('http://www.autohome.com.cn/\w+/\d+/\d+(-\d+)?\.html'),
                     allow_domains=self.allowed_domains,
                 ),
                 callback=self.parse_news
