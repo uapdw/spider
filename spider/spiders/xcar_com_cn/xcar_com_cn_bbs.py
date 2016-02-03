@@ -13,7 +13,7 @@ class XcarComCnBBSSpider(CrawlSpider):
 
     allowed_domains = ['xcar.com.cn']
 
-    start_url_pattern = 'http://www.xcar.com.cn/bbs/forumdisplay.php?.*fid=%s.*'
+    start_url_pattern = 'http://www.xcar.com.cn/bbs/forumdisplay.php?fid=%s'
     list_url_pattern = '.*forumdisplay\.php\?.*fid=%s.*page=\d+.*'
     thread_url_pattern = '.*viewthread\.php\?.*tid=\d+.*'
 
