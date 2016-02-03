@@ -13,12 +13,21 @@ class XcarComCnBBSSpider(CrawlSpider):
 
     allowed_domains = ['xcar.com.cn']
 
-    start_url_pattern = 'http://www.xcar.com.cn/bbs/forumdisplay.php?fid=%s'
-    list_url_pattern = '.*forumdisplay\.php\?fid=%s&orderby=dateline&page=\d+'
-    thread_url_pattern = '.*viewthread\.php\?tid=\d+'
+    start_url_pattern = 'http://www.xcar.com.cn/bbs/forumdisplay.php?.*fid=%s.*'
+    list_url_pattern = '.*forumdisplay\.php\?.*fid=%s.*page=\d+.*'
+    thread_url_pattern = '.*viewthread\.php\?.*tid=\d+.*'
 
     categories = [
-        '10113'
+        '10113',
+        '1187',
+        '1199',
+        '1359',
+        '1221',
+        '1223',
+        '1227',
+        '1292',
+        '1322',
+        '1186'
     ]
 
     def __init__(self):
