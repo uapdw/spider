@@ -70,10 +70,11 @@ class AutohomeComCnBBSLoader(object):
         l = ItemLoader(item={}, selector=selector)
         l.default_output_processor = TakeFirst()
 
-        l.add_xpath('title', '//*[@class="rtitle"]', MapCompose(text))
-        l.add_xpath('content', '//*[@class="conttxt"]',
+        l.add_xpath('title', '//*[contains(@class, "rtitle")]',
+                    MapCompose(text))
+        l.add_xpath('content', '//*[@xname="content"]',
                     MapCompose(SafeHtml(base_url)))
-        l.add_xpath('author', 'class="rtitle"', MapCompose(text))
+        l.add_xpath('author', '//*[@xname="uname"]', MapCompose(text))
         l.add_xpath('publish_time', '@data-time',
                     MapCompose(DateProcessor('%Y%m%d%H%M%S')))
         l.add_xpath('post_id', '@id', MapCompose(text),
