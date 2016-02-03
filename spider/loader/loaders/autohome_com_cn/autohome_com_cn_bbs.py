@@ -17,7 +17,7 @@ class AutohomeComCnBBSLoader(object):
     u"""汽车之家BBS"""
 
     id_matcher = re.compile(
-        '.*club\.autohome\.com\.cn/bbs/thread-(\S+-\d+)-(\d+)-\d+\.html'
+        '.*club\.autohome\.com\.cn/bbs/thread(qa)?-(\S+-\d+)-(\d+)-\d+\.html'
     )
 
     def load(self, response):
@@ -50,7 +50,7 @@ class AutohomeComCnBBSLoader(object):
 
         match = self.id_matcher.match(response.url)
         if match:
-            l.add_value('thread_id', match.group(1))
+            l.add_value('thread_id', match.group(2))
         else:
             raise DropItem('not thread_id')
 
