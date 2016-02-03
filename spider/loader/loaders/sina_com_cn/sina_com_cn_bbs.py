@@ -17,7 +17,7 @@ class SinaComCnBBSLoader(object):
     u"""新浪汽车BBS"""
 
     id_matcher = re.compile(
-        '.*bbs\.auto\.sina\.com\.cn/thread-(\d+)-\d+-\d+\.html'
+        '.*bbs\.auto\.sina\.com\.cn/.*thread-(\d+)-\d+-\d+\.html'
     )
 
     def load(self, response):
@@ -25,7 +25,7 @@ class SinaComCnBBSLoader(object):
 
         i_list = []
         for selector in Selector(response).xpath(
-                '//*[@name="modactions"]/div'):
+                '//*[@name="modactions"]/div[contains(@class, "viewthread")]'):
             i = self.load_post(selector, ti['url'])
             i_list.append(i)
 
