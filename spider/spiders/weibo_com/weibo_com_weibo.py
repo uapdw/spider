@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 import re
 import time
+import json
 
 from scrapy import Spider, Request
 from selenium import webdriver
@@ -10,11 +12,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from pyvirtualdisplay import Display
 
+import spider
 from spider.items import UradarWeiboItem
 
 
 LOAD_MORE_TIMEOUT = 60
 TARGET_URL = 'http://d.weibo.com/102803_ctg1_5188_-_ctg1_5188'
+COOKIES_FILE_NAME = 'cookies.json'
 
 
 class WeiboLoaded(object):
@@ -38,13 +42,13 @@ class WeiboComWeiboSpider(Spider):
     repost_count_matcher = re.compile(u'\s*转发\s*(\d+)')
     comment_count_matcher = re.compile(u'\s*评论\s*(\d+)')
 
-
     def start_requests(self):
 
         display = Display(visible=0, size=(800, 600))
         display.start()
-
         driver = self.get_driver()
+        self.load_cookies(driver)
+
         driver.get(self.start_url)
         item_list = []
 
@@ -57,6 +61,7 @@ class WeiboComWeiboSpider(Spider):
 
         # 不是目标url返回
         if driver.current_url != TARGET_URL:
+            self.save_cookies(driver)
             driver.close()
             display.stop()
             return []
@@ -123,6 +128,7 @@ class WeiboComWeiboSpider(Spider):
             except:
                 continue
 
+        self.save_cookies(driver)
         driver.close()
         display.stop()
 
@@ -131,6 +137,30 @@ class WeiboComWeiboSpider(Spider):
     def parse(self, response):
         return response.meta['item_list']
 
+    def load_cookies(self, driver):
+        f = open(self.cookies_file_path(), 'r')
+        cookies = json.loads(f.read())
+        f.close()
+
+        for cookie in cookies:
+            try:
+                driver.add_cookie(cookie)
+            except:
+                continue
+
+    def save_cookies(self, driver):
+        cookies = driver.get_cookies()
+        f = open(self.cookies_file_path(), 'w')
+        f.write(json.dumps(cookies))
+        f.flush()
+        f.close()
+
     def get_driver(self):
         driver = webdriver.Firefox()
         return driver
+
+    def cookies_file_path(self):
+        return os.path.join(self.root_path(), COOKIES_FILE_NAME)
+
+    def root_path(self):
+        return os.path.abspath(os.path.dirname(spider.__file__))
