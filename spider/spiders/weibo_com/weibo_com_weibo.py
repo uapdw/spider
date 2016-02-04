@@ -14,6 +14,7 @@ from spider.items import UradarWeiboItem
 
 
 LOAD_MORE_TIMEOUT = 60
+TARGET_URL = 'http://d.weibo.com/102803_ctg1_5188_-_ctg1_5188'
 
 
 class WeiboLoaded(object):
@@ -32,7 +33,7 @@ class WeiboComWeiboSpider(Spider):
     name = 'weibo_com_weibo'
     allowed_domains = ['weibo.com']
 
-    start_url = 'http://d.weibo.com/102803_ctg1_5188_-_ctg1_5188'
+    start_url = TARGET_URL
 
     repost_count_matcher = re.compile(u'\s*转发\s*(\d+)')
     comment_count_matcher = re.compile(u'\s*评论\s*(\d+)')
@@ -49,6 +50,12 @@ class WeiboComWeiboSpider(Spider):
         WebDriverWait(driver, 120).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, 'WB_feed'))
         )
+
+        # 不是目标url返回
+        if driver.current_url != TARGET_URL:
+            driver.close()
+            return []
+
         weibo_list = driver.find_elements_by_xpath(
             '//*[@class="WB_feed"]/div[@action-type="feed_list_item"]')
 
