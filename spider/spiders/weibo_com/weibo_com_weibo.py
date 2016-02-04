@@ -58,6 +58,7 @@ class WeiboComWeiboSpider(Spider):
         # 不是目标url返回
         if driver.current_url != TARGET_URL:
             driver.close()
+            display.stop()
             return []
 
         weibo_list = driver.find_elements_by_xpath(
