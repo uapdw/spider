@@ -9,7 +9,7 @@ from spider.loader.loaders import XcarComCnBBSLoader
 class XcarComCnBBSSpider(CrawlSpider):
     u"""爱卡汽车论坛爬虫"""
 
-    name = 'xcar_com_cn_news'
+    name = 'xcar_com_cn_bbs'
 
     allowed_domains = ['xcar.com.cn']
 
