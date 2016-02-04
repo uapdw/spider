@@ -13,7 +13,13 @@ class IFengAutoHangyeSpider(NewsSpider):
 
     target_urls = [
         'auto\.ifeng\.com/hangye/\d{1}.shtml',#文章列表翻页
-        'auto\.ifeng\.com/\S+?/\d{8}/\d{1,}.shtml'#文章
+        
+        #'auto\.ifeng\.com/\S+?/\d{8}/\d{1,}.shtml'#文章
+        'auto\.ifeng\.com/xinwen/\d{8}/\d{1,}.shtml',#文章
+        'auto\.ifeng\.com/pinglun/\d{8}/\d{1,}.shtml',#文章
+        'auto\.ifeng\.com/fangtan/\d{8}/\d{1,}.shtml',#文章
+        'auto\.ifeng\.com/baogao/\d{8}/\d{1,}.shtml',#文章
+        'auto\.ifeng\.com/hangye/zhuanlan/\d{8}/\d{1,}.shtml'#文章
     ]
 
     title_xpath = '//div[@class="arl-cont"]/h3'
