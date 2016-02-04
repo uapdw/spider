@@ -119,5 +119,5 @@ class WeiboComWeiboSpider(Spider):
         return response.meta['item_list']
 
     def get_driver(self):
-        driver = webdriver.Chrome('/usr/local/bin/chromedriver')
+        driver = webdriver.Firefox()
         return driver
