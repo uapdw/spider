@@ -6,3 +6,4 @@ python-dateutil==2.4.2
 PyVirtualDisplay==0.1.5
 Scrapy==1.0.3
 w3lib==1.13.0
+selenium==2.50.1
