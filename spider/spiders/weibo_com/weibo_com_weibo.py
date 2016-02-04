@@ -8,7 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-
+from pyvirtualdisplay import Display
 
 from spider.items import UradarWeiboItem
 
@@ -38,10 +38,14 @@ class WeiboComWeiboSpider(Spider):
     repost_count_matcher = re.compile(u'\s*转发\s*(\d+)')
     comment_count_matcher = re.compile(u'\s*评论\s*(\d+)')
 
+
     def start_requests(self):
+
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+
         driver = self.get_driver()
         driver.get(self.start_url)
-
         item_list = []
 
         start_time = time.time()
@@ -119,6 +123,7 @@ class WeiboComWeiboSpider(Spider):
                 continue
 
         driver.close()
+        display.stop()
 
         return [Request('http://weibo.com', meta={'item_list': item_list})]
 
