@@ -19,7 +19,7 @@ class AutohomeShuokeSpider(CrawlSpider):
     rules = (
         Rule(
             LinkExtractor(
-                allow=('http://shuoke.autohome.com.cn/article/\d+.html'),
+                allow=('http://shuoke.autohome.com.cn/article/\d+(-\d+)?.html'),
                 allow_domains=allowed_domains,
             ),
             callback='parse_target'

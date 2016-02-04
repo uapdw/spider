@@ -34,6 +34,27 @@ class HBaseItem(Item):
         return self[self.row_key_field]
 
 
+class UradarWeiboItem(HBaseItem):
+    table_name = 'uradar_weibo'
+
+    required_fields = ['weibo_id', 'weibo_url', 'content', 'created_at']
+
+    weibo_id = Field()
+    weibo_url = Field()
+    content = Field()
+    created_at = Field()
+
+    user_url = Field()
+    screen_name = Field()
+    user_pic = Field()
+
+    comment_count = Field()
+    repost_count = Field()
+
+    def get_row_key(self):
+        return self['weibo_url']
+
+
 class UradarBBSItem(HBaseItem):
     table_name = 'uradar_bbs'
     required_fields = ['thread_id', 'post_id', 'url', 'title', 'content',

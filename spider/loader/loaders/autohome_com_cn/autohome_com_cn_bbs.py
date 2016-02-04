@@ -17,7 +17,7 @@ class AutohomeComCnBBSLoader(object):
     u"""汽车之家BBS"""
 
     id_matcher = re.compile(
-        '.*club\.autohome\.com\.cn/bbs/thread-(\S+-\d+)-(\d+)-\d+\.html'
+        '.*club\.autohome\.com\.cn/bbs/thread(qa)?-(\S+-\d+)-(\d+)-\d+\.html'
     )
 
     def load(self, response):
@@ -50,7 +50,7 @@ class AutohomeComCnBBSLoader(object):
 
         match = self.id_matcher.match(response.url)
         if match:
-            l.add_value('thread_id', match.group(1))
+            l.add_value('thread_id', match.group(2))
         else:
             raise DropItem('not thread_id')
 
@@ -70,10 +70,11 @@ class AutohomeComCnBBSLoader(object):
         l = ItemLoader(item={}, selector=selector)
         l.default_output_processor = TakeFirst()
 
-        l.add_xpath('title', '//*[@class="rtitle"]', MapCompose(text))
-        l.add_xpath('content', '//*[@class="conttxt"]',
+        l.add_xpath('title', '//*[contains(@class, "rtitle")]',
+                    MapCompose(text))
+        l.add_xpath('content', '//*[@xname="content"]',
                     MapCompose(SafeHtml(base_url)))
-        l.add_xpath('author', 'class="rtitle"', MapCompose(text))
+        l.add_xpath('author', '//*[@xname="uname"]', MapCompose(text))
         l.add_xpath('publish_time', '@data-time',
                     MapCompose(DateProcessor('%Y%m%d%H%M%S')))
         l.add_xpath('post_id', '@id', MapCompose(text),
