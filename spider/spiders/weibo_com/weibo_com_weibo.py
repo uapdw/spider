@@ -16,7 +16,8 @@ import spider
 from spider.items import UradarWeiboItem
 
 
-LOAD_MORE_TIMEOUT = 60
+LOAD_MORE_TIMEOUT = 120
+WEIBO_URL = 'http://weibo.com'
 TARGET_URL = 'http://d.weibo.com/102803_ctg1_5188_-_ctg1_5188'
 COOKIES_FILE_NAME = 'cookies.json'
 
@@ -49,6 +50,11 @@ class WeiboComWeiboSpider(Spider):
         driver = self.get_driver()
         self.load_cookies(driver)
 
+        cookies = []
+
+        driver.get(WEIBO_URL)
+        cookies.extend(driver.get_cookies())
+
         driver.get(self.start_url)
         item_list = []
 
@@ -61,7 +67,8 @@ class WeiboComWeiboSpider(Spider):
 
         # 不是目标url返回
         if driver.current_url != TARGET_URL:
-            self.save_cookies(driver)
+            cookies.extend(driver.get_cookies())
+            self.save_cookies(driver, cookies)
             driver.close()
             display.stop()
             return []
@@ -128,7 +135,8 @@ class WeiboComWeiboSpider(Spider):
             except:
                 continue
 
-        self.save_cookies(driver)
+        cookies.extend(driver.get_cookies())
+        self.save_cookies(driver, cookies)
         driver.close()
         display.stop()
 
@@ -148,8 +156,7 @@ class WeiboComWeiboSpider(Spider):
             except:
                 continue
 
-    def save_cookies(self, driver):
-        cookies = driver.get_cookies()
+    def save_cookies(self, driver, cookies):
         f = open(self.cookies_file_path(), 'w')
         f.write(json.dumps(cookies))
         f.flush()
