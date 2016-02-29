@@ -148,3 +148,29 @@ class UradarActivityItem(HBaseItem):
     source_domain = Field()
     source_name = Field()
     add_time = Field()
+
+
+class CarComDetailItem(HBaseItem):
+
+    table_name = 'car_com_detail'
+    row_key_field = 'comment_id'
+    required_fields = ['comment_id', 'product_id', 'url', 'content', 'author', 'publish_time']
+
+    comment_id = Field()
+    product_id = Field()
+    url = Field()
+    author = Field()
+    content = Field()
+    publish_time = Field()
+    sentiment = Field()
+
+
+class CarDanPinItem(HBaseItem):
+
+    table_name = 'car_danpin'
+    row_key_field = 'product_id'
+    required_fields = ['product_id', 'brand', 'type']
+
+    product_id = Field()
+    brand = Field()
+    type = Field()

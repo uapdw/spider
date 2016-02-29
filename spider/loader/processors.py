@@ -70,6 +70,11 @@ def text(html_part):
     return _WHITE_SPACE.sub(u' ', value).strip()
 
 
+def white_space(html_part):
+    # 处理网页中的\xa0，替换为空格
+    return html_part.replace(u'\xa0', u' ')
+
+
 def _safe_html(html_part):
     '''去掉html中一些标签(script、input等)
     @type  html_part: unicode
