@@ -39,8 +39,8 @@ LOG_STDOUT = False
 LOG_FILE = '/tmp/scrapy.log'
 
 
-HBASE_HOST = '172.20.6.61'
+HBASE_HOST = '172.20.3.105'
 HBASE_PORT = 9090
-SOLR_HOST = '172.20.8.87'
+SOLR_HOST = '172.20.3.103'
 SOLR_PORT = 8983
 SOLR_INDEX = 'uradar_article'
