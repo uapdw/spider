@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from spider.spiders import NewsSpider
+from spider.spiders import LoaderMappingSpider
+from spider.loader.loaders import LeiphoneNewsLoader
 
 
-class LeiphoneNewsSpider(NewsSpider):
+class LeiphoneNewsSpider(LoaderMappingSpider):
 
     u"""雷锋网新闻爬虫"""
 
@@ -11,19 +12,6 @@ class LeiphoneNewsSpider(NewsSpider):
     allowed_domains = ['leiphone.com']
     start_urls = ['http://www.leiphone.com/']
 
-    target_urls = [
-        'leiphone\.com/news/\d{6}/\S+\.html'
-    ]
-
-    title_xpath = '//*[@class="pageTop"]/h1'
-    content_xpath = '//*[contains(@class, "pageCont")]'
-    author_xpath = '//*[@class="pi-author"]'
-    author_re = u'.*\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}\s*\S+\s*(\S+).*'
-    publish_time_xpath = '//*[@class="pi-author"]'
-    publish_time_re = u'.*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}).*'
-    publish_time_format = '%Y-%m-%d %H:%M'
-    source_xpath = '//*[@class="pi-author"]'
-    source_re = u'.*\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}\s*(\S+)\s*\S+.*'
-
-    source_domain = 'leiphone.com'
-    source_name = u'雷锋网'
+    mapping = {
+        'leiphone\.com/news/\d{6}/\S+\.html': LeiphoneNewsLoader
+    }

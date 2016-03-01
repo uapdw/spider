@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from spider.spiders import BlogSpider
+from spider.spiders import LoaderMappingSpider
+from spider.loader.loaders import CSDNBlogLoader
 
 
-class CSDNBlogSpider(BlogSpider):
+class CSDNBlogSpider(LoaderMappingSpider):
 
     u"""CSDN博客爬虫"""
 
@@ -11,15 +12,6 @@ class CSDNBlogSpider(BlogSpider):
     allowed_domains = ['csdn.net']
     start_urls = ['http://csdn.net']
 
-    target_urls = [
-        'http://blog.csdn.net/\S+?/article/details/\d+'
-    ]
-
-    title_xpath = '//*[@class="link_title"]'
-    content_xpath = '//div[@class="article_content"]'
-    author_xpath = '//*[@class="user_name"]'
-    publish_time_xpath = '//*[@class="link_postdate"]'
-    publish_time_format = '%Y-%m-%d %H:%M'
-
-    source_domain = 'csdn.net'
-    source_name = 'CSDN'
+    mapping = {
+        'http://blog.csdn.net/\S+?/article/details/\d+': CSDNBlogLoader
+    }
