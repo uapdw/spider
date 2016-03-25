@@ -9,7 +9,11 @@ class IFengNewsSpider(LoaderMappingSpider):
     u"""凤凰新闻爬虫"""
 
     name = 'ifeng_com_news'
-    allowed_domains = ['ifeng.com']
+    allowed_domains = [
+        'news.ifeng.com',
+        'finance.ifeng.com',
+        'tech.ifeng.com',
+    ]
     start_urls = ['http://www.ifeng.com']
 
     mapping = {

@@ -9,7 +9,11 @@ class QQNewsSpider(LoaderMappingSpider):
     u"""腾讯新闻爬虫"""
 
     name = 'qq_com_news'
-    allowed_domains = ['qq.com']
+    allowed_domains = [
+        'news.qq.com',
+        'finance.qq.com',
+        'tech.qq.com',
+    ]
     start_urls = ['http://qq.com']
 
     mapping = {

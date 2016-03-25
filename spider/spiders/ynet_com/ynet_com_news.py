@@ -9,7 +9,10 @@ class YnetNewsSpider(LoaderMappingSpider):
     u"""北青网新闻爬虫"""
 
     name = 'ynet_com_news'
-    allowed_domains = ['ynet.com']
+    allowed_domains = [
+        'news.ynet.com',
+        'finance.ynet.com',
+    ]
     start_urls = ['http://www.ynet.com/']
 
     mapping = {

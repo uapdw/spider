@@ -9,7 +9,13 @@ class It168NewsSpider(LoaderMappingSpider):
     u"""It168新闻爬虫"""
 
     name = 'it168_com_news'
-    allowed_domains = ['it168.com']
+    allowed_domains = [
+        'cio.it168.com',
+        'cloud.it168.com',
+        'tech.it168.com',
+        'inp.it168.com',
+        'datacenter.it168.com',
+    ]
     start_urls = ['http://www.it168.com/']
 
     mapping = {

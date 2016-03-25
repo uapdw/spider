@@ -8,7 +8,15 @@ class ZJOLComCnNewsSpider(LoaderMappingSpider):
     '''浙江在线新闻爬虫'''
 
     name = 'zjol_com_cn_news'
-    allowed_domains = ['zjol.com.cn']
+    allowed_domains = [
+        'www.zjol.com.cn',
+        'js.zjol.com.cn',
+        'zjnews.zjol.com.cn',
+        'biz.zjol.com.cn',
+        'smartzj.zjol.com.cn',
+        'ec.zjol.com.cn',
+        'st.zjol.com.cn',
+    ]
     start_urls = ['http://www.zjol.com.cn/']
 
     mapping = {

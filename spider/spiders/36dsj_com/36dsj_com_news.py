@@ -9,7 +9,7 @@ class N36dsjNewsSpider(LoaderMappingSpider):
     u"""36dsj新闻爬虫"""
 
     name = '36dsj_com_news'
-    allowed_domains = ['36dsj.com']
+    allowed_domains = ['www.36dsj.com']
     start_urls = ['http://www.36dsj.com/']
 
     mapping = {

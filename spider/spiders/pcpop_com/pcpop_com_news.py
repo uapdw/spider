@@ -9,7 +9,10 @@ class PcpopNewsSpider(LoaderMappingSpider):
     u"""泡泡网新闻爬虫"""
 
     name = 'pcpop_com_news'
-    allowed_domains = ['pcpop.com']
+    allowed_domains = [
+        'news.pcpop.com',
+        'smb.pcpop.com',
+    ]
     start_urls = ['http://www.pcpop.com/']
 
     mapping = {

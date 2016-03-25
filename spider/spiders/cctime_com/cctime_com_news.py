@@ -9,7 +9,7 @@ class CctimeNewsSpider(LoaderMappingSpider):
     u"""飞象网新闻爬虫"""
 
     name = 'cctime_com_news'
-    allowed_domains = ['cctime.com']
+    allowed_domains = ['www.cctime.com']
     start_urls = ['http://www.cctime.com/']
 
     mapping = {

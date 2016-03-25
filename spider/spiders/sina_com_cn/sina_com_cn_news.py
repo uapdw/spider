@@ -9,7 +9,11 @@ class SinaNewsSpider(LoaderMappingSpider):
     u"""新浪新闻爬虫"""
 
     name = 'sina_com_cn_news'
-    allowed_domains = ['sina.com.cn']
+    allowed_domains = [
+        'news.sina.com.cn',
+        'finance.sina.com.cn',
+        'tech.sina.com.cn',
+    ]
     start_urls = ['http://www.sina.com.cn']
 
     mapping = {

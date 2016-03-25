@@ -9,7 +9,9 @@ class LeiphoneNewsSpider(LoaderMappingSpider):
     u"""雷锋网新闻爬虫"""
 
     name = 'leiphone_com_news'
-    allowed_domains = ['leiphone.com']
+    allowed_domains = [
+        'www.leiphone.com',
+    ]
     start_urls = ['http://www.leiphone.com/']
 
     mapping = {

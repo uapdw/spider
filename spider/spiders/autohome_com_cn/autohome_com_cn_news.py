@@ -11,7 +11,7 @@ class AutohomeNewsSpider(CrawlSpider):
 
     name = 'autohome_com_cn_news'
 
-    allowed_domains = ['autohome.com.cn']
+    allowed_domains = ['www.autohome.com.cn']
 
     start_url_pattern = 'http://www.autohome.com.cn/%s'
 

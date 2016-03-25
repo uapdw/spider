@@ -9,7 +9,13 @@ class PeopleComCnNewsSpider(LoaderMappingSpider):
     u"""人民网新闻爬虫"""
 
     name = 'people_com_cn_news'
-    allowed_domains = ['people.com.cn']
+    allowed_domains = [
+        'news.people.com.cn',
+        'finance.people.com.cn',
+        'money.people.com.cn',
+        'scitech.people.com.cn',
+        'it.people.com.cn',
+    ]
     start_urls = ['http://www.people.com.cn/']
 
     mapping = {

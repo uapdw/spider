@@ -9,7 +9,11 @@ class QianLongNewsSpider(LoaderMappingSpider):
     u"""千龙网新闻爬虫"""
 
     name = 'qianlong_com_news'
-    allowed_domains = ['qianlong.com']
+    allowed_domains = [
+        'finance.qianlong.com',
+        'tech.qianlong.com',
+        'baic.qianlong.com',
+    ]
     start_urls = ['http://www.qianlong.com/']
 
     mapping = {

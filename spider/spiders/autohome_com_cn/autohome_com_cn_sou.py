@@ -13,7 +13,11 @@ class AutohomeSouSpider(CrawlSpider):
 
     name = 'autohome_com_cn_sou'
 
-    allowed_domains = ['autohome.com.cn']
+    allowed_domains = [
+        'www.autohome.com.cn',
+        'zhidao.autohome.com.cn',
+        'club.autohome.com.cn'
+    ]
 
     start_url_pattern = 'http://sou.autohome.com.cn/%s?q=%s'
 

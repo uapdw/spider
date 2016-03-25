@@ -20,7 +20,7 @@ class HuxiuNewsSpider(Spider):
     u"""虎嗅网新闻"""
 
     name = 'huxiu_com_news'
-    allowed_domains = ['huxiu.com']
+    allowed_domains = ['www.huxiu.com']
     start_urls = [
         'http://www.huxiu.com/'
     ]

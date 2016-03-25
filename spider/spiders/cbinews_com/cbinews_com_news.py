@@ -9,7 +9,7 @@ class CbinewsNewsSpider(LoaderMappingSpider):
     u"""电脑商情网新闻爬虫"""
 
     name = 'cbinews_com_news'
-    allowed_domains = ['cbinews.com']
+    allowed_domains = ['www.cbinews.com']
     start_urls = ['http://www.cbinews.com']
 
     mapping = {

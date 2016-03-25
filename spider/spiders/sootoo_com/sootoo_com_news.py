@@ -9,7 +9,10 @@ class SootooNewsSpider(LoaderMappingSpider):
     u"""速途网新闻爬虫"""
 
     name = 'sootoo_com_news'
-    allowed_domains = ['sootoo.com']
+    allowed_domains = [
+        'www.sootoo.com',
+        'it.sootoo.com',
+    ]
     start_urls = ['http://www.sootoo.com/']
 
     mapping = {

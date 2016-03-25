@@ -9,7 +9,7 @@ class CniiComCnNewsSpider(LoaderMappingSpider):
     u"""中国信息产业网新闻爬虫"""
 
     name = 'cnii_com_cn_news'
-    allowed_domains = ['cnii.com.cn']
+    allowed_domains = ['www.cnii.com.cn']
     start_urls = ['http://www.cnii.com.cn/']
 
     mapping = {

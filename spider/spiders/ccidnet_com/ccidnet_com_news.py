@@ -9,7 +9,7 @@ class CcidnetNewsSpider(LoaderMappingSpider):
     u"""赛迪网新闻爬虫"""
 
     name = 'ccidnet_com_news'
-    allowed_domains = ['ccidnet.com']
+    allowed_domains = ['www.ccidnet.com']
     start_urls = ['http://www.ccidnet.com/']
 
     mapping = {

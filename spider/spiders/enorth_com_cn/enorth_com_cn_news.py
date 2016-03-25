@@ -8,7 +8,12 @@ class ENorthNewsSpider(LoaderMappingSpider):
     '''北方网新闻爬虫'''
 
     name = 'enorth_com_cn_news'
-    allowed_domains = ['enorth.com.cn']
+    allowed_domains = [
+        'economy.enorth.com.cn',
+        'tianjin.enorth.com.cn',
+        'news.enorth.com.cn',
+        'it.enorth.com.cn',
+    ]
     start_urls = ['http://www.enorth.com.cn/']
 
     mapping = {

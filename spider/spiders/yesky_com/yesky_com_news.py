@@ -9,7 +9,12 @@ class YeskyComNewsSpider(LoaderMappingSpider):
     u"""天极网新闻爬虫"""
 
     name = 'yesky_com_news'
-    allowed_domains = ['yesky.com']
+    allowed_domains = [
+        'news.yesky.com',
+        'enterprise.yesky.com',
+        'cloud.yesky.com',
+        'soft.yesky.com',
+    ]
     start_urls = ['http://www.yesky.com/']
 
     mapping = {

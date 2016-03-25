@@ -13,7 +13,10 @@ class XcarComCnSouSpider(CrawlSpider):
 
     name = 'xcar_com_cn_sou'
 
-    allowed_domains = ['xcar.com.cn']
+    allowed_domains = [
+        'info.xcar.com.cn',
+        'drive.xcar.com.cn',
+    ]
 
     start_url_pattern = 'http://search.xcar.com.cn/search.php?c=%s&k=%s'
 

@@ -9,7 +9,20 @@ class ZdnetNewsSpider(LoaderMappingSpider):
     u"""至顶网新闻爬虫"""
 
     name = 'zdnet_com_cn_news'
-    allowed_domains = ['zdnet.com.cn']
+    allowed_domains = [
+        'cio.zdnet.com.cn',
+        'soft.zdnet.com.cn',
+        'security.zdnet.com.cn',
+        'cloud.zdnet.com.cn',
+        'soft.zdnet.com.cn',
+        'big-data.zdnet.com.cn',
+        'virtual.zdnet.com.cn',
+        'byod.zdnet.com.cn',
+        'biz.zdnet.com.cn',
+        'industry.zdnet.com.cn',
+        'smb.zdnet.com.cn',
+        'ple.zdnet.com.cn',
+    ]
     start_urls = ['http://www.zdnet.com.cn']
 
     mapping = {

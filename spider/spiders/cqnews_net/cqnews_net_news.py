@@ -9,7 +9,9 @@ class CqNewsNetNewsSpider(LoaderMappingSpider):
     u"""华龙网新闻爬虫"""
 
     name = 'cqnews_net_news'
-    allowed_domains = ['cqnews.net']
+    allowed_domains = [
+        'cq.cqnews.net',
+    ]
     start_urls = ['http://www.cqnews.net/']
 
     mapping = {

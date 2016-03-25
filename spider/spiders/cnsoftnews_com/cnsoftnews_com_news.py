@@ -9,7 +9,7 @@ class CnsoftNewsSpider(LoaderMappingSpider):
     u"""中国软件资讯网新闻爬虫"""
 
     name = 'cnsoftnews_com_news'
-    allowed_domains = ['cnsoftnews.com']
+    allowed_domains = ['www.cnsoftnews.com']
     start_urls = ['http://www.cnsoftnews.com/']
 
     mapping = {
