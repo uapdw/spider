@@ -63,6 +63,9 @@ def text(html_part):
     if html_part is None:
         return None
 
+    # 先去掉不该有标签
+    html_part = _safe_html(html_part)
+
     # 去掉html标签
     value = remove_tags(html_part)
 
