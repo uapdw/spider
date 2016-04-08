@@ -7,6 +7,8 @@ import datetime
 import time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from celery.utils.log import get_task_logger
+from kombu import Exchange, Queue
 
 app = Celery('spider_worker')
 
@@ -14,22 +16,47 @@ app = Celery('spider_worker')
 # app.config_from_object('config')
 
 app.conf.update(
-    BROKER_URL = 'redis://172.20.14.29:6379/0',
-    CELERY_RESULT_BACKEND = 'redis://172.20.14.29:6379/0',
-    CELERY_TASK_SERIALIZER = 'json',
-    CELERY_ACCEPT_CONTENT = ['json'],
-    CELERY_RESULT_SERIALIZER = 'json',
-    CELERY_TIMEZONE = 'Asia/Shanghai',
-    CELERY_ENABLE_UTC = False,
+    #BROKER_URL='redis://172.20.14.29:6379/0',
+    #CELERY_RESULT_BACKEND='redis://172.20.14.29:6379/1',
+    BROKER_URL='redis://127.0.0.1:6379/0',
+    CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/1',
+    CELERY_TASK_SERIALIZER='json',
+    CELERY_ACCEPT_CONTENT=['json'],
+    CELERY_RESULT_SERIALIZER='json',
+    CELERY_TIMEZONE='Asia/Shanghai',
+    CELERY_ENABLE_UTC=False,
+    CELERY_DISABLE_RATE_LIMITS=True,
+    BROKER_TRANSPORT_OPTIONS={
+        'fanout_prefix': True,
+        'fanout_patterns': True,
+    },
+    CELERY_DEFAULT_QUEUE='default',
+    CELERY_QUEUES=(
+        Queue('default', Exchange('default'), routing_key='default'),
+        Queue('mail', Exchange('mail'), routing_key='mail'),
+        Queue('spider', Exchange('spider'), routing_key='spider'),
+        Queue('period', Exchange('period'), routing_key='period'),
+    ),
+    CELERY_ROUTES={
+        'spider_worker.celery.sendMail': {'queue': 'mail', 'routing_key': 'mail'},
+        'spider_worker.celery.runSpiderAtMidNight': {'queue': 'period', 'routing_key': 'period'},
+        'spider_worker.celery.runLoopSpider': {'queue': 'period', 'routing_key': 'period'},
+        'spider_worker.celery.runSpider': {'queue': 'spider', 'routing_key': 'spider'},
+    },
 )
 
+logger = get_task_logger(__name__)
 
 def getDBSession():
-    host = '172.20.8.115'
+    #host = '172.20.8.115'
+    #userName = 'root'
+    #passWord = 'udh*123'
+    host = '127.0.0.1'
     userName = 'root'
-    passWord = 'udh*123'
+    passWord = 'kevenking'
     dataBase = 'uspider_manager'
 
+    logger.info('connecting to mysql server: {0}'.format(host))
     dbConnectString = "mysql+mysqlconnector://%s:%s@%s:3306/%s?charset=utf8" % (userName, passWord, host, dataBase)
     engine = create_engine(dbConnectString)
     dbSession = sessionmaker(bind=engine)
@@ -37,25 +64,25 @@ def getDBSession():
 
 
 def sendSpiderTask(funcName, spiderList):
-    print '#'*50
-    print "Enter %s ...." % funcName
+    logger.info('#'*50)
+    logger.info('Enter {0} ....'.format(funcName))
     if len(spiderList) > 0:
         session = getDBSession()
         for spider in spiderList:
             spiderId = spider[0]
             spiderName = spider[1]
-            print "set spider status to 'pending'...."
+            logger.info("set spider status to 'pending'....")
             session.execute("update spider_info set status = '%s' where spider_id = '%s'" % ('pending', spider[0]))
 
             try:
-                print "send task: %s %s ...." % (spiderId, spiderName)
+                logger.info("send task: {0} {1} ....".format(spiderId, spiderName))
                 app.send_task('spider_worker.celery.runSpider', args=[spiderId, spiderName])
             except Exception, e:
-                print e
+                logger.warning("Something's wrong! {0}".format(e))
         session.close()
     else:
-        print "no spiders need to run...."
-    print '#'*50
+        logger.info("no spiders need to run....")
+    logger.info('#'*50)
 
 
 @periodic_task(run_every=crontab(minute=0, hour=0))
@@ -63,6 +90,7 @@ def runSpiderAtMidNight():
     session = getDBSession()
     spiderList = session.execute("SELECT spider_id, code_path, schedule_config FROM spider_info where enable=1 and schedule_config = 'once_a_day' and (status = 'init' or status = 'success' or status = 'failed')").fetchall()
     session.close()
+    logger.info('send spider to task queue....')
     sendSpiderTask('runSpiderAtMidNight', spiderList)
 
 
@@ -71,40 +99,49 @@ def runLoopSpider():
     session = getDBSession()
     spiderList = session.execute("SELECT spider_id, code_path, schedule_config FROM spider_info where enable=1 and schedule_config = 'loop' and (status = 'init' or status = 'success' or status = 'failed')").fetchall()
     session.close()
+    logger.info('send spider to task queue....')
     sendSpiderTask('runLoopSpider', spiderList)
 
 
 @app.task(bind=True)
 def runSpider(self, spiderId, spiderName):
-    print '*'*50
+    logger.info('*'*50)
     jobId = self.request.id
     hostName = self.request.hostname
     startTime = datetime.datetime.now()
     strStartTime = datetime.datetime.strftime(startTime, '%Y-%m-%d %H:%M:%S')
 
     session = getDBSession()
-    print "set spider status to 'running'...."
+    logger.info("set spider status to 'running'....")
     session.execute("update spider_info set status = '%s' where spider_id = '%s'" % ('running', spiderId))
-    print "insert data into spider history...."
+
+    logger.info("insert data into spider history....")
     session.execute("insert into spider_run_history (history_id, spider_id, start_time, run_host, run_status) values('%s', '%s', '%s', '%s', '%s')" % (jobId, spiderId, strStartTime, hostName, 'running'))
     session.close()
 
-    print "run spider: %s ...." % spiderName
-    subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
-    # time.sleep(70)
+    logger.info("run spider: {0} ....".format(spiderName))
+    #subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
+    time.sleep(70)
 
     endTime = datetime.datetime.now()
     strEndTime = datetime.datetime.strftime(endTime, '%Y-%m-%d %H:%M:%S')
     totalTime = (endTime - startTime).seconds
 
     session = getDBSession()
-    print "set spider status to 'success'...."
+    logger.info("set spider status to 'success'....")
     session.execute("update spider_info set status = '%s' where spider_id = '%s'" % ('success', spiderId))
-    print "set spider history status to 'success'...."
+    logger.info("set spider history status to 'success'....")
     session.execute("update spider_run_history set end_time = '%s', total_time = '%s', run_status = '%s' where history_id = '%s'" % (strEndTime, totalTime, 'success', jobId))
     session.close()
 
-    print spiderId, spiderName
-    print 'job id: %s' % jobId
-    print '%s is finished!' % spiderName
-    print '*'*50
+    logger.info("Finished! spiderId: {0}, spiderName: {1}, job id: {2}".format(spiderId, spiderName, jobId))
+    logger.info('*'*50)
+
+
+@app.task(bind=True, default_retry_delay=3*60)
+def sendMail(self, mailFrom, mailTo):
+    try:
+        #print 'sending mail from {0} to {1}.....'.format(mailFrom, mailTo)
+        logger.info('send mail from {0} to {1}'.format(mailFrom, mailTo))
+    except Exception as exc:
+        raise self.retry(exc=exc)
