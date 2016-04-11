@@ -173,7 +173,7 @@ def sendMail(self, subject, mail_to, content):
 
         # 发送邮件
         s.sendmail(app.config['EMAIL_USER'], [mail_to], msgRoot.as_string())
-        logger.info('send mail to {1}'.format(mail_to))
+        logger.info('send mail to {}'.format(mail_to))
     except Exception as exc:
         raise self.retry(exc=exc)
     finally:
