@@ -16,10 +16,10 @@ app = Celery('spider_worker')
 # app.config_from_object('config')
 
 app.conf.update(
-    #BROKER_URL='redis://172.20.14.29:6379/0',
-    #CELERY_RESULT_BACKEND='redis://172.20.14.29:6379/1',
-    BROKER_URL='redis://127.0.0.1:6379/0',
-    CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/1',
+    BROKER_URL='redis://172.20.14.29:6379/0',
+    CELERY_RESULT_BACKEND='redis://172.20.14.29:6379/1',
+    #BROKER_URL='redis://127.0.0.1:6379/0',
+    #CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/1',
     CELERY_TASK_SERIALIZER='json',
     CELERY_ACCEPT_CONTENT=['json'],
     CELERY_RESULT_SERIALIZER='json',
@@ -48,12 +48,12 @@ app.conf.update(
 logger = get_task_logger(__name__)
 
 def getDBSession():
-    #host = '172.20.8.115'
-    #userName = 'root'
-    #passWord = 'udh*123'
-    host = '127.0.0.1'
+    host = '172.20.8.115'
     userName = 'root'
-    passWord = 'kevenking'
+    passWord = 'udh*123'
+    #host = '127.0.0.1'
+    #userName = 'root'
+    #passWord = 'kevenking'
     dataBase = 'uspider_manager'
 
     logger.info('connecting to mysql server: {0}'.format(host))
@@ -120,8 +120,8 @@ def runSpider(self, spiderId, spiderName):
     session.close()
 
     logger.info("run spider: {0} ....".format(spiderName))
-    #subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl %s' % spiderName], shell=True)
-    time.sleep(70)
+    #subprocess.call(['cd /data0/sourcecode/spider/current;/root/.virtualenvs/spider/bin/scrapy crawl {0}'.format(spiderName)], shell=True)
+    time.sleep(150)
 
     endTime = datetime.datetime.now()
     strEndTime = datetime.datetime.strftime(endTime, '%Y-%m-%d %H:%M:%S')
@@ -139,7 +139,7 @@ def runSpider(self, spiderId, spiderName):
 
 
 @app.task(bind=True, default_retry_delay=3*60)
-def sendMail(self, mailFrom, mailTo):
+def sendMail(self, mailFrom, mailTo, content):
     try:
         #print 'sending mail from {0} to {1}.....'.format(mailFrom, mailTo)
         logger.info('send mail from {0} to {1}'.format(mailFrom, mailTo))

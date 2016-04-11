@@ -8,19 +8,26 @@ __author__ = 'zhangxind'
 env.user = 'root'
 env.colorize_errors = True
 env.roledefs = {
-  'spider-test': ['172.20.8.163'],
-  'spider-worker': [
-    '172.20.14.80',
-    '172.20.14.93',
-    '172.20.14.94',
-    '172.20.14.95',
-  ],
-  'spider-beat': [
-    '172.20.14.80',
-  ],
-  'flower': [
-    '172.20.14.80',
-  ]
+    'workerPeriod': [
+        '172.20.14.80',
+        '172.20.14.93',
+    ],
+    'workerSpider': [
+        '172.20.14.80',
+        '172.20.14.93',
+        '172.20.14.94',
+        '172.20.14.95',
+    ],
+    'workerMail': [
+        '172.20.14.94',
+        '172.20.14.95',
+    ],
+    'beat': [
+        '172.20.14.80',
+    ],
+    'flower': [
+        '172.20.14.80',
+    ]
 }
 
 _TAR_FILE = 'dist-spider.tar.gz'
@@ -75,48 +82,78 @@ def copyFile():
       run('chown -R root:root %s' % newDir)
 
 
-def copySupervisorWorkerConf():
-    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_spider_worker.conf /etc/supervisor')
+def copyWorkerSpiderConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor/worker_spider.conf /etc/supervisor')
 
 
-def copySupervisorBeatConf():
-    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_spider_beat.conf /etc/supervisor')
+def copyWorkerPeriodConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor/worker_period.conf /etc/supervisor')
 
 
-def copySupervisorFlowerConf():
-    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor_flower.conf /etc/supervisor')
+def copyWorkerMailConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor/worker_mail.conf /etc/supervisor')
 
 
+def copyBeatConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor/beat.conf /etc/supervisor')
+
+
+def copyFlowerConf():
+    run('cp /data0/sourcecode/spider/current/utils/tools/conf/supervisor/flower.conf /etc/supervisor')
+
+
+@parallel(pool_size=5)
 def reloadSupervisor():
     run('supervisorctl reload')
 
 
-def deploySpider():
+@task
+def deployAllSpider():
     getNewCode()
     build()
     copyFile()
 
 
-def deploySpiderWorker():
-    getNewCode()
-    build()
-    copyFile()
-    copySupervisorWorkerConf()
-    reloadSupervisor()
+@task
+@roles('workerSpider')
+def deployWorkerSpider():
+    copyWorkerSpiderConf()
 
 
-def deploySpiderBeat():
-    copySupervisorBeatConf()
-    reloadSupervisor()
+@task
+@roles('workerPeriod')
+def deployWorkerPeriod():
+    copyWorkerPeriodConf()
 
 
+@task
+@roles('workerMail')
+def deployWorkerMail():
+    copyWorkerMailConf()
+
+
+@task
+@roles('beat')
+def deployBeat():
+    copyBeatConf()
+
+
+@task
+@roles('flower')
 def deployFlower():
-    copySupervisorFlowerConf()
+    copyFlowerConf()
+
+
+@task
+@roles('beat')
+def deployAllWorkers():
+    deployWorkerPeriod()
+    deployWorkerMail()
+    deployWorkerSpider()
+    deployBeat()
+    deployFlower()
     reloadSupervisor()
 
 
 def testEnv():
     print "Executing on %(host)s as %(user)s" % env
-
-
-
