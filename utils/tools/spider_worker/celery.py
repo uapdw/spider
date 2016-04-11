@@ -9,6 +9,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from celery.utils.log import get_task_logger
 from kombu import Exchange, Queue
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 app = Celery('spider_worker')
 
@@ -43,7 +46,14 @@ app.conf.update(
         'spider_worker.celery.runLoopSpider': {'queue': 'period', 'routing_key': 'period'},
         'spider_worker.celery.runSpider': {'queue': 'spider', 'routing_key': 'spider'},
     },
+
+    # 邮件
+    EMAIL_USER = 'info@uradar.com.cn',
+    EMAIL_PASSWORD = 'yonyou@123',
+    EMAIL_HOST = 'smtp.exmail.qq.com',
+    EMAIL_PORT = 465,
 )
+app.config = app.conf
 
 logger = get_task_logger(__name__)
 
@@ -139,9 +149,30 @@ def runSpider(self, spiderId, spiderName):
 
 
 @app.task(bind=True, default_retry_delay=3*60)
-def sendMail(self, mailFrom, mailTo, content):
+def sendMail(self, subject, mail_to, content):
+    msgRoot = MIMEMultipart('related')
+
+    # 创建一个实例，这里设置为html格式邮件
+    msgText = MIMEText(content, _subtype='html', _charset='utf-8')
+    msgRoot.attach(msgText)
+
+    msgRoot['Subject'] = subject
+    msgRoot['From'] = app.config['EMAIL_USER']
+    msgRoot['To'] = mail_to
+
     try:
-        #print 'sending mail from {0} to {1}.....'.format(mailFrom, mailTo)
-        logger.info('send mail from {0} to {1}'.format(mailFrom, mailTo))
+        s = smtplib.SMTP_SSL(
+            app.config['EMAIL_HOST'],
+            port=app.config['EMAIL_PORT']
+        )
+
+        # 登陆服务器
+        s.login(app.config['EMAIL_USER'], app.config['EMAIL_PASSWORD'])
+
+        # 发送邮件
+        s.sendmail(app.config['EMAIL_USER'], [mail_to], msgRoot.as_string())
+        logger.info('send mail to {1}'.format(mail_to))
     except Exception as exc:
         raise self.retry(exc=exc)
+    finally:
+        s.close()
