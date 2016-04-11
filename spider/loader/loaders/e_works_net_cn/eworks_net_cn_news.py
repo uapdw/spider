@@ -21,7 +21,8 @@ class EworksNewsLoader(NewsLoader):
     author_re = u'.*?作者：(.*)关键字：.*'
     publish_time_xpath = '//div[@class="fl mt10" or @class="fl mt10 pb10"]'
     publish_time_re = u'.*(\d{4})[年|/](\d{1,2})[月|/](\d{1,2}).*'
-    publish_time_format = '%Y%m%d'
+    publish_time_re_join = '-'
+    publish_time_format = '%Y-%m-%d'
     source_xpath = '//div[@class="fl mt10"]'
     source_re = u'.*?来源：(\S+).*'
 
