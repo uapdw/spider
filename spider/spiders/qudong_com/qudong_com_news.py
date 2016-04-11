@@ -9,7 +9,9 @@ class QudongNewsSpider(LoaderMappingSpider):
     u"""驱动中国新闻爬虫"""
 
     name = 'qudong_com_news'
-    allowed_domains = ['qudong.com']
+    allowed_domains = [
+        'news.qudong.com',
+    ]
     start_urls = ['http://www.qudong.com/']
 
     mapping = {

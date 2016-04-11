@@ -9,7 +9,7 @@ class IdcNewsSpider(LoaderMappingSpider):
     u"""idc新闻爬虫"""
 
     name = 'idc_com_cn_news'
-    allowed_domains = ['idc.com.cn']
+    allowed_domains = ['www.idc.com.cn']
     start_urls = ['http://www.idc.com.cn/']
 
     mapping = {

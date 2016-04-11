@@ -9,7 +9,13 @@ class ZolNewsSpider(LoaderMappingSpider):
     u"""中关村在线新闻爬虫"""
 
     name = 'zol_com_cn_news'
-    allowed_domains = ['zol.com.cn']
+    allowed_domains = [
+        'news.zol.com.cn',
+        'soft.zol.com.cn',
+        'biz.zol.com.cn',
+        'cloud.zol.com.cn',
+        'safe.zol.com.cn',
+    ]
     start_urls = ['http://www.zol.com.cn/']
 
     mapping = {

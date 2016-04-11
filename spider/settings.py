@@ -34,9 +34,9 @@ ROBOTSTXT_OBEY = True
 DEPTH_LIMIT = 3
 DEPTH_STATS_VERBOSE = True
 
-LOG_LEVEL = 'INFO'
-LOG_STDOUT = False
-LOG_FILE = '/tmp/scrapy.log'
+#LOG_LEVEL = 'INFO'
+#LOG_STDOUT = False
+#LOG_FILE = '/tmp/scrapy.log'
 
 
 HBASE_HOST = '172.20.3.107'

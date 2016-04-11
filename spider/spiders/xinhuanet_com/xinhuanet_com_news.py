@@ -9,7 +9,10 @@ class XinhuanetNewsSpider(LoaderMappingSpider):
     u"""新华网新闻爬虫"""
 
     name = 'xinhuanet_com_news'
-    allowed_domains = ['xinhuanet.com']
+    allowed_domains = [
+        'news.xinhuanet.com',
+        'www.news.cn',
+    ]
     start_urls = ['http://xinhuanet.com/']
 
     mapping = {

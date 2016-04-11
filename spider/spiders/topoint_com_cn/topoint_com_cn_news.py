@@ -9,7 +9,7 @@ class TopointNewsSpider(LoaderMappingSpider):
     u"""支点网新闻爬虫"""
 
     name = 'topoint_com_cn_news'
-    allowed_domains = ['topoint.com.cn']
+    allowed_domains = ['www.topoint.com.cn']
     start_urls = ['http://www.topoint.com.cn/']
 
     mapping = {

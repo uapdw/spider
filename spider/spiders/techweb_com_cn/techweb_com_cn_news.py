@@ -9,7 +9,12 @@ class TechwebNewsSpider(LoaderMappingSpider):
     u"""TechWeb新闻爬虫"""
 
     name = 'techweb_com_cn_news'
-    allowed_domains = ['techweb.com.cn']
+    allowed_domains = [
+        'people.techweb.com.cn',
+        'mi.techweb.com.cn',
+        'tech.techweb.com.cn',
+        'www.techweb.com.cn',
+    ]
     start_urls = ['http://www.techweb.com.cn/']
 
     mapping = {

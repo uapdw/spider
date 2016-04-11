@@ -9,7 +9,13 @@ class ChinaComCnNewsSpider(LoaderMappingSpider):
     u"""中国网新闻爬虫"""
 
     name = 'china_com_cn_news'
-    allowed_domains = ['china.com.cn']
+    allowed_domains = [
+        'news.china.com.cn',
+        'finance.china.com.cn',
+        'business.china.com.cn',
+        'tech.china.com.cn',
+        'invest.china.com.cn',
+    ]
     start_urls = ['http://www.china.com.cn/']
 
     mapping = {

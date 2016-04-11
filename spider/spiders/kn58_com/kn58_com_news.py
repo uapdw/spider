@@ -9,7 +9,7 @@ class Kn58NewsSpider(LoaderMappingSpider):
     u"""微客网新闻爬虫"""
 
     name = 'kn58_com_news'
-    allowed_domains = ['kn58.com']
+    allowed_domains = ['www.kn58.com']
     start_urls = ['http://www.kn58.com/']
 
     mapping = {

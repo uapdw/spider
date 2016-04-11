@@ -8,7 +8,14 @@ class EastDayNewsSpider(LoaderMappingSpider):
     '''东方网新闻爬虫'''
 
     name = 'eastday_com_news'
-    allowed_domains = ['eastday.com']
+    allowed_domains = [
+        'news.eastday.com',
+        'sh.eastday.com',
+        'finance.eastday.com',
+        'shzw.eastday.com',
+        'world.eastday.com',
+        'china.eastday.com',
+    ]
     start_urls = ['http://www.eastday.com/']
 
     mapping = {

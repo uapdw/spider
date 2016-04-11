@@ -9,7 +9,11 @@ class VsharingNewsSpider(LoaderMappingSpider):
     u"""畅享网新闻爬虫"""
 
     name = 'vsharing_com_news'
-    allowed_domains = ['vsharing.com']
+    allowed_domains = [
+        'portal.vsharing.com',
+        'it.vsharing.com',
+        'www.vsharing.com',
+    ]
     start_urls = ['http://www.vsharing.com/']
 
     mapping = {

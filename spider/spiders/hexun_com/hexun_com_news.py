@@ -9,7 +9,10 @@ class HexunNewsSpider(LoaderMappingSpider):
     u"""和讯新闻爬虫"""
 
     name = 'hexun_com_news'
-    allowed_domains = ['hexun.com']
+    allowed_domains = [
+        'news.hexun.com',
+        'tech.hexun.com',
+    ]
     start_urls = ['http://www.hexun.com/']
 
     mapping = {

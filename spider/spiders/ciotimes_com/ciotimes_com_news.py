@@ -9,7 +9,7 @@ class CiotimesNewsSpider(LoaderMappingSpider):
     u"""CIO时代新闻爬虫"""
 
     name = 'ciotimes_com_news'
-    allowed_domains = ['ciotimes.com']
+    allowed_domains = ['www.ciotimes.com']
     start_urls = ['http://www.ciotimes.com/']
 
     mapping = {

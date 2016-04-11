@@ -9,7 +9,7 @@ class CeocioNewsSpider(LoaderMappingSpider):
     u"""经理世界网新闻爬虫"""
 
     name = 'ceocio_com_cn_news'
-    allowed_domains = ['ceocio.com.cn']
+    allowed_domains = ['www.ceocio.com.cn']
     start_urls = ['http://www.ceocio.com.cn/']
 
     mapping = {

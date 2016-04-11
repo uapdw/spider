@@ -11,7 +11,7 @@ class AutohomeBQSpider(CrawlSpider):
 
     name = 'autohome_com_cn_beiqi'
 
-    allowed_domains = ['autohome.com.cn']
+    allowed_domains = ['k.autohome.com.cn']
 
     start_url_pattern = 'http://k.autohome.com.cn/%s/'
 

@@ -10,7 +10,7 @@ class BaiduNewsSpider(CrawlSpider):
 
     name = 'baidu_com_news'
 
-    allowed_domains = ['baidu.com']
+    allowed_domains = ['news.baidu.com']
 
 #     start_url_pattern = 'http://news.baidu.com/ns?cl=2&rn=20&tn=news&word=%s'
     start_url_pattern = 'http://news.baidu.com/ns?word=%s&pn=%s&cl=2&ct=1&tn=news&rn=20&ie=utf-8&bt=0&et=0'

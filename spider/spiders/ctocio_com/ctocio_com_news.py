@@ -9,7 +9,7 @@ class CtocioNewsSpider(LoaderMappingSpider):
     u"""IT经理网新闻爬虫"""
 
     name = 'ctocio_com_news'
-    allowed_domains = ['ctocio.com']
+    allowed_domains = ['www.ctocio.com']
     start_urls = ['http://www.ctocio.com/']
 
     mapping = {

@@ -9,7 +9,12 @@ class GmwNewsSpider(LoaderMappingSpider):
     u"""光明网新闻爬虫"""
 
     name = 'gmw_cn_news'
-    allowed_domains = ['gmw.cn']
+    allowed_domains = [
+        'news.gmw.cn',
+        'tech.gmw.cn',
+        'economy.gmw.cn',
+        'it.gmw.cn',
+    ]
     start_urls = ['http://gmw.cn/']
 
     mapping = {

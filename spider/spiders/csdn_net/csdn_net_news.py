@@ -9,7 +9,9 @@ class CSDNNewsSpider(LoaderMappingSpider):
     u"""CSDN新闻爬虫"""
 
     name = 'csdn_net_news'
-    allowed_domains = ['csdn.net']
+    allowed_domains = [
+        'www.csdn.net',
+    ]
     start_urls = ['http://csdn.net']
 
     mapping = {

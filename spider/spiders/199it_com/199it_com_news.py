@@ -9,7 +9,7 @@ class N199itNewsSpider(LoaderMappingSpider):
     u"""199it新闻爬虫"""
 
     name = '199it_com_news'
-    allowed_domains = ['199it.com']
+    allowed_domains = ['www.199it.com']
     start_urls = ['http://www.199it.com/']
 
     mapping = {

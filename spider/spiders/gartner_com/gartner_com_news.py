@@ -13,7 +13,7 @@ from spider.loader.processors import SafeHtml
 
 class GartnerNewsSpider(CrawlSpider):
     name = 'gartner_com_news'
-    allowed_domains = ['gartner.com']
+    allowed_domains = ['www.gartner.com']
     SCROLLCOUNT = 0
     SCROLLFREE = 0
     SCROLLPREMIUM = 0
