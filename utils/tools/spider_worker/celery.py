@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+
 from celery import Celery
 from celery.schedules import crontab
 from celery.task import periodic_task
+from celery.utils.log import get_task_logger
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from kombu import Exchange, Queue
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 import subprocess
 import datetime
 import time
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from celery.utils.log import get_task_logger
-from kombu import Exchange, Queue
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 app = Celery('spider_worker')
 
@@ -21,10 +24,10 @@ app = Celery('spider_worker')
 # app.config_from_object('config')
 
 app.conf.update(
-    BROKER_URL='redis://172.20.14.29:6379/0',
-    CELERY_RESULT_BACKEND='redis://172.20.14.29:6379/1',
-    #BROKER_URL='redis://127.0.0.1:6379/0',
-    #CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/1',
+    #BROKER_URL='redis://172.20.14.29:6379/0',
+    #CELERY_RESULT_BACKEND='redis://172.20.14.29:6379/1',
+    BROKER_URL='redis://127.0.0.1:6379/0',
+    CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/1',
     CELERY_TASK_SERIALIZER='json',
     CELERY_ACCEPT_CONTENT=['json'],
     CELERY_RESULT_SERIALIZER='json',
@@ -54,22 +57,23 @@ app.conf.update(
     EMAIL_PASSWORD = 'yonyou@123',
     EMAIL_HOST = 'smtp.exmail.qq.com',
     EMAIL_PORT = 465,
+
+    MYSQL_HOST = '127.0.0.1',
+    MYSQL_USER = 'root',
+    MYSQL_PASSWORD = 'kevenking',
+    #MYSQL_HOST = '172.20.8.115',
+    #MYSQL_USER = 'root',
+    #MYSQL_PASSWORD = 'udh*123',
+    MYSQL_DATABASE = 'uspider_manager'
 )
 app.config = app.conf
 
 logger = get_task_logger(__name__)
 
 def getDBSession():
-    host = '172.20.8.115'
-    userName = 'root'
-    passWord = 'udh*123'
-    #host = '127.0.0.1'
-    #userName = 'root'
-    #passWord = 'kevenking'
-    dataBase = 'uspider_manager'
-
-    logger.info('connecting to mysql server: {0}'.format(host))
-    dbConnectString = "mysql+mysqlconnector://%s:%s@%s:3306/%s?charset=utf8" % (userName, passWord, host, dataBase)
+    '''创建数据库连接'''
+    logger.info('connecting to mysql server: {0}'.format(app.config['MYSQL_HOST']))
+    dbConnectString = "mysql+mysqlconnector://%s:%s@%s:3306/%s?charset=utf8" % (app.config['MYSQL_USER'], app.config['MYSQL_PASSWORD'], app.config['MYSQL_HOST'], app.config['MYSQL_DATABASE'])
     engine = create_engine(dbConnectString)
     dbSession = sessionmaker(bind=engine)
     return dbSession()
@@ -150,7 +154,7 @@ def runSpider(self, spiderId, spiderName):
     logger.info('*'*50)
 
 
-@app.task(bind=True, default_retry_delay=3*60)
+@app.task(bind=True, default_retry_delay=3*60, name='spider_worker.celery.sendMail')
 def sendMail(self, subject, mail_to, content):
     msgRoot = MIMEMultipart('related')
 
