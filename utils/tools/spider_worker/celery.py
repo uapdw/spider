@@ -152,7 +152,7 @@ def runSpider(self, spiderId, spiderName):
 
 
 @app.task(bind=True, default_retry_delay=3*60)
-def sendMail(self, subject, mail_to, content, report_send_id):
+def sendMail(self, subject, mail_to, content, report_send_id=None):
     msgRoot = MIMEMultipart('related')
 
     # 创建一个实例，这里设置为html格式邮件
@@ -182,4 +182,5 @@ def sendMail(self, subject, mail_to, content, report_send_id):
     finally:
         s.close()
 
-    set_mail_status(report_send_id, mail_to, is_success)
+    if report_send_id is not None:
+        set_mail_status(report_send_id, mail_to, is_success)
