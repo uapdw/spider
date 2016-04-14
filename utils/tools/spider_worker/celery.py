@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from kombu import Exchange, Queue
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from uradar import set_mail_status
 
 import subprocess
 import datetime
@@ -155,7 +156,7 @@ def runSpider(self, spiderId, spiderName):
 
 
 @app.task(bind=True, default_retry_delay=3*60, name='spider_worker.celery.sendMail')
-def sendMail(self, subject, mail_to, content):
+def sendMail(self, subject, mail_to, content, report_send_id=None):
     msgRoot = MIMEMultipart('related')
 
     # 创建一个实例，这里设置为html格式邮件
@@ -166,6 +167,7 @@ def sendMail(self, subject, mail_to, content):
     msgRoot['From'] = app.config['EMAIL_USER']
     msgRoot['To'] = mail_to
 
+    is_success = True
     try:
         s = smtplib.SMTP_SSL(
             app.config['EMAIL_HOST'],
@@ -179,6 +181,10 @@ def sendMail(self, subject, mail_to, content):
         s.sendmail(app.config['EMAIL_USER'], [mail_to], msgRoot.as_string())
         logger.info('send mail to {}'.format(mail_to))
     except Exception as exc:
+        is_success = False
         raise self.retry(exc=exc)
     finally:
         s.close()
+
+    if report_send_id is not None:
+        set_mail_status(report_send_id, mail_to, is_success)
