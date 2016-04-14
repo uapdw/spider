@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from kombu import Exchange, Queue
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from uradar import set_mail_status
+from .uradar import set_mail_status
 
 import subprocess
 import datetime
