@@ -14,7 +14,7 @@ from kombu import Exchange, Queue
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from uradar import set_mail_status
+from .uradar import set_mail_status
 
 app = Celery('spider_worker')
 
