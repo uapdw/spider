@@ -43,7 +43,7 @@ def set_mail_status(report_send_id, mail, is_success):
     session = Session()
 
     try:
-        report_send = ReportSendLog.query.filter(
+        report_send = session.query(ReportSendLog).filter(
             ReportSendLog.report_send_id == report_send_id
         ).with_for_update().one()
 
