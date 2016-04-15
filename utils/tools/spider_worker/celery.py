@@ -59,12 +59,12 @@ app.conf.update(
     EMAIL_HOST = 'smtp.exmail.qq.com',
     EMAIL_PORT = 465,
 
-    MYSQL_HOST = '127.0.0.1',
-    MYSQL_USER = 'root',
-    MYSQL_PASSWORD = 'kevenking',
-    #MYSQL_HOST = '172.20.8.115',
+    #MYSQL_HOST = '127.0.0.1',
     #MYSQL_USER = 'root',
-    #MYSQL_PASSWORD = 'udh*123',
+    #MYSQL_PASSWORD = 'kevenking',
+    MYSQL_HOST = '172.20.8.115',
+    MYSQL_USER = 'root',
+    MYSQL_PASSWORD = 'udh*123',
     MYSQL_DATABASE = 'uspider_manager'
 )
 app.config = app.conf
