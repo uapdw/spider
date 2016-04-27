@@ -48,6 +48,7 @@ app.conf.update(
     ),
     CELERY_ROUTES={
         'spider_worker.celery.sendMail': {'queue': 'mail', 'routing_key': 'mail'},
+        'spider_worker.celery.sendMails': {'queue': 'mail', 'routing_key': 'mail'},
         'spider_worker.celery.runSpiderAtMidNight': {'queue': 'period', 'routing_key': 'period'},
         'spider_worker.celery.runLoopSpider': {'queue': 'period', 'routing_key': 'period'},
         'spider_worker.celery.runSpider': {'queue': 'spider', 'routing_key': 'spider'},
