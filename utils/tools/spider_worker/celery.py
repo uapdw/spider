@@ -55,7 +55,7 @@ app.conf.update(
     },
 
     # 邮件
-    EMAIL_USER = 'info@uradar.com.cn',
+    EMAIL_USER = 'info@uradar.cn',
     EMAIL_PASSWORD = 'URadar123',
     EMAIL_HOST = 'smtp.exmail.qq.com',
     EMAIL_PORT = 465,
