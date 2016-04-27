@@ -155,6 +155,15 @@ def runSpider(self, spiderId, spiderName):
     logger.info('*'*50)
 
 
+@app.task(bind=True, default_retry_delay=3*60, name='spider_worker.celery.sendMails')
+def sendMails(self, subject, mail_tos, content, report_send_id=None):
+    if not mail_tos:
+        return
+
+    for mail_to in mail_tos:
+        sendMail.delay(subject, mail_to, content, report_send_id)
+
+
 @app.task(bind=True, default_retry_delay=3*60, name='spider_worker.celery.sendMail')
 def sendMail(self, subject, mail_to, content, report_send_id=None):
     msgRoot = MIMEMultipart('related')
