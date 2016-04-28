@@ -16,9 +16,13 @@ from sqlalchemy.orm.exc import NoResultFound
 
 
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:udh*123@172.20.8.115/uradar'
+SQLALCHEMY_POOL_RECYCLE = 60 * 60 * 2  # 2 hours, same as uradar
 
 
-some_engine = create_engine(SQLALCHEMY_DATABASE_URI)
+some_engine = create_engine(
+    SQLALCHEMY_DATABASE_URI,
+    pool_recycle=SQLALCHEMY_POOL_RECYCLE
+)
 Session = sessionmaker(bind=some_engine)
 Base = declarative_base()
 
