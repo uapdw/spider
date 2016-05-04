@@ -11,9 +11,13 @@ NEWSPIDER_MODULE = 'spider.spiders'
 fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
+FILES_STORE = '/data0/files/stock_year_reports'
+
 ITEM_PIPELINES = {
+    'spider.pipelines.NamedFilesPipeline': 1,
+    'spider.pipelines.SqlalchemyPipeline': 2,
     #'spider.pipelines.JSONWriterPipeline': 1,
-    'spider.pipelines.HBaseItemPipeline': 1,
+    'spider.pipelines.HBaseItemPipeline': 3,
     #'spider.pipelines.SolrItemPipeline': 2
 }
 

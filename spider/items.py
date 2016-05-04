@@ -6,6 +6,15 @@ from scrapy.item import Item, Field
 from scrapy.exceptions import DropItem
 
 
+class StockYearReportItem(Item):
+    stock_code = Field()
+    publish_time = Field()
+    report_name = Field()
+
+    file_urls = Field()
+    files = Field()
+
+
 class HBaseItem(Item):
 
     # hbase 表名
