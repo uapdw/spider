@@ -3,74 +3,20 @@
 import json
 import hashlib
 import datetime
-import uuid
 
 import pysolr
 import happybase
 from scrapy.http import Request
 from scrapy.pipelines.files import FilesPipeline
-from scrapy.exceptions import DropItem
-from sqlalchemy.exc import IntegrityError as SqlalchemyIntegrityError
-from pymysql.err import IntegrityError as PymysqlIntegrityError
 
-from spider.items import HBaseItem, StockYearReportItem
+from spider.items import HBaseItem, SqlalchemyItem, StockReportItem
 from spider.loader.processors import text
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-
-
-# SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root@127.0.0.1/stock?charset=utf8'
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://stock:stock@172.20.8.163/stock?charset=utf8'
-SQLALCHEMY_POOL_RECYCLE = 60 * 60 * 2  # 2 hours, same as uradar
-
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URI,
-    pool_recycle=SQLALCHEMY_POOL_RECYCLE,
-    encoding='utf-8'
-)
-Session = sessionmaker(bind=engine)
-Base = declarative_base()
-
-
-class StockYearReport(Base):
-    __tablename__ = 'stock_year_report'
-
-    report_id = Column(String(36), primary_key=True)
-    stock_code = Column(String(45))
-    publish_time = Column(DateTime)
-    report_name = Column(String(255))
-    pdf_url = Column(String(255))
-    pdf_path = Column(String(255))
 
 
 class SqlalchemyPipeline(object):
     def process_item(self, item, spider):
-        if isinstance(item, StockYearReportItem):
-            session = Session()
-            try:
-                report = StockYearReport()
-                report.report_id = str(uuid.uuid1())
-                report.stock_code = item['stock_code']
-                report.publish_time = item['publish_time']
-                report.report_name = item['report_name']
-                if u'摘要' in report.report_name:
-                    raise ValueError(u'"摘要" in report_name')
-                report.pdf_url = item['file_urls'][0]['file_url']
-                report.pdf_path = item['files'][0]['path']
-                session.add(report)
-                session.commit()
-            except (SqlalchemyIntegrityError, PymysqlIntegrityError) as e:
-                session.rollback()
-                raise DropItem(e.message)
-            except Exception as e:
-                session.rollback()
-                raise DropItem(e.message)
-            finally:
-                session.close()
+        if isinstance(item, SqlalchemyItem):
+            item.add()
 
         return item
 
@@ -78,11 +24,12 @@ class SqlalchemyPipeline(object):
 class NamedFilesPipeline(FilesPipeline):
 
     def get_media_requests(self, item, info):
-        for file_spec in item['file_urls']:
-            yield Request(
-                url=file_spec["file_url"],
-                meta={"file_spec": file_spec, "download_timeout": 180}
-            )
+        if isinstance(item, StockReportItem):
+            for file_spec in item['file_urls']:
+                yield Request(
+                    url=file_spec["file_url"],
+                    meta={"file_spec": file_spec, "download_timeout": 180}
+                )
 
     def file_path(self, request, response=None, info=None):
         return request.meta["file_spec"]["file_name"]
@@ -263,3 +210,87 @@ class HBaseItemPipeline(object):
             value = value
             mutations[column] = value
         return mutations
+
+
+# class StockCompanyInfoPipeline(object):
+#     def process_item(self, item, spider):
+#         if spider.name not in ['stockinfo']:
+#             return item
+#         print "enter StockCompanyInfoPipeline....."
+#
+#         arrInfo = {}
+#         for i in item:
+#             if i == 'stockCode':
+#                 continue
+#             arrInfo[i] = item[i]
+#
+#         spider.tCompanyInfo.update({'stockCode': item['stockCode']}, {'$set': arrInfo}, True)
+#         return item
+#
+#
+# class StockBalanceSheetPipeline(object):
+#     def process_item(self, item, spider):
+#         if spider.name not in ['stockbalance']:
+#             return item
+#         print "enter StockBalanceSheetPipeline....."
+#
+#         arrInfo = {}
+#         if u'科目'.encode('utf8') in item['row']:
+#             for i in item['row']:
+#                 if i == 'stockCode' or i == 'pubtime':
+#                     continue
+#                 arrInfo[i] = item['row'][i]
+#
+#             spider.tBalanceSheet.update({'stockCode': item['row']['stockCode'], 'pubtime': item['row']['pubtime']}, {'$set': arrInfo}, True)
+#             return item
+#         else:
+#             raise DropItem('No stock balance sheet datas in %s' % item)
+#
+#
+# class StockIncomeStatementsPipeline(object):
+#     def process_item(self, item, spider):
+#         if spider.name not in ['stockincome']:
+#             return item
+#         print "enter StockIncomeStatementsPipeline....."
+#
+#         arrInfo = {}
+#         if u'科目'.encode('utf8') in item['row']:
+#             for i in item['row']:
+#                 if i == 'stockCode' or i == 'pubtime':
+#                     continue
+#                 arrInfo[i] = item['row'][i]
+#
+#             spider.tIncome.update({'stockCode': item['row']['stockCode'], 'pubtime': item['row']['pubtime']}, {'$set': arrInfo}, True)
+#             return item
+#         else:
+#             raise DropItem('No stock income statements datas in %s' % item)
+#
+#
+# class StockCashFlowPipeline(object):
+#     def process_item(self, item, spider):
+#         if spider.name not in ['stockcashflow']:
+#             return item
+#         print "enter StockCashFlowPipeline....."
+#
+#         arrInfo = {}
+#         if u'科目'.encode('utf8') in item['row']:
+#             for i in item['row']:
+#                 if i == 'stockCode' or i == 'pubtime':
+#                     continue
+#                 arrInfo[i] = item['row'][i]
+#
+#             spider.tCashFlow.update({'stockCode': item['row']['stockCode'], 'pubtime': item['row']['pubtime']}, {'$set': arrInfo}, True)
+#             return item
+#         else:
+#             raise DropItem('No stock cash flow datas in %s' % item)
+#
+#
+# class StockFinancialReportPipeline(object):
+#     def process_item(self, item, spider):
+#         if spider.name not in ['cninfo']:
+#             return item
+#         else:
+#             if item['iType'] == 'financialReport':
+#                 print "enter StockFinancialReportPipeline....."
+#                 print '='*10
+#             return item
