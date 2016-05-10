@@ -78,6 +78,7 @@ class CurrListedCorpItem(SqlalchemyItem):
     stock_cd = Field()
     corp_name = Field()
     indus = Field()
+    data_sour = Field()
 
     stock_sname = Field()
     corp_sname = Field()

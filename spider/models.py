@@ -11,6 +11,7 @@ class CurrListedCorp(Base):
     stock_cd = Column(String(6), primary_key=True)
     corp_name = Column(String(500))
     indus = Column(String(100))
+    data_sour = Column(String(20))
 
     stock_sname = Column(String(20))
     corp_sname = Column(String(100))
