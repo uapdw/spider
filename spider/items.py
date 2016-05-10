@@ -69,16 +69,16 @@ class SqlalchemyItem(RequiredFieldItem):
         session = Session()
         try:
             row = ModelClass()
-            for key in self['row'].keys():
-                setattr(row, self['row'][key])
+            for key in self.fields.keys():
+                setattr(row, key, self.get(key))
             session.add(row)
             session.commit()
         except (SqlalchemyIntegrityError, PymysqlIntegrityError) as e:
             session.rollback()
             raise DropItem(e.message)
-        except Exception as e:
-            session.rollback()
-            raise DropItem(e.message)
+        # except Exception as e:
+        #     session.rollback()
+        #     raise DropItem(e.message)
         finally:
             session.close()
 
