@@ -258,6 +258,80 @@ class AsstLiabTable(Base):
     modifytime = Column(String(19))
 
 
+class ProfitTable(Base):
+    __tablename__ = 'profit_table'
+
+    year = Column(String(4), primary_key=True)
+    period = Column(String(8), primary_key=True)
+    stock_cd = Column(String(6), primary_key=True)
+    data_sour = Column(String(1000), primary_key=True)
+    biz_income = Column(DECIMAL(24, 2))
+    biz_cost = Column(DECIMAL(24, 2))
+    sell_cost = Column(DECIMAL(24, 2))
+    manage_cost = Column(DECIMAL(24, 2))
+    explor_cost = Column(DECIMAL(24, 2))
+    fin_cost = Column(DECIMAL(24, 2))
+    ast_devalu_loss = Column(DECIMAL(24, 2))
+    fair_value_chng_net_inc = Column(DECIMAL(24, 2))
+    inv_prft = Column(DECIMAL(24, 2))
+    invest_assoc_joint_comp = Column(DECIMAL(24, 2))
+    operat_prft_oth_subj = Column(DECIMAL(24, 2))
+    run_prft = Column(DECIMAL(24, 2))
+    subs_reven = Column(DECIMAL(24, 2))
+    nonbiz_incom = Column(DECIMAL(24, 2))
+    nonbiz_cost = Column(DECIMAL(24, 2))
+    ncurrt_ast_dispos_nloss = Column(DECIMAL(24, 2))
+    oth_subj_affect_total_prft = Column(DECIMAL(24, 2))
+    profit_tamt = Column(DECIMAL(24, 2))
+    income_tax = Column(DECIMAL(24, 2))
+    oth_subj_affect_net_prft = Column(DECIMAL(24, 2))
+    net_profit = Column(DECIMAL(24, 2))
+    nprf_attrib_parent_corp = Column(DECIMAL(24, 2))
+    less_intr_income = Column(DECIMAL(24, 2))
+    modifytime = Column(DECIMAL(24, 2))
+
+
+class CashFlowTable(Base):
+    __tablename__ = 'cash_flow_table'
+
+    year = Column(String(4), primary_key=True)
+    period = Column(String(8), primary_key=True)
+    stock_cd = Column(String(6), primary_key=True)
+    data_sour = Column(String(1000), primary_key=True)
+    cash_recev_sell_goods = Column(DECIMAL(24, 2))
+    refund_taxes = Column(DECIMAL(24, 2))
+    cash_recev_oth_run_biz = Column(DECIMAL(24, 2))
+    operat_activ_cash_inflows = Column(DECIMAL(24, 2))
+    cash_paid_buy_goods = Column(DECIMAL(24, 2))
+    tax_paym = Column(DECIMAL(24, 2))
+    cash_paid_staff = Column(DECIMAL(24, 2))
+    cash_paid_oth_run_biz = Column(DECIMAL(24, 2))
+    operat_activ_cash_outflow = Column(DECIMAL(24, 2))
+    operat_activ_cash_flow_net = Column(DECIMAL(24, 2))
+    cash_recev_invests = Column(DECIMAL(24, 2))
+    cash_recev_invest_intr = Column(DECIMAL(24, 2))
+    net_cash_recev_disp_fix_ast = Column(DECIMAL(24, 2))
+    net_cash_recev_oth_biz = Column(DECIMAL(24, 2))
+    recev_oth_invest_activ_cash = Column(DECIMAL(24, 2))
+    cash_inflow_invest_activ = Column(DECIMAL(24, 2))
+    cash_paid_constr_fixed_ast = Column(DECIMAL(24, 2))
+    inv_payment = Column(DECIMAL(24, 2))
+    net_cash_acqu_oth_biz_units = Column(DECIMAL(24, 2))
+    pay_oth_invest_activ_cash = Column(DECIMAL(24, 2))
+    cash_outflow_invest_activ = Column(DECIMAL(24, 2))
+    net_cashflow_make_invest_activ = Column(DECIMAL(24, 2))
+    cash_recev_invest = Column(DECIMAL(24, 2))
+    cash_recev_debts = Column(DECIMAL(24, 2))
+    oth_fin_activ_recv_cash = Column(DECIMAL(24, 2))
+    fina_activ_cash_inflow = Column(DECIMAL(24, 2))
+    debt_payment = Column(DECIMAL(24, 2))
+    pay_intr_cash = Column(DECIMAL(24, 2))
+    cash_payment_rela_fina_activ = Column(DECIMAL(24, 2))
+    cash_outflow_fina_activ = Column(DECIMAL(24, 2))
+    ncash_flow_make_fina_activ = Column(DECIMAL(24, 2))
+    modifytime = Column(DECIMAL(24, 2))
+
+
 class StockReport(Base):
     __tablename__ = 'stock_report'
 
