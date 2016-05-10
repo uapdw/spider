@@ -33,7 +33,34 @@ class RequiredFieldItem(Item):
                 raise DropItem('not field %s' % required_field)
 
 
+class HBaseItem(RequiredFieldItem):
+
+    # hbase 表名
+    table_name = None
+
+    # hbase 列族
+    column_family = 'column'
+
+    # md5后作为主键的列
+    row_key_field = None
+
+    def get_row_key(self):
+        return self[self.row_key_field]
+
+
+class PublishItem(HBaseItem):
+    def validate(self):
+        super(HBaseItem, self).validate()
+
+        publish_time = getattr(self, 'publish_time', None)
+        if isinstance(publish_time, datetime.datetime) and \
+                publish_time > datetime.datetime.now():
+            raise DropItem('invalid publish_time %s' % publish_time)
+
+
 class SqlalchemyItem(RequiredFieldItem):
+
+    model = None
 
     def add(self):
         self.validate()
@@ -147,7 +174,7 @@ class ListedCorpInfo(Base):
     modifytime = Column(String(19))
 
 
-class ListedCorpInfoItem(SqlalchemyItem):
+class ListedCorpInfoItem(SqlalchemyItem, HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = ListedCorpInfo
 
@@ -180,6 +207,14 @@ class ListedCorpInfoItem(SqlalchemyItem):
     recomm_org = Field()
     is_crawl = Field()
     modifytime = Field()
+
+    def get_row_key(self):
+        return '%s_%s_%s_%s' % (
+            self['data_sour'],
+            self['year'],
+            self['period'],
+            self['stock_cd']
+        )
 
 
 class AsstLiabTable(Base):
@@ -258,7 +293,7 @@ class AsstLiabTable(Base):
     modifytime = Column(String(19))
 
 
-class AsstLiabTableItem(SqlalchemyItem):
+class AsstLiabTableItem(SqlalchemyItem, HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = AsstLiabTable
 
@@ -334,6 +369,14 @@ class AsstLiabTableItem(SqlalchemyItem):
     liab_owner_sum = Field()
     modifytime = Field()
 
+    def get_row_key(self):
+        return '%s_%s_%s_%s' % (
+            self['data_sour'],
+            self['year'],
+            self['period'],
+            self['stock_cd']
+        )
+
 
 class ProfitTable(Base):
     __tablename__ = 'profit_table'
@@ -368,7 +411,7 @@ class ProfitTable(Base):
     modifytime = Column(DECIMAL(24, 2))
 
 
-class ProfitTableItem(SqlalchemyItem):
+class ProfitTableItem(SqlalchemyItem, HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = ProfitTable
 
@@ -400,6 +443,14 @@ class ProfitTableItem(SqlalchemyItem):
     nprf_attrib_parent_corp = Field()
     less_intr_income = Field()
     modifytime = Field()
+
+    def get_row_key(self):
+        return '%s_%s_%s_%s' % (
+            self['data_sour'],
+            self['year'],
+            self['period'],
+            self['stock_cd']
+        )
 
 
 class CashFlowTable(Base):
@@ -443,7 +494,7 @@ class CashFlowTable(Base):
     modifytime = Column(DECIMAL(24, 2))
 
 
-class CashFlowTableItem(SqlalchemyItem):
+class CashFlowTableItem(SqlalchemyItem, HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = ProfitTable
 
@@ -484,6 +535,14 @@ class CashFlowTableItem(SqlalchemyItem):
     ncash_flow_make_fina_activ = Field()
     modifytime = Field()
 
+    def get_row_key(self):
+        return '%s_%s_%s_%s' % (
+            self['data_sour'],
+            self['year'],
+            self['period'],
+            self['stock_cd']
+        )
+
 
 class StockReport(Base):
     __tablename__ = 'stock_report'
@@ -505,35 +564,7 @@ class StockReportItem(Item):
     files = Field()
 
 
-class HBaseItem(Item):
-
-    # hbase 表名
-    table_name = None
-
-    # hbase 列族
-    column_family = 'column'
-
-    # md5后作为主键的列
-    row_key_field = None
-
-    # 必须字段，如果没有值丢弃item
-    required_fields = []
-
-    def validate(self):
-        for required_field in self.required_fields:
-            if required_field not in self or not self[required_field]:
-                raise DropItem('not field %s' % required_field)
-
-        publish_time = getattr(self, 'publish_time', None)
-        if isinstance(publish_time, datetime.datetime) and \
-                publish_time > datetime.datetime.now():
-            raise DropItem('invalid publish_time %s' % publish_time)
-
-    def get_row_key(self):
-        return self[self.row_key_field]
-
-
-class UradarWeiboItem(HBaseItem):
+class UradarWeiboItem(PublishItem):
     table_name = 'uradar_weibo'
 
     required_fields = ['weibo_id', 'weibo_url', 'content', 'created_at']
@@ -554,7 +585,7 @@ class UradarWeiboItem(HBaseItem):
         return self['weibo_url']
 
 
-class UradarBBSItem(HBaseItem):
+class UradarBBSItem(PublishItem):
     table_name = 'uradar_bbs'
     required_fields = ['thread_id', 'post_id', 'url', 'title', 'content',
                        'publish_time']
@@ -582,7 +613,7 @@ class UradarBBSItem(HBaseItem):
                              self['post_id'])
 
 
-class UradarArticleItem(HBaseItem):
+class UradarArticleItem(PublishItem):
 
     table_name = 'uradar_article'
     row_key_field = 'url'
@@ -605,25 +636,25 @@ class UradarArticleItem(HBaseItem):
     sentiment = Field()
 
 
-class UradarNewsItem(UradarArticleItem):
+class UradarNewsItem(PublishItem):
 
     def __init__(self):
         super(UradarNewsItem, self).__init__(article_type='1')
 
 
-class UradarBlogItem(UradarArticleItem):
+class UradarBlogItem(PublishItem):
 
     def __init__(self):
         super(UradarBlogItem, self).__init__(article_type='3')
 
 
-class UradarWeixinItem(UradarArticleItem):
+class UradarWeixinItem(PublishItem):
 
     def __init__(self):
         super(UradarWeixinItem, self).__init__(article_type='2')
 
 
-class UradarReportItem(UradarArticleItem):
+class UradarReportItem(PublishItem):
 
     def __init__(self):
         super(UradarReportItem, self).__init__(article_type='4')
@@ -649,7 +680,7 @@ class UradarActivityItem(HBaseItem):
     add_time = Field()
 
 
-class CarComDetailItem(HBaseItem):
+class CarComDetailItem(PublishItem):
 
     table_name = 'car_com_detail'
     row_key_field = 'comment_id'
