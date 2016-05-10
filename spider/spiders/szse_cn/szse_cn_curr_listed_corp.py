@@ -9,6 +9,8 @@ from spider.loader.processors import text
 
 
 class SzseCnCurrListedCorpSpider(Spider):
+    u"""深交所公司列表"""
+
     name = "szse_cn_curr_listed_corp"
     allowed_domains = ['szse.cn']
 
