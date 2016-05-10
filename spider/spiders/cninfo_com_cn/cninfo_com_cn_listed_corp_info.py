@@ -4,7 +4,8 @@ import datetime
 
 from scrapy.http import Request
 from scrapy.spider import Spider
-from spider.items import ListedCorpInfoItem
+
+from spider.items import ListedCorpInfoItem, CurrListedCorp
 
 
 class CninfoComCnListedCorpInfo(Spider):

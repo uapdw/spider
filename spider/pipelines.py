@@ -16,7 +16,7 @@ from spider.loader.processors import text
 class SqlalchemyPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, SqlalchemyItem):
-            item.add()
+            item.save()
 
         return item
 
