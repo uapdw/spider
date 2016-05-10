@@ -4,8 +4,12 @@ import datetime
 
 from scrapy.http import Request
 from scrapy.spider import Spider
+from sqlalchemy import desc
+# from sqlalchemy.orm.exc import NoResultFound
 
-from spider.items import ListedCorpInfoItem, CurrListedCorp
+from spider.items import ListedCorpInfoItem
+from spider.db import Session
+from spider.models import CurrListedCorp, PeriodList
 
 
 class CninfoComCnListedCorpInfo(Spider):
@@ -36,29 +40,31 @@ class CninfoComCnListedCorpInfo(Spider):
         u"保荐机构：": "recomm_org"
     }
 
-    start_urls = (
-        'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
-        'http://www.cninfo.com.cn/information/sz/sme/szsmelclist.html',
-        'http://www.cninfo.com.cn/information/sz/cn/szcnlclist.html',
-        'http://www.cninfo.com.cn/information/sh/mb/shmblclist.html',
-    )
+    information_url_pattern = 'http://www.cninfo.com.cn/information/brief/{}{}.html'
 
-    information_url_pattern = 'http://www.cninfo.com.cn/information/{}/{}.html'
+    def start_requests(self):
+        session = Session()
+        try:
+            self.periodlist = session.query(PeriodList).order_by(
+                desc(PeriodList.year), desc(PeriodList.period)
+            ).limit(1).one()
+
+            stock_cd_market_part_list = session.query(
+                CurrListedCorp.stock_cd, CurrListedCorp.market_part
+            ).all()
+
+            for stock_cd_market_part in stock_cd_market_part_list:
+                stock_cd = stock_cd_market_part[0]
+                market_part = stock_cd_market_part[1]
+                yield Request(
+                    self.information_url_pattern.format(
+                        market_part, stock_cd
+                    )
+                )
+        finally:
+            session.close()
 
     def parse(self, response):
-        onclickList = response.selector.xpath(
-            '//td[@class="zx_data3"]/a/@onclick'
-        ).extract()
-        for theStr in onclickList:
-            arr = theStr.replace(
-                "setLmCode('", ''
-            ).replace("');", '').split('?')
-            companyInfoUrl = self.information_url_pattern.format(
-                arr[0], arr[1]
-            )
-            yield Request(companyInfoUrl, self.parseCompanyInfo)
-
-    def parseCompanyInfo(self, response):
         tmpStr = response.selector.xpath(
             '//table[@class="table"]/tr/td[@style]/text()'
         ).extract()
@@ -82,8 +88,8 @@ class CninfoComCnListedCorpInfo(Spider):
             '%Y-%m-%d %H:%M:%S'
         )
         item['data_sour'] = '2'
-        item['year'] = '2016'
-        item['period'] = '0'
+        item['year'] = self.periodlist.year
+        item['period'] = self.periodlist.period
 
         for title, value in arr_res.iteritems():
             if title in self.arrStockInfoColumn:
