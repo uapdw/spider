@@ -45,6 +45,7 @@ class SzseCnCurrListedCorpSpider(Spider):
             i['corp_name'] = text(tr.xpath('td[3]').extract()[0])
             i['indus'] = text(tr.xpath('td[4]').extract()[0])[0]
             i['corp_sname'] = text(tr.xpath('td[2]').extract()[0])
+            i['data_sour'] = '1'
             yield i
 
         if page >= page_count:
