@@ -63,8 +63,7 @@ class CninfoComCnCashFlowSpiderSpider(Spider):
             for stock_cd_market_part in stock_cd_market_part_list:
                 stock_cd = stock_cd_market_part[0]
                 for year_period in year_period_list:
-                    year = 2015
-                    # int(year_period[0])
+                    year = int(year_period[0])
                     period = year_period[1]
                     period_season = self.monthList[int(period)]
                     yield Request(
@@ -91,7 +90,7 @@ class CninfoComCnCashFlowSpiderSpider(Spider):
         ).extract()
         arr_res = dict(zip(arr_title, arr_value))
 
-        print response.url
+        # print response.url
 
         item = CashFlowTableItem()
         item['stock_cd'] = response.meta['stock_cd']

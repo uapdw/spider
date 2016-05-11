@@ -74,14 +74,14 @@ class CninfoComCnProfitSpider(Spider):
 
     def parse_profit(self, response):
         arr_title = response.selector.xpath(
-            '//div[@class="zx_left"]/div[2]/table/tr/td[@bgcolor="#b8ddf8"]/text()'
+            '//td[@bgcolor="#b8ddf8"]/text()'
         ).extract()
         arr_value = response.selector.xpath(
-            '//div[@class="zx_left"]/div[2]/table/tr/td[@bgcolor="#daf2ff"]/text()'
+            '//td[@bgcolor="#daf2ff"]/text()'
         ).extract()
         arr_res = dict(zip(arr_title, arr_value))
 
-        print response.url
+        # print response.url
 
         item = ProfitTableItem()
         item['stock_cd'] = response.meta['stock_cd']
