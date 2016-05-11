@@ -9,7 +9,7 @@ import happybase
 from scrapy.http import Request
 from scrapy.pipelines.files import FilesPipeline
 
-from spider.items import HBaseItem, SqlalchemyItem, StockReportItem
+from spider.items import HBaseItem, SqlalchemyItem, PdfItem
 from spider.loader.processors import text
 
 
@@ -24,7 +24,7 @@ class SqlalchemyPipeline(object):
 class NamedFilesPipeline(FilesPipeline):
 
     def get_media_requests(self, item, info):
-        if isinstance(item, StockReportItem):
+        if isinstance(item, PdfItem):
             for file_spec in item['file_urls']:
                 yield Request(
                     url=file_spec["file_url"],

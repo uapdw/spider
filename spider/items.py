@@ -350,10 +350,11 @@ class CashFlowTableItem(SqlalchemyItem, HBaseItem):
         )
 
 
-class StockReportItem(Item):
-    stock_code = Field()
-    publish_time = Field()
-    report_name = Field()
+class PdfItem(Item):
+    stock_cd = Field()
+    year = Field()
+    period = Field()
+    title = Field()
 
     file_urls = Field()
     files = Field()

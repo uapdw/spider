@@ -1,9 +1,11 @@
 fake-factory==0.5.3
 happybase==0.9
 lxml==3.5.0
+PyMySQL==0.6.7
 pysolr==3.3.3
 python-dateutil==2.4.2
 PyVirtualDisplay==0.1.5
 Scrapy==1.0.3
 w3lib==1.13.0
 selenium==2.50.1
+SQLAlchemy==1.0.11
