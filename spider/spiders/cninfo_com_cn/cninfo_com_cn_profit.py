@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 import datetime
 from scrapy.http import Request
 from scrapy.spider import Spider
@@ -12,7 +8,7 @@ from spider.items import ProfitTableItem
 from spider.db import Session
 from spider.models import CurrListedCorp, PeriodList
 
-class StockincomeSpider(Spider):
+class CninfoComCnProfitSpider(Spider):
     name = "cninfo_com_cn_profit"
     allowed_domains = ["cninfo.com.cn"]
     
@@ -78,10 +74,10 @@ class StockincomeSpider(Spider):
 
     def parse_profit(self, response):
         arr_title = response.selector.xpath(
-            '//div[@class="zx_left"]/div[2]/table/tr/td[@bgcolor="#b8ddf8"]/text()'
+            '//td[@bgcolor="#b8ddf8"]/text()'
         ).extract()
         arr_value = response.selector.xpath(
-            '//div[@class="zx_left"]/div[2]/table/tr/td[@bgcolor="#daf2ff"]/text()'
+            '//td[@bgcolor="#daf2ff"]/text()'
         ).extract()
         arr_res = dict(zip(arr_title, arr_value))
 
@@ -98,6 +94,6 @@ class StockincomeSpider(Spider):
 
         for title, value in arr_res.iteritems():
             if title in self.arrStockProfitColumn:
-                item[self.arrStockProfitColumn[title]] = value.strip()
+                item[self.arrStockProfitColumn[title]] = value.strip().replace(',','')
 
         return item
