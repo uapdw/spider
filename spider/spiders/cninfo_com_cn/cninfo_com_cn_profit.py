@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 import datetime
 from scrapy.http import Request
 from scrapy.spider import Spider
@@ -12,7 +8,7 @@ from spider.items import ProfitTableItem
 from spider.db import Session
 from spider.models import CurrListedCorp, PeriodList
 
-class StockincomeSpider(Spider):
+class CninfoComCnProfitSpider(Spider):
     name = "cninfo_com_cn_profit"
     allowed_domains = ["cninfo.com.cn"]
     
@@ -85,7 +81,7 @@ class StockincomeSpider(Spider):
         ).extract()
         arr_res = dict(zip(arr_title, arr_value))
 
-        # print response.url
+        print response.url
 
         item = ProfitTableItem()
         item['stock_cd'] = response.meta['stock_cd']
