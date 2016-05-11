@@ -2,9 +2,10 @@
 
 import datetime
 
+from decimal import Decimal
 from scrapy.item import Item, Field
 from scrapy.exceptions import DropItem
-
+from sqlalchemy import DECIMAL, Integer
 from sqlalchemy.exc import IntegrityError as SqlalchemyIntegrityError
 from pymysql.err import IntegrityError as PymysqlIntegrityError
 
@@ -58,7 +59,20 @@ class SqlalchemyItem(RequiredFieldItem):
         try:
             row = ModelClass()
             for key in self.fields.keys():
-                setattr(row, key, self.get(key))
+                value = self.get(key)
+                if (
+                    getattr(
+                        ModelClass, key
+                    ).property.columns[0].type.__class__ == DECIMAL
+                ) and (isinstance(value, str) or isinstance(value, unicode)):
+                    value = Decimal(value.replace(',', ''))
+                elif (
+                    getattr(
+                        ModelClass, key
+                    ).property.columns[0].type.__class__ == Integer
+                ) and (isinstance(value, str) or isinstance(value, unicode)):
+                    value = int(value.replace(',', ''))
+                setattr(row, key, value)
             session.add(row)
             session.commit()
         except (SqlalchemyIntegrityError, PymysqlIntegrityError) as e:

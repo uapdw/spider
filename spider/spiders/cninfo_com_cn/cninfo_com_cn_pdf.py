@@ -54,7 +54,7 @@ class CninfoComCnPdfSpider(Spider):
                 year = int(year_period[0])
                 period = year_period[1]
 
-                if period == '4':
+                if period == '3':
                     year += 1
                 start_time = '{}-01-01'.format(year)
                 end_time = '{}-01-01'.format(year+1)
@@ -100,6 +100,8 @@ class CninfoComCnPdfSpider(Spider):
                 url = pdf_link.xpath('@href').extract()[0]
                 url = 'http://www.cninfo.com.cn' + url
                 title = pdf_link.xpath('text()').extract()[0]
+                if u'摘要' in title:
+                    continue
 
                 i = PdfItem()
                 i['stock_cd'] = response.meta['stock_cd']
