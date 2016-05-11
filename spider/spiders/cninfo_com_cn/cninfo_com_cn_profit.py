@@ -94,6 +94,6 @@ class CninfoComCnProfitSpider(Spider):
 
         for title, value in arr_res.iteritems():
             if title in self.arrStockProfitColumn:
-                item[self.arrStockProfitColumn[title]] = value.strip()
+                item[self.arrStockProfitColumn[title]] = value.strip().replace(',','')
 
         return item
