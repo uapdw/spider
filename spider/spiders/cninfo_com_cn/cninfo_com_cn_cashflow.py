@@ -13,7 +13,7 @@ class CninfoComCnCashFlowSpiderSpider(Spider):
     allowed_domains = ["cninfo.com.cn"]
     
     arrStockCashFlowColumn = {
-		u"售商品、提供劳务收到的现金": "cash_recev_sell_goods",
+		u"销售商品、提供劳务收到的现金": "cash_recev_sell_goods",
 		u"收到的税费返还": "refund_taxes",
 		u"收到其他与经营活动有关的现金": "cash_recev_oth_run_biz",
 		u"经营活动现金流入小计": "operat_activ_cash_inflows",
