@@ -65,13 +65,19 @@ class SqlalchemyItem(RequiredFieldItem):
                         ModelClass, key
                     ).property.columns[0].type.__class__ == DECIMAL
                 ) and (isinstance(value, str) or isinstance(value, unicode)):
-                    value = Decimal(value.replace(',', ''))
+                    if not value:
+                        value = None
+                    else:
+                        value = Decimal(value.replace(',', ''))
                 elif (
                     getattr(
                         ModelClass, key
                     ).property.columns[0].type.__class__ == Integer
                 ) and (isinstance(value, str) or isinstance(value, unicode)):
-                    value = int(value.replace(',', ''))
+                    if not value:
+                        value = None
+                    else:
+                        value = int(value.replace(',', ''))
                 setattr(row, key, value)
             session.add(row)
             session.commit()
