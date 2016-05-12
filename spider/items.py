@@ -242,7 +242,7 @@ class AsstLiabTableItem(SqlalchemyItem, HBaseItem):
     oyear_not_current_liab = Field()
     oth_current_liab = Field()
     current_liab_sum = Field()
-    lterm_loan = Field()
+    ltrem_loan = Field()
     bonds_payable = Field()
     term_payable = Field()
     spec_payable = Field()

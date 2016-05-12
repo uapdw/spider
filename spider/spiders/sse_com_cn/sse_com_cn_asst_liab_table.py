@@ -70,7 +70,7 @@ class SseComCnAsstLiabTableSpider(Spider):
         57: 'oyear_not_current_liab',  # 一年内到期的长期负债(元)
         58: 'oth_current_liab',  # 其他流动负债(元)
         59: 'current_liab_sum',  # 流动负债合计(元)
-        60: 'lterm_loan',  # 长期借款(元)
+        60: 'ltrem_loan',  # 长期借款(元)
         61: 'bonds_payable',  # 应付债券(元)
         62: 'term_payable',  # 长期应付款(元)
         63: 'spec_payable',  # 专项应付款(元)

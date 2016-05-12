@@ -69,7 +69,7 @@ class ListedCorpInfo(Base):
 
 
 class AsstLiabTable(Base):
-    __tablename__ = 'asset_liab_table'
+    __tablename__ = 'asst_liab_table'
 
     year = Column(String(4), primary_key=True)
     period = Column(String(8), primary_key=True)
@@ -122,7 +122,7 @@ class AsstLiabTable(Base):
     oyear_not_current_liab = Column(DECIMAL(24, 2))
     oth_current_liab = Column(DECIMAL(24, 2))
     current_liab_sum = Column(DECIMAL(24, 2))
-    lterm_loan = Column(DECIMAL(24, 2))
+    ltrem_loan = Column(DECIMAL(24, 2))
     bonds_payable = Column(DECIMAL(24, 2))
     term_payable = Column(DECIMAL(24, 2))
     spec_payable = Column(DECIMAL(24, 2))
