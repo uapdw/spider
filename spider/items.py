@@ -64,7 +64,7 @@ class SqlalchemyItem(RequiredFieldItem):
                     getattr(
                         ModelClass, key
                     ).property.columns[0].type.__class__ == DECIMAL
-                ) and (isinstance(value, str) or isinstance(value, unicode)):
+                ) and (isinstance(value, str) or isinstance(value, unicode)) and value:
                     value = Decimal(value.replace(',', ''))
                 elif (
                     getattr(
