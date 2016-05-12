@@ -15,7 +15,8 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.orm.exc import NoResultFound
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:udh*123@172.20.8.115/uradar'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://uradar:uradar@172.20.20.73/uradar'
+# SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:udh*123@172.20.8.115/uradar'
 SQLALCHEMY_POOL_RECYCLE = 60 * 60 * 2  # 2 hours, same as uradar
 
 
