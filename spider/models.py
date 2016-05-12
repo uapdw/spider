@@ -174,7 +174,7 @@ class ProfitTable(Base):
     net_profit = Column(DECIMAL(24, 2))
     nprf_attrib_parent_corp = Column(DECIMAL(24, 2))
     less_intr_income = Column(DECIMAL(24, 2))
-    modifytime = Column(DECIMAL(24, 2))
+    modifytime = Column(String(19))
 
 
 class CashFlowTable(Base):
@@ -215,7 +215,7 @@ class CashFlowTable(Base):
     cash_payment_rela_fina_activ = Column(DECIMAL(24, 2))
     cash_outflow_fina_activ = Column(DECIMAL(24, 2))
     ncash_flow_make_fina_activ = Column(DECIMAL(24, 2))
-    modifytime = Column(DECIMAL(24, 2))
+    modifytime = Column(String(19))
 
 
 class StockReport(Base):
