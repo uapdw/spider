@@ -55,9 +55,11 @@ class CninfoComCnPdfSpider(Spider):
                 period = year_period[1]
 
                 if period == '3':
-                    year += 1
-                start_time = '{}-01-01'.format(year)
-                end_time = '{}-01-01'.format(year+1)
+                    start_time = '{}-01-01'.format(year+1)
+                    end_time = '{}-01-01'.format(year+2)
+                else:
+                    start_time = '{}-01-01'.format(year)
+                    end_time = '{}-01-01'.format(year+1)
 
                 formdata = {
                     'orderby': 'date11',
