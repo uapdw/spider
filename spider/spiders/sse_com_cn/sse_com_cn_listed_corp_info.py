@@ -30,15 +30,49 @@ class SseComCnListedCorpInfoSpider(Spider):
     }
     value_field_pattern = 'value{}'
 
-    row_num_field_dict = {
-        0: 'corp_name',
-        1: 'legal_reps',
-        2: 'reg_addr',
-        3: 'post_cd',
-        4: 'corp_url',
-        5: 'corp_sec',
-        6: 'corp_tel',
-        7: 'email'
+    name_list = [
+        u"公司法定中文名称",
+        u"公司法定代表人",
+        u"公司注册地址",
+        u"公司办公地址邮政编码",
+        u"公司国际互联网网址",
+        u"公司董事会秘书姓名",
+        u"公司董事会秘书电话",
+        u"公司董事会秘书电子信箱",
+        u"报告期末股东总数",
+        u"每10股送红股数",
+        u"每10股派息数（含税）",
+        u"每10股转增数",
+        u"本期营业收入(元)",
+        u"本期营业利润(元)",
+        u"利润总额(元)",
+        u"归属于上市公司股东的净利润(元)",
+        u"归属于上市公司股东的扣除非经常性损益的净利润(元)",
+        u"经营活动产生的现金流量净额(元)",
+        u"总资产(元)",
+        u"所有者权益（或股东权益）(元)",
+        u"基本每股收益(元/股)",
+        u"稀释每股收益(元/股)",
+        u"扣除非经常性损益后的基本每股收益(元/股)",
+        u"全面摊薄净资产收益率（%）",
+        u"加权平均净资产收益率（%）",
+        u"扣除非经常性损益后全面摊薄净资产收益率（%）",
+        u"扣除非经常性损益后的加权平均净资产收益率（%）",
+        u"每股经营活动产生的现金流量净额(元/股)",
+        u"归属于上市公司股东的每股净资产（元/股）"
+    ]
+
+    name_row_num_dict = {name: index for index, name in enumerate(name_list)}
+
+    name_field_dict = {
+        u"公司法定中文名称": 'corp_name',
+        u"公司法定代表人": 'legal_reps',
+        u"公司注册地址": 'reg_addr',
+        u"公司办公地址邮政编码": 'post_cd',
+        u"公司国际互联网网址": 'corp_url',
+        u"公司董事会秘书姓名": 'corp_sec',
+        u"公司董事会秘书电话": 'corp_tel',
+        u"公司董事会秘书电子信箱": 'email'
     }
 
     def start_requests(self):
@@ -112,7 +146,8 @@ class SseComCnListedCorpInfoSpider(Spider):
         i['period'] = period
         i['data_sour'] = '0'
 
-        for row_num, field in self.row_num_field_dict.iteritems():
+        for name, field in self.name_field_dict.iteritems():
+            row_num = self.name_row_num_dict.get(name)
             value = self._get_value(rows, row_num, value_index)
             i[field] = text(value)
 

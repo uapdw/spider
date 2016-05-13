@@ -30,64 +30,149 @@ class SseComCnAsstLiabTableSpider(Spider):
     }
     value_field_pattern = 'value{}'
 
-    row_num_field_dict = {
-        0: 'curr_fund',  # 货币资金(元)
-        3: 'txn_fin_ast',  # 交易性金融资产(元)
-        4: 'notes_recev',  # 应收票据(元)
-        5: 'reces',  # 应收帐款(元)
-        6: 'prepay',  # 预付帐款(元)
-        10: 'recev_intr',  # 应收利息(元)
-        11: 'recev_dividn',  # 应收股利(元)
-        12: 'oth_recev',  # 其他应收款(元)
-        14: 'inventy',  # 存货(元)
-        15: 'oyear_not_current_ast',  # 一年内到期的非流动资产(元)
-        16: 'other_current_ast',  # 其他流动资产(元)
-        17: 'current_ast_sum',  # 流动资产合计(元)
-        19: 'saleable_fin_ast',  # 可供出售金融资产(元)
-        21: 'lterm_reces',  # 长期应收款(元)
-        22: 'lterm_equity_investm',  # 长期股权投资(元)
-        23: 'real_estate_investm',  # 投资性房地产(元)
-        24: 'fixed_ast',  # 固定资产净额(元)
-        25: 'under_constr_proj',  # 在建工程(元)
-        26: 'proj_goods',  # 工程物资(元)
-        27: 'fixed_ast_clean',  # 固定资产清理(元)
-        28: 'prod_bio_ast',  # 生产性生物资产(元)
-        29: 'oil_ast',  # 油气资产(元)
-        30: 'intang_ast',  # 无形资产(元)
-        31: 'develop_costs',  # 开发支出(元)
-        32: 'goodwill',  # 商誉(元)
-        33: 'deferred_ast',  # 长期待摊费用(元)
-        34: 'deferred_tax_ast',  # 递延税款借项合计(元)
-        35: 'oth_non_current_ast',  # 其他长期资产(元)
-        36: 'non_current_ast_sum',  # 非流动资产合计(元)
-        37: 'ast_sum',  # 资产总计(元)
-        38: 'sterm_liab',  # 短期借款(元)
-        48: 'payroll_payable',  # 应付职工薪酬(元)
-        49: 'tax_payable',  # 应交税金(元)
-        50: 'intr_payable',  # 应付利息(元)
-        51: 'dividn_payable',  # 应付股利(元)
-        52: 'oth_payable',  # 其他应付款(元)
-        57: 'oyear_not_current_liab',  # 一年内到期的长期负债(元)
-        58: 'oth_current_liab',  # 其他流动负债(元)
-        59: 'current_liab_sum',  # 流动负债合计(元)
-        60: 'ltrem_loan',  # 长期借款(元)
-        61: 'bonds_payable',  # 应付债券(元)
-        62: 'term_payable',  # 长期应付款(元)
-        63: 'spec_payable',  # 专项应付款(元)
-        64: 'estim_liab',  # 预计负债(元)
-        65: 'deferr_inc_tax_liab',  # 递延税款贷项合计(元)
-        66: 'oth_not_current_liab',  # 其他长期负债(元)
-        67: 'not_current_liab_sum',  # 长期负债合计(元)
-        68: 'liab_sum',  # 负债合计(元)
-        69: 'real_reces_cap',  # 股本(元)
-        70: 'cap_reserve',  # 资本公积(元)
-        71: 'treas_stock',  # 库存股(元)
-        72: 'earned_surplus',  # 盈余公积(元)
-        74: 'undistr_profit',  # 未分配利润(元)
-        75: 'fcurr_trans_spreads',  # 外币报表折算差额(元)
-        77: 'minority_equity',  # 少数股东权益(元)
-        78: 'owner_intr_sum',  # 股东权益合计(元)
-        79: 'liab_owner_sum'  # 负债和股东权益合计(元)
+    name_list = [
+        u"货币资金(元)",
+        u"结算备付金(元)",
+        u"拆出资金(元)",
+        u"交易性金融资产(元)",
+        u"应收票据(元)",
+        u"应收帐款(元)",
+        u"预付帐款(元)",
+        u"应收保费(元)",
+        u"应收分保账款(元)",
+        u"应收分保合同准备金(元)",
+        u"应收利息(元)",
+        u"应收股利(元)",
+        u"其他应收款(元)",
+        u"买入返售金融资产(元)",
+        u"存货(元)",
+        u"一年内到期的非流动资产(元)",
+        u"其他流动资产(元)",
+        u"流动资产合计(元)",
+        u"发放贷款和垫款(元)",
+        u"可供出售金融资产(元)",
+        u"持有至到期投资(元)",
+        u"长期应收款(元)",
+        u"长期股权投资(元)",
+        u"投资性房地产(元)",
+        u"固定资产净额(元)",
+        u"在建工程(元)",
+        u"工程物资(元)",
+        u"固定资产清理(元)",
+        u"生产性生物资产(元)",
+        u"油气资产(元)",
+        u"无形资产(元)",
+        u"开发支出(元)",
+        u"商誉(元)",
+        u"长期待摊费用(元)",
+        u"递延税款借项合计(元)",
+        u"其他长期资产(元)",
+        u"非流动资产合计(元)",
+        u"资产总计(元)",
+        u"短期借款(元)",
+        u"向中央银行借款(元)",
+        u"吸收存款及同业存放(元)",
+        u"拆入资金(元)",
+        u"交易性金融负债(元)",
+        u"应付票据(元)",
+        u"应付帐款(元)",
+        u"预收帐款(元)",
+        u"卖出回购金融资产款(元)",
+        u"应付手续费及佣金(元)",
+        u"应付职工薪酬(元)",
+        u"应交税金(元)",
+        u"应付利息(元)",
+        u"应付股利(元)",
+        u"其他应付款(元)",
+        u"应付分保账款(元)",
+        u"保险合同准备金(元)",
+        u"代理买卖证券款(元)",
+        u"代理承销证券款(元)",
+        u"一年内到期的长期负债(元)",
+        u"其他流动负债(元)",
+        u"流动负债合计(元)",
+        u"长期借款(元)",
+        u"应付债券(元)",
+        u"长期应付款(元)",
+        u"专项应付款(元)",
+        u"预计负债(元)",
+        u"递延税款贷项合计(元)",
+        u"其他长期负债(元)",
+        u"长期负债合计(元)",
+        u"负债合计(元)",
+        u"股本(元)",
+        u"资本公积(元)",
+        u"库存股(元)",
+        u"盈余公积(元)",
+        u"一般风险准备(元)",
+        u"未分配利润(元)",
+        u"外币报表折算差额(元)",
+        u"归属于母公司所有者权益合计(元)",
+        u"少数股东权益(元)",
+        u"股东权益合计(元)",
+        u"负债和股东权益合计(元)"
+    ]
+
+    name_row_num_dict = {name: index for index, name in enumerate(name_list)}
+
+    name_field_dict = {
+        u"应付债券(元)": "bonds_payable",
+        u"商誉(元)": "goodwill",
+        u"应收利息(元)": "recev_intr",
+        u"长期借款(元)": "ltrem_loan",
+        u"资本公积(元)": "cap_reserve",
+        u"流动负债合计(元)": "current_liab_sum",
+        u"盈余公积(元)": "earned_surplus",
+        u"其他长期负债(元)": "oth_not_current_liab",
+        u"应付利息(元)": "intr_payable",
+        u"在建工程(元)": "under_constr_proj",
+        u"货币资金(元)": "curr_fund",
+        u"生产性生物资产(元)": "prod_bio_ast",
+        u"预付帐款(元)": "prepay",
+        u"工程物资(元)": "proj_goods",
+        u"应收票据(元)": "notes_recev",
+        u"油气资产(元)": "oil_ast",
+        u"应收股利(元)": "recev_dividn",
+        u"长期应收款(元)": "lterm_reces",
+        u"预计负债(元)": "estim_liab",
+        u"未分配利润(元)": "undistr_profit",
+        u"资产总计(元)": "ast_sum",
+        u"负债和股东权益合计(元)": "liab_owner_sum",
+        u"股本(元)": "real_reces_cap",
+        u"递延税款借项合计(元)": "deferred_tax_ast",
+        u"非流动资产合计(元)": "non_current_ast_sum",
+        u"一年内到期的非流动资产(元)": "oyear_not_current_ast",
+        u"长期应付款(元)": "term_payable",
+        u"股东权益合计(元)": "owner_intr_sum",
+        u"存货(元)": "inventy",
+        u"其他流动资产(元)": "other_current_ast",
+        u"固定资产净额(元)": "fixed_ast",
+        u"少数股东权益(元)": "minority_equity",
+        u"一年内到期的长期负债(元)": "oyear_not_current_liab",
+        u"外币报表折算差额(元)": "fcurr_trans_spreads",
+        u"其他应付款(元)": "oth_payable",
+        u"无形资产(元)": "intang_ast",
+        u"长期负债合计(元)": "not_current_liab_sum",
+        u"应付股利(元)": "dividn_payable",
+        u"其他长期资产(元)": "oth_non_current_ast",
+        u"应付职工薪酬(元)": "payroll_payable",
+        u"库存股(元)": "treas_stock",
+        u"负债合计(元)": "liab_sum",
+        u"交易性金融资产(元)": "txn_fin_ast",
+        u"长期股权投资(元)": "lterm_equity_investm",
+        u"应交税金(元)": "tax_payable",
+        u"专项应付款(元)": "spec_payable",
+        u"长期待摊费用(元)": "deferred_ast",
+        u"应收帐款(元)": "reces",
+        u"固定资产清理(元)": "fixed_ast_clean",
+        u"可供出售金融资产(元)": "saleable_fin_ast",
+        u"短期借款(元)": "sterm_liab",
+        u"其他应收款(元)": "oth_recev",
+        u"递延税款贷项合计(元)": "deferr_inc_tax_liab",
+        u"开发支出(元)": "develop_costs",
+        u"投资性房地产(元)": "real_estate_investm",
+        u"其他流动负债(元)": "oth_current_liab",
+        u"流动资产合计(元)": "current_ast_sum",
     }
 
     def start_requests(self):
@@ -152,7 +237,8 @@ class SseComCnAsstLiabTableSpider(Spider):
         i['period'] = period
         i['data_sour'] = '0'
 
-        for row_num, field in self.row_num_field_dict.iteritems():
+        for name, field in self.name_field_dict.iteritems():
+            row_num = self.name_row_num_dict.get(name)
             value = self._get_value(rows, row_num, value_index)
             i[field] = text(value)
 
