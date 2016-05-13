@@ -14,7 +14,7 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
     name = "cninfo_com_cn_balance"
     allowed_domains = ['cninfo.com.cn']
     monthList = ['-03-31', '-06-30', '-09-30', '-12-31']
-    
+
     # start_urls = [
     #   'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
     # ]
@@ -103,10 +103,10 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                 for period in self.periodlist:
                     year = period.year.encode('utf8')
                     mm = self.monthList[int(period.period.encode('utf8'))]
-                    balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ stock_code +'&yyyy='+ year +'&&mm='+ mm +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
+                    balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ stock_code +'&yyyy='+ year +'&&mm='+ (year != str(2016) and mm or '') +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
                     req = Request(balanceSheetUrl, callback=self.parsebalance)
                     req.meta['year'] = year
-                    req.meta['month'] = int(period.period.encode('utf8'))
+                    req.meta['month'] = period.period.encode('utf8')
                     yield req
         finally:
             session.close()
@@ -135,5 +135,6 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                 item[self.balanceSheetColumn[key]] = arrRes[key].replace(',','')
 
         return item
+        
 
         
