@@ -106,7 +106,7 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                     balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ stock_code +'&yyyy='+ year +'&&mm='+ mm +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
                     req = Request(balanceSheetUrl, callback=self.parsebalance)
                     req.meta['year'] = year
-                    req.meta['month'] = mm
+                    req.meta['month'] = int(period.period.encode('utf8'))
                     yield req
         finally:
             session.close()
