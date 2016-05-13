@@ -18,7 +18,7 @@ from spider.db import Session
 class RequiredFieldItem(Item):
     def validate(self):
         for required_field in self.required_fields:
-            if required_field not in self or not self[required_field]:
+            if required_field not in self or self[required_field] is None:
                 raise DropItem('not field %s' % required_field)
 
 
