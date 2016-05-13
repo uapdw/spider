@@ -42,6 +42,9 @@ env.roledefs = {
     ],
     'flower': [
         '172.20.14.80',
+    ],
+    'stock': [
+        '172.20.19.139',
     ]
 }
 
@@ -129,6 +132,15 @@ def checkSupervisorStatus():
 @roles('allWorker')
 def deploySpiderCode():
     '''向所有节点部署爬虫相关代码'''
+    getNewCode()
+    build()
+    copyFile()
+
+
+@task
+@roles('stock')
+def deployStockSpiderCode():
+    '''向长城项目机器部署爬虫相关代码'''
     getNewCode()
     build()
     copyFile()
