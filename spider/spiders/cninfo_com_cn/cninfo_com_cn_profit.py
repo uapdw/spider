@@ -79,6 +79,8 @@ class CninfoComCnProfitSpider(Spider):
         arr_value = response.selector.xpath(
             '//td[@bgcolor="#daf2ff"]/text()'
         ).extract()
+        if len(arr_title) < 1:
+            return
         arr_res = dict(zip(arr_title, arr_value))
 
         # print response.url
