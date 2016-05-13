@@ -14,29 +14,11 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
     name = "cninfo_com_cn_balance"
     allowed_domains = ['cninfo.com.cn']
     monthList = ['-03-31', '-06-30', '-09-30', '-12-31']
-    start_urls = (
-        'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
-        'http://www.cninfo.com.cn/information/sz/sme/szsmelclist.html',
-        'http://www.cninfo.com.cn/information/sz/cn/szcnlclist.html',
-        'http://www.cninfo.com.cn/information/sh/mb/shmblclist.html',
-    )
+    
     # start_urls = [
     #   'http://www.cninfo.com.cn/information/sz/mb/szmblclist.html',
     # ]
-    session = Session()
-    try: 
-        periodlist = session.query(PeriodList).order_by(
-             desc(PeriodList.year), desc(PeriodList.period)
-            ).all()
-        
-        stock_cd_market_part_list = session.query(
-            CurrListedCorp.stock_cd, CurrListedCorp.market_part
-            ).all()
-        for stock_cd_market_part in stock_cd_market_part_list:
-            stock_cd = stock_cd_market_part[0]
-            market_part = stock_cd_market_part[1]
-    finally:
-        session.close()
+
 
   
     balanceSheetColumn = {
@@ -107,24 +89,27 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
     u'所有者权益(或股东权益)合计':'owner_intr_sum',
     u'负债和所有者(或股东权益)合计':'liab_owner_sum'
     }
-
-
-    def parse(self,response):
-        sel = Selector(response)
-        onclickList = sel.xpath('//td[@class="zx_data3"]/a/@onclick').extract()
-        p = re.compile(r'\d{6}$')
-        
-        for theStr in onclickList:
-            arr = theStr.replace("setLmCode('", '').replace("');", '').split('?')
-            code = p.search(arr[1]).group()
-            for year in self.periodlist: 
-                balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ code +'&yyyy='+ year.year.encode('utf8') +'&&mm='+ self.monthList[int(year.period.encode('utf8'))] +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
-                #balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode=002404&yyyy=2015&&mm=-12-31&cwzb=balancesheet&button2=%CC%E1%BD%BB'
-                req = Request(balanceSheetUrl, callback=self.parsebalance)
-                req.meta['year'] = year.year.encode('utf8')
-                req.meta['month'] = year.period.encode('utf8')
-                yield req
-        
+    def start_requests(self):
+        session = Session()
+        try: 
+            self.periodlist = session.query(PeriodList).order_by(
+                desc(PeriodList.year), desc(PeriodList.period)
+                ).all()
+            stock_cd_list = session.query(
+                CurrListedCorp.stock_cd
+                ).all()
+            for stock_cd in stock_cd_list:
+                stock_code = stock_cd[0]
+                for period in self.periodlist:
+                    year = period.year.encode('utf8')
+                    mm = self.monthList[int(period.period.encode('utf8'))]
+                    balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ stock_code +'&yyyy='+ year +'&&mm='+ mm +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
+                    req = Request(balanceSheetUrl, callback=self.parsebalance)
+                    req.meta['year'] = year
+                    req.meta['month'] = mm
+                    yield req
+        finally:
+            session.close()
 
     def parsebalance(self, response):
         sel = Selector(response)
@@ -150,4 +135,5 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                 item[self.balanceSheetColumn[key]] = arrRes[key].replace(',','')
 
         return item
+
         
