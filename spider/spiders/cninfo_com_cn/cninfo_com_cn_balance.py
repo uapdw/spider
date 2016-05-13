@@ -106,14 +106,12 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                     balanceSheetUrl = 'http://www.cninfo.com.cn/information/stock/balancesheet_.jsp?stockCode='+ stock_code +'&yyyy='+ year +'&&mm='+ (year != str(2016) and mm or '') +'&cwzb=balancesheet&button2=%CC%E1%BD%BB'
                     req = Request(balanceSheetUrl, callback=self.parsebalance)
                     req.meta['year'] = year
-                    req.meta['month'] = int(period.period.encode('utf8'))
+                    req.meta['month'] = period.period.encode('utf8')
                     yield req
         finally:
             session.close()
 
     def parsebalance(self, response):
-        print response.url
-        '''
         sel = Selector(response)
         year = response.meta['year']
         month = response.meta['month']
@@ -137,6 +135,6 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
                 item[self.balanceSheetColumn[key]] = arrRes[key].replace(',','')
 
         return item
-        '''
+        
 
         
