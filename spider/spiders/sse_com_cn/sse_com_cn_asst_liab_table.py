@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import datetime
 
 from scrapy.http import FormRequest
 from scrapy.spider import Spider
@@ -241,6 +242,10 @@ class SseComCnAsstLiabTableSpider(Spider):
             row_num = self.name_row_num_dict.get(name)
             value = self._get_value(rows, row_num, value_index)
             i[field] = text(value)
+
+        i['modifytime'] = datetime.datetime.now().strftime(
+            '%Y-%m-%d %H:%M:%S'
+        )
 
         yield i
 
