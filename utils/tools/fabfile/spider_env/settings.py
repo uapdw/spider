@@ -14,12 +14,15 @@ USER_AGENT = fake.internet_explorer()
 FILES_STORE = '/data0/files/stock_reports'
 
 ITEM_PIPELINES = {
-    'spider.pipelines.NamedFilesPipeline': 1,
-    'spider.pipelines.SqlalchemyPipeline': 2,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 100,
+    'spider.pipelines.NamedFilesPipeline': 300,
+    'spider.pipelines.SqlalchemyPipeline': 500,
     # 'spider.pipelines.JSONWriterPipeline': 1,
     # 'spider.pipelines.HBaseItemPipeline': 3,
     # 'spider.pipelines.SolrItemPipeline': 2
 }
+
+RETRY_TIMES = 3
 
 REACTOR_THREADPOOL_MAXSIZE = 20
 COOKIES_ENABLED = False
