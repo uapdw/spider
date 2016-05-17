@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `scrapy list`
+for i in `cd /data0/sourcecode/spider/current && ~/.virtualenvs/spider/bin/scrapy list`
 do
-    scrapy crawl $i
+    cd /data0/sourcecode/spider/current && ~/.virtualenvs/spider/bin/scrapy crawl $i
 done
