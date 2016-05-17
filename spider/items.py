@@ -452,25 +452,25 @@ class UradarArticleItem(PublishItem):
     sentiment = Field()
 
 
-class UradarNewsItem(PublishItem):
+class UradarNewsItem(UradarArticleItem):
 
     def __init__(self):
         super(UradarNewsItem, self).__init__(article_type='1')
 
 
-class UradarBlogItem(PublishItem):
+class UradarBlogItem(UradarArticleItem):
 
     def __init__(self):
         super(UradarBlogItem, self).__init__(article_type='3')
 
 
-class UradarWeixinItem(PublishItem):
+class UradarWeixinItem(UradarArticleItem):
 
     def __init__(self):
         super(UradarWeixinItem, self).__init__(article_type='2')
 
 
-class UradarReportItem(PublishItem):
+class UradarReportItem(UradarArticleItem):
 
     def __init__(self):
         super(UradarReportItem, self).__init__(article_type='4')
