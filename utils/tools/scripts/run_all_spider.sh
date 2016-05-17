@@ -1,6 +1,7 @@
 #!/bin/bash
 
-for i in `cd /data0/sourcecode/spider/current && ~/.virtualenvs/spider/bin/scrapy list`
+cd /data0/sourcecode/spider/current
+for i in 100ec_cn_news 163_com_news 199it_com_news 36dsj_com_news app_myzaker_com_news autohome_com_cn_bbs autohome_com_cn_beiqi autohome_com_cn_news autohome_com_cn_shuoke autohome_com_cn_sou caijing_com_cn_news cbinews_com_news cbismb_com_news ccidnet_com_news cctime_com_news ccw_com_cn_news ceocio_com_cn_news china-cloud_com_news china_com_cn_news china_com_news chinabyte_com_news ciotimes_com_news cnii_com_cn_news cnsoftnews_com_news cqnews_net_news csdn_net_activity csdn_net_blog csdn_net_news ctocio_com_news data_tsci_com_cn_news dataguru_cn_news eastday_com_news enorth_com_cn_news eworks_net_cn_news gartner_com_news gmw_cn_news hexun_com_news huxiu_com_news idc_com_cn_news ifeng_com_auto_hangye ifeng_com_auto_news ifeng_com_auto_sou ifeng_com_auto_zimeiti ifeng_com_news it168_com_news kn58_com_news leiphone_com_news pcpop_com_news people_com_cn_news qianlong_com_news qq_com_news qudong_com_news s3d4_cn_news sap_com_news sina_com_cn_bbs sina_com_cn_news sina_com_cn_news_100news sogou_com_weixin sohu_com_news sootoo_com_news spn_com_cn_news sse_com_cn_asst_liab_table sse_com_cn_listed_corp_info sse_com_cn_profit_table sse_com_cn_sh_listed_corp_info szse_cn_curr_listed_corp techweb_com_cn_news topoint_com_cn_news toutiao_com_news uradar_url vsharing_com_news weibo_com_weibo xcar_com_cn_bbs xcar_com_cn_sou xinhuanet_com_news ycwb_com_news yesky_com_news yidonghua_com_news ynet_com_news zdnet_com_cn_news zjol_com_cn_news zol_com_cn_news
 do
-    cd /data0/sourcecode/spider/current && ~/.virtualenvs/spider/bin/scrapy crawl $i
+    ~/.virtualenvs/spider/bin/scrapy crawl $i
 done
