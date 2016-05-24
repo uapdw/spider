@@ -12,7 +12,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Text, DateTime
 from sqlalchemy.dialects.mysql import LONGTEXT
-from sqlalchemy.orm.exc import NoResultFound
 
 
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://uradar:uradar@172.20.20.73/uradar'
@@ -78,7 +77,8 @@ def set_mail_status(report_send_id, mail, is_success):
             report_send.status = 'success'
 
         session.commit()
-    except NoResultFound:
+    except:
         session.rollback()
+        raise
     finally:
         session.close()

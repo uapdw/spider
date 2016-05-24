@@ -191,10 +191,21 @@ def sendMail(self, subject, mail_to, content, report_send_id=None):
         s.sendmail(app.config['EMAIL_USER'], [mail_to], msgRoot.as_string())
         logger.info('send mail to {}'.format(mail_to))
     except Exception as exc:
+        logger.exception(
+            'exception occur when sending mail to {}'.format(mail_to)
+        )
         is_success = False
         raise self.retry(exc=exc)
     finally:
         s.close()
 
     if report_send_id is not None:
-        set_mail_status(report_send_id, mail_to, is_success)
+        logger.info(
+            'modify report_send_log status, id:{}, mail:{}, success:{}'.format(
+                report_send_id, mail_to, is_success
+            )
+        )
+        try:
+            set_mail_status(report_send_id, mail_to, is_success)
+        except:
+            logger.exception('exception occur when modifying report_send_log')
