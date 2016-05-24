@@ -1,6 +1,7 @@
 *.pyc
 items.jl
 *.swp
+*.swo
 utils/dist/*.tar.gz
 *.sublime*
 celerybeat-schedule

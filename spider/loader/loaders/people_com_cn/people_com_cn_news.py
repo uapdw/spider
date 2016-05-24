@@ -26,3 +26,20 @@ class PeopleComCnNewsLoader(NewsLoader):
 
     source_domain = 'people.com.cn'
     source_name = u'人民网'
+
+
+class N1PeopleComCnNewsLoader(NewsLoader):
+
+    u"""中国共产党新闻网新闻爬虫"""
+
+    title_xpath = '//*[contains(@class, "text_c")]/h1'
+    content_xpath = '//*[@class="text_show"]'
+    publish_time_xpath = '//*[contains(@class, "text_c")]/h5'
+    publish_time_re = u'.*?(\d{4})年(\d{2})月(\d{2})日(\d{2}:\d{2})\s+来源：\S+'
+    publish_time_re_join = '-'
+    publish_time_format = '%Y-%m-%d-%H:%M'
+    source_xpath = '//*[contains(@class, "text_c")]/h5'
+    source_re = u'.*?\d{4}年\d{2}月\d{2}日\d{2}:\d{2}\s+来源：(\S+)'
+
+    source_domain = 'people.com.cn'
+    source_name = u'人民网'
