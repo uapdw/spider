@@ -137,7 +137,8 @@ class NewsLoader(object):
         l.add_value('add_time', datetime.datetime.now())
 
         i = l.load_item()
-        return i
+        #return i
+        print i
 
 
 class BlogLoader(object):
@@ -294,7 +295,16 @@ from spider.loader.loaders.ceocio_com_cn.ceocio_com_cn_news import CeocioNewsLoa
 from spider.loader.loaders.autohome_com_cn.autohome_com_cn_bbs import AutohomeComCnBBSLoader
 from spider.loader.loaders.xcar_com_cn.xcar_com_cn_bbs import XcarComCnBBSLoader
 from spider.loader.loaders.sina_com_cn.sina_com_cn_bbs import SinaComCnBBSLoader
-
+from spider.loader.loaders.ganzhou_gov_cn.ganzhou_gov_cn_news import GanZhouNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzhrss_gov_cn_news import GZHrssNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzsczj_gov_cn_news import GZSCZJNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzstc_gov_cn_news import GZStcNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzciit_gov_cn_news import GZCiitNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzsdpc_gov_cn_news import GZSdpcNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gz315_gov_cn_news import GZ315NewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.sipo_gov_cn_news import SiPoNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzdofcom_gov_cn_news import GZDoFComNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gzsl_gov_cn_news import GZSLNewsLoader
 __all__ = [
     'It168NewsLoader',
     'DataTsciComCnNewsLoader',
@@ -354,5 +364,15 @@ __all__ = [
     'CeocioNewsLoader',
     'AutohomeComCnBBSLoader',
     'XcarComCnBBSLoader',
-    'SinaComCnBBSLoader'
+    'SinaComCnBBSLoader',
+    'GanZhouNewsLoader',
+    'GZHrssNewsLoader',
+    'GZStcNewsLoader',
+    'GZSCZJNewsLoader',
+    'GZCiitNewsLoader',
+    'GZSdpcNewsLoader',
+    'GZ315NewsLoader',
+    'SiPoNewsLoader',
+    'GZDoFComNewsLoader',
+    'GZSLNewsLoader'
 ]
