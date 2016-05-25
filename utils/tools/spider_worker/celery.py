@@ -59,7 +59,7 @@ app.conf.update(
     EMAIL_PASSWORD = 'yonyou_uradar*123',
     EMAIL_HOST = 'mail.yonyou.com',
     EMAIL_PORT = 25,
-    EMAIL_SSL = False
+    EMAIL_SSL = False,
 
     #MYSQL_HOST = '127.0.0.1',
     #MYSQL_USER = 'root',
