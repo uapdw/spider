@@ -60,6 +60,7 @@ app.conf.update(
     EMAIL_HOST = 'mail.yonyou.com',
     EMAIL_PORT = 25,
     EMAIL_SSL = False,
+    EMAIL_SENDER = 'uradar@yonyou.com',
 
     #MYSQL_HOST = '127.0.0.1',
     #MYSQL_USER = 'root',
@@ -191,7 +192,7 @@ def sendMail(self, subject, mail_to, content, report_send_id=None):
         s.login(app.config['EMAIL_USER'], app.config['EMAIL_PASSWORD'])
 
         # 发送邮件
-        s.sendmail(app.config['EMAIL_USER'], [mail_to], msgRoot.as_string())
+        s.sendmail(app.config['EMAIL_SENDER'], [mail_to], msgRoot.as_string())
         logger.info('send mail to {}'.format(mail_to))
     except Exception as exc:
         logger.exception(
