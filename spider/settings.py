@@ -11,13 +11,13 @@ NEWSPIDER_MODULE = 'spider.spiders'
 fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
-FILES_STORE = '/data0/files/stock_reports'
+# FILES_STORE = '/data0/files/stock_reports'
 
 ITEM_PIPELINES = {
     # 'spider.pipelines.NamedFilesPipeline': 1,
     # 'spider.pipelines.SqlalchemyPipeline': 2,
-    # 'spider.pipelines.JSONWriterPipeline': 1,
-    'spider.pipelines.HBaseItemPipeline': 3,
+    'spider.pipelines.JSONWriterPipeline': 1,
+    # 'spider.pipelines.HBaseItemPipeline': 3,
     # 'spider.pipelines.SolrItemPipeline': 2
 }
 
@@ -35,12 +35,12 @@ RETRY_ENABLED = False
 
 # ROBOTSTXT_OBEY = True
 
-DEPTH_LIMIT = 3
-DEPTH_STATS_VERBOSE = True
-
-LOG_LEVEL = 'INFO'
-LOG_STDOUT = False
-LOG_FILE = '/tmp/scrapy.log'
+# DEPTH_LIMIT = 3
+# DEPTH_STATS_VERBOSE = True
+#
+# LOG_LEVEL = 'INFO'
+# LOG_STDOUT = False
+# LOG_FILE = '/tmp/scrapy.log'
 
 
 HBASE_HOST = '172.20.19.137'
