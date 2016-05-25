@@ -17,3 +17,17 @@ class Cut35ComNewsLoader(NewsLoader):
 
     source_domain = 'cut35.com'
     source_name = u'中国刀具商务网'
+
+
+class CnsandvikCut35ComNewsLoader(NewsLoader):
+
+    u"""山特维克可乐满（中国）新闻"""
+
+    title_xpath = '//*[@class="NewsTitle"]'
+    content_xpath = '//*[@class="NContent"]'
+    publish_time_xpath = '//*[@class="NewsDiv1"]'
+    publish_time_re = u'.*?发布日期：(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})'
+    publish_time_format = '%Y-%m-%d %H:%M:%S'
+
+    source_domain = 'cnsandvik.cut35.com'
+    source_name = u'山特维克可乐满（中国）'
