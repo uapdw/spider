@@ -55,10 +55,11 @@ app.conf.update(
     },
 
     # 邮件
-    EMAIL_USER = 'info@uradar.cn',
-    EMAIL_PASSWORD = 'URadar123',
-    EMAIL_HOST = 'smtp.exmail.qq.com',
-    EMAIL_PORT = 465,
+    EMAIL_USER = 'uradar',
+    EMAIL_PASSWORD = 'yonyou_uradar*123',
+    EMAIL_HOST = 'mail.yonyou.com',
+    EMAIL_PORT = 25,
+    EMAIL_SSL = False
 
     #MYSQL_HOST = '127.0.0.1',
     #MYSQL_USER = 'root',
@@ -179,10 +180,12 @@ def sendMail(self, subject, mail_to, content, report_send_id=None):
 
     is_success = True
     try:
-        s = smtplib.SMTP_SSL(
-            app.config['EMAIL_HOST'],
-            port=app.config['EMAIL_PORT']
-        )
+        if app.config['EMAIL_SSL']:
+            s = smtplib.SMTP_SSL(app.config['EMAIL_HOST'],
+                                 port=app.config['EMAIL_PORT'])
+        else:
+            s = smtplib.SMTP(app.config['EMAIL_HOST'],
+                             port=app.config['EMAIL_PORT'])
 
         # 登陆服务器
         s.login(app.config['EMAIL_USER'], app.config['EMAIL_PASSWORD'])
