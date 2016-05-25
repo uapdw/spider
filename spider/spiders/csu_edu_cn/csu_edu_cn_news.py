@@ -10,7 +10,7 @@ class CsuEduCnNewsSpider(LoaderMappingSpider):
 
     u"""中南大学新闻爬虫"""
 
-    name = 'csu_edu_cn'
+    name = 'csu_edu_cn_news'
     allowed_domains = [
         'csu.edu.cn'
     ]
