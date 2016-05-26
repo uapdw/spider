@@ -15,9 +15,13 @@ class OmetalComNewsSpider(LoaderMappingSpider):
         'ometal.com'
     ]
     start_urls = [
-        'http://www.ometal.com/news_other.htm'
+        'http://www.ometal.com/news_other.htm',
+        'http://www.ometal.com/news_world.htm',
+        'http://www.ometal.com/news_law.htm',
+        'http://www.ometal.com/news_china.htm'
     ]
 
     mapping = {
-        'ometal\.com/bin/new/\d{4}/\d+/\d+/other/\d+\.htm': OmetalComNewsLoader
+        'ometal\.com/bin/new/\d{4}/\d+/\d+/(other|zcfg|china|world)/\d+\.htm':
+        OmetalComNewsLoader
     }
