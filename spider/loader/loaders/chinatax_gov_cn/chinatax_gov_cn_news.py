@@ -2,13 +2,13 @@
 
 from spider.loader.loaders import NewsLoader
 
+
 class ChinataxGovCnNewsLoader(NewsLoader):
 
     u"""国家税务总局新闻"""
 
     title_xpath = '//*[@class="sv_texth1"]'
-    content_xpath = '//*[class@="sv_texth3"]'
-#    author_xpath = '//*[@=""]'
+    content_xpath = '//*[@class="sv_texth3"]'
 
     publish_time_xpath = '//*[@class="sv_texth2"]'
     publish_time_re = u'.*?发布日期：\s*(\d{4})年(\d{2})月(\d{2})日.*'
