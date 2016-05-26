@@ -137,8 +137,8 @@ class NewsLoader(object):
         l.add_value('add_time', datetime.datetime.now())
 
         i = l.load_item()
-        #return i
-        print i
+        return i
+        #print i
 
 
 class BlogLoader(object):
@@ -305,6 +305,18 @@ from spider.loader.loaders.ganzhou_gov_cn.gz315_gov_cn_news import GZ315NewsLoad
 from spider.loader.loaders.ganzhou_gov_cn.sipo_gov_cn_news import SiPoNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.gzdofcom_gov_cn_news import GZDoFComNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.gzsl_gov_cn_news import GZSLNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.gz_jxgtt_gov_cn_news import GZJxgttNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jiangxi_gov_cn_news import JiangXiNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxdpc_gov_cn_news import JXDpcNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxciit_gov_cn_news import JXCiitNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxhrss_gov_cn_news import JXHrssNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxf_gov_cn_news import JXFNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxepb_gov_cn_news import JXEpbNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxgtt_gov_cn_news import JXGttNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.jxsl_gov_cn_news import JXSLNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.mof_gov_cn_news import MOFNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.mwr_gov_cn_news import MWRNewsLoader
+from spider.loader.loaders.ganzhou_gov_cn.mep_gov_cn_news import MEPNewsLoader
 __all__ = [
     'It168NewsLoader',
     'DataTsciComCnNewsLoader',
@@ -374,5 +386,17 @@ __all__ = [
     'GZ315NewsLoader',
     'SiPoNewsLoader',
     'GZDoFComNewsLoader',
-    'GZSLNewsLoader'
+    'GZSLNewsLoader',
+    'GZJxgttNewsLoader',
+    'JiangXiNewsLoader',
+    'JXDpcNewsLoader',
+    'JXCiitNewsLoader',
+    'JXHrssNewsLoader',
+    'JXFNewsLoader',
+    'JXEpbNewsLoader',
+    'JXGttNewsLoader',
+    'JXSLNewsLoader',
+    'MOFNewsLoader',
+    'MWRNewsLoader',
+    'MEPNewsLoader'
 ]
