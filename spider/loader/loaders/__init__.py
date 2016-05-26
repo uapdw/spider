@@ -312,8 +312,6 @@ from spider.loader.loaders.ganzhou_gov_cn.jxciit_gov_cn_news import JXCiitNewsLo
 from spider.loader.loaders.ganzhou_gov_cn.jxhrss_gov_cn_news import JXHrssNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.jxf_gov_cn_news import JXFNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.jxepb_gov_cn_news import JXEpbNewsLoader
-from spider.loader.loaders.ganzhou_gov_cn.jxgtt_gov_cn_news import JXGttNewsLoader
-from spider.loader.loaders.ganzhou_gov_cn.jxsl_gov_cn_news import JXSLNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.mof_gov_cn_news import MOFNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.mwr_gov_cn_news import MWRNewsLoader
 from spider.loader.loaders.ganzhou_gov_cn.mep_gov_cn_news import MEPNewsLoader
@@ -394,8 +392,6 @@ __all__ = [
     'JXHrssNewsLoader',
     'JXFNewsLoader',
     'JXEpbNewsLoader',
-    'JXGttNewsLoader',
-    'JXSLNewsLoader',
     'MOFNewsLoader',
     'MWRNewsLoader',
     'MEPNewsLoader'
