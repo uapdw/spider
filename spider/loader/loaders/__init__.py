@@ -137,8 +137,8 @@ class NewsLoader(object):
         l.add_value('add_time', datetime.datetime.now())
 
         i = l.load_item()
+
         return i
-        #print i
 
 
 class BlogLoader(object):
