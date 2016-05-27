@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import re
+import datetime
+
 from spider.loader.loaders import NewsLoader
+
+publish_time_matcher = re.compile(
+    '.*?www.ndrc.gov.cn/xwzx/xwfb/\d{6}/t(\d{8})_\d+.html'
+)
 
 class NdrcGovCnNewsLoader(NewsLoader):
 
@@ -10,8 +17,8 @@ class NdrcGovCnNewsLoader(NewsLoader):
     content_xpath = '//*[@class="TRS_Editor"]'
 
     publish_time_xpath = '//*[@class="txt_subtitle1 tleft"]'
-    publish_time_re = u'.*(\d{4}-\d{2}-\d{2})*'
-    publish_time_format = '%Y-%m-%d'
+    publish_time_re = u'.*(\d{4}-\d{2}-\d{2}).*'
+    publish_time_format = '%.Y-%m-%d'
 
     source_xpath = '//*[@id="dSourceText"]/a'
 

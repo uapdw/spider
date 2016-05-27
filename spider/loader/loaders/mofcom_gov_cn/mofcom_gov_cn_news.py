@@ -1,24 +1,3 @@
-<<<<<<< HEAD
-# -*- coding: utf-8 -*-
-
-from spider.loader.loaders import NewsLoader
-
-class MofcomGovCnNewsLoader(NewsLoader):
-
-    u"""中华人民共和国商务部新闻"""
-
-    title_xpath = '//*[@class="artTitle"]'
-    content_xpath = '//*[@class="artCon"]'
-
-    publish_time_xpath = '//*[@class="artInfo"]/script/tm'
-    publish_time_re = u'.*(\d{4}-\d{2}-\d{2}  \d{2}:\d{2}).*'
-    publish_time_format = '%Y-%m-%d %H:%M'
-
-    source_xpath = '//*[@class="artInfo"]/script/a'
-
-    source_domain = 'mofcom.gov.cn'
-    source_name = u'中华人民共和国商务部'
-=======
 # -*- coding: utf-8 -*-
 
 from spider.loader.loaders import NewsLoader, MergeLoader
@@ -34,7 +13,7 @@ class MofcomGovCnNewsLoader(MergeLoader):
 
 class MofcomGovCnNewsLoader1(NewsLoader):
 
-    u"""国家知识产权局新闻"""
+    u"""中华人民共和国商务部新闻"""
 
     title_xpath = '//*[@class="artTitle"]'
     content_xpath = '//*[@class="artCon"]'
@@ -50,7 +29,7 @@ class MofcomGovCnNewsLoader1(NewsLoader):
 
 class MofcomGovCnNewsLoader2(NewsLoader):
 
-    u"""国家知识产权局新闻"""
+    u"""中华人民共和国商务部新闻"""
 
     title_xpath = '//*[@id="artitle"]'
     content_xpath = '//*[@class="cont"]'
@@ -62,4 +41,3 @@ class MofcomGovCnNewsLoader2(NewsLoader):
 
     source_domain = 'mofcom.gov.cn'
     source_name = u'中华人民共和国商务部'
->>>>>>> 7057ade3e78625e3d0cf6e342ff2936b0b961005
