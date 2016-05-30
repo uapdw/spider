@@ -15,5 +15,5 @@ class CnmnComCnNewsSpider(LoaderMappingSpider):
     start_urls = ['http://www.cnmn.com.cn/']
 
     mapping = {
-        'cnmn\.com\.cn/ShowNews1\.aspx\?id=\d+': CnmnComCnNewsLoader
+        '/ShowNews1\.aspx\?id=\d+': CnmnComCnNewsLoader
     }
