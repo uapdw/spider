@@ -135,6 +135,7 @@ def deploySpiderCode():
     getNewCode()
     build()
     copyFile()
+    put('./spider_env/settings.py', '/data0/sourcecode/spider/current/spider/')
 
 
 @task
