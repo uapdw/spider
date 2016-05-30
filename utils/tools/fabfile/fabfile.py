@@ -145,7 +145,7 @@ def deployStockSpiderCode():
     getNewCode()
     build()
     copyFile()
-    put('./spider_env/settings.py', '/data0/sourcecode/spider/current/spider/')
+    put('./spider_env/stock/settings.py', '/data0/sourcecode/spider/current/spider/')
 
 
 @task
