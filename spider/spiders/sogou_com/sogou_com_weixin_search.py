@@ -76,7 +76,7 @@ class SogouWeixinSearchSpider(CrawlSpider):
                     MapCompose(SafeHtml(response.url)), Join('\n'))
 
         l.add_xpath('author',
-                    '//*[@class="rich_media_meta rich_media_meta_text"][2]',
+                    '//*[@class="rich_media_meta_list"]/em[2]',
                     MapCompose(text))
 
         l.add_xpath('publish_time',
@@ -89,8 +89,7 @@ class SogouWeixinSearchSpider(CrawlSpider):
                     ))
 
         l.add_xpath('source',
-                    '//*[@class="rich_media_meta rich_media_\
-                    meta_link rich_media_meta_nickname"]',
+                    '//*[@class="rich_media_meta_list"]/a',
                     MapCompose(text))
 
         l.add_xpath('abstract', '//meta[@name="description"]/@content',
