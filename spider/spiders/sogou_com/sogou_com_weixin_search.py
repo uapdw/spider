@@ -47,16 +47,16 @@ class SogouWeixinSearchSpider(CrawlSpider):
         cookies = {
             'ABTEST': '0|1464681399|v1',
             'IPLOC': 'CN1100',
-            'JSESSIONID': 'aaaYT3Lnrs_59_yFm1euv',
+            'JSESSIONID': 'aaacYPGYSSown_zmo1euv',
             'PHPSESSID': 'i4n5g4qiker4raenugd55r82i2',
             'SNUID': '8A5DF4F88E88B99298900CDC8EB7A86B',
             'SUID': '04D07A7560C80D0A00000000574D49BC',
             'SUID': '04D07A752708930A00000000574D49BB',
-            'SUIR': '1464681399',
+            'SUIR': '1464682939',
             'SUV': '00677B1B757AD004574D49BC312F5146',
             'seccodeRight': 'success',
-            'successCount': '1|Tue, 31 May 2016 08:28:23 GMT',
-            'seccodeErrorCount': '1|Tue, 31 May 2016 08:28:04 GMT'
+            'successCount': '2|Tue, 31 May 2016 08:41:42 GMT',
+            #'seccodeErrorCount': '1|Tue, 31 May 2016 08:28:04 GMT'
         }
 
         for keyword in keywords:
