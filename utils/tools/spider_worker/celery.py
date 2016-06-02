@@ -176,7 +176,7 @@ def sendMail(self, subject, mail_to, content, report_send_id=None):
     msgRoot.attach(msgText)
 
     msgRoot['Subject'] = subject
-    msgRoot['From'] = app.config['EMAIL_USER']
+    msgRoot['From'] = app.config['EMAIL_SENDER']
     msgRoot['To'] = mail_to
 
     is_success = True
