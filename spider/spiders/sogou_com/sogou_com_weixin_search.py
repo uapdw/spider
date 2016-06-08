@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from scrapy import Request
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader.processors import TakeFirst, MapCompose, Join
@@ -21,18 +22,46 @@ class SogouWeixinSearchSpider(CrawlSpider):
         'mp.weixin.qq.com'
     ]
 
-    keywords = [
-        u'章源钨业',
-        u'有色金属'
-    ]
+    def start_requests(self):
+        keywords = [
+            u'章源钨业',
+            u'有色金属'
+        ]
 
-    search_article_pattern = u'http://weixin.sogou.com/weixin?query={}&type=2'
-    search_profile_pattern = u'http://weixin.sogou.com/weixin?query={}&type=1'
+        search_article_pattern = u'http://weixin.sogou.com/weixin?query={}&type=2'
+        search_profile_pattern = u'http://weixin.sogou.com/weixin?query={}&type=1'
 
-    start_urls = []
-    for keyword in keywords:
-        start_urls.append(search_article_pattern.format(keyword))
-        start_urls.append(search_profile_pattern.format(keyword))
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, sdch',
+            'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Host': 'weixin.sogou.com',
+            'Pragma': 'no-cache',
+            'Referer': 'http://weixin.sogou.com/antispider/?from=%2fweixin%3Fquery%3d%E6%9C%89%E8%89%B2%E9%87%91%E5%B1%9E%26type%3d2',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+        }
+
+        cookies = {
+            'ABTEST': '0|1464681399|v1',
+            'IPLOC': 'CN1100',
+            'JSESSIONID': 'aaacYPGYSSown_zmo1euv',
+            'PHPSESSID': 'i4n5g4qiker4raenugd55r82i2',
+            'SNUID': '8A5DF4F88E88B99298900CDC8EB7A86B',
+            'SUID': '04D07A7560C80D0A00000000574D49BC',
+            'SUID': '04D07A752708930A00000000574D49BB',
+            'SUIR': '1464682939',
+            'SUV': '00677B1B757AD004574D49BC312F5146',
+            'seccodeRight': 'success',
+            'successCount': '2|Tue, 31 May 2016 08:41:42 GMT',
+            #'seccodeErrorCount': '1|Tue, 31 May 2016 08:28:04 GMT'
+        }
+
+        for keyword in keywords:
+            yield Request(search_article_pattern.format(keyword), headers=headers, cookies=cookies)
+            yield Request(search_profile_pattern.format(keyword), headers=headers, cookies=cookies)
 
     rules = (
         Rule(
