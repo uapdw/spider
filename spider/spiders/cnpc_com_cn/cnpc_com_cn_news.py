@@ -8,13 +8,13 @@ from spider.loader.loaders.cnpc_com_cn.cnpc_com_cn_news import(
 
 class CnpcComCnNewsSpider(LoaderMappingSpider):
 
-    u"""中国石油新闻中心新闻爬虫"""
+    u"""中国石油新闻爬虫"""
 
     name = 'cnpc_com_cn_news'
     allowed_domains = ['cnpc.com.cn']
-    start_urls = ['http://news.cnpc.com.cn/']
+    start_urls = ['http://www.cnpc.com.cn/cnpc/index.shtml']
 
     mapping = {
-        'news.cnpc.com.cn/system/\d{4}/\d{2}/\d{2}/\d+.shtml':
+        '../cnpc/\S+/\d{6}/\S+.shtml':
         CnpcComCnNewsLoader
     }

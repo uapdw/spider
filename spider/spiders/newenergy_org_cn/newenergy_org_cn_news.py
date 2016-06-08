@@ -11,7 +11,7 @@ class NewenergyOrgCnNewsSpider(LoaderMappingSpider):
     u"""中国新能源网新闻爬虫"""
 
     name = 'newenergy_org_cn_news'
-    allowed_domains = ['newnergy.org.cn']
+    allowed_domains = ['newenergy.org.cn']
     start_urls = ['http://www.newenergy.org.cn/']
 
     mapping = {
