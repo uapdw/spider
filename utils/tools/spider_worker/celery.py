@@ -180,14 +180,15 @@ def sendMail(self, subject, mail_to, content, report_send_id=None):
     msgRoot['To'] = mail_to
 
     is_success = True
-    try:
-        if app.config['EMAIL_SSL']:
-            s = smtplib.SMTP_SSL(app.config['EMAIL_HOST'],
-                                 port=app.config['EMAIL_PORT'])
-        else:
-            s = smtplib.SMTP(app.config['EMAIL_HOST'],
-                             port=app.config['EMAIL_PORT'])
 
+    if app.config['EMAIL_SSL']:
+        s = smtplib.SMTP_SSL(app.config['EMAIL_HOST'],
+                             port=app.config['EMAIL_PORT'])
+    else:
+        s = smtplib.SMTP(app.config['EMAIL_HOST'],
+                         port=app.config['EMAIL_PORT'])
+
+    try:
         # 登陆服务器
         s.login(app.config['EMAIL_USER'], app.config['EMAIL_PASSWORD'])
 
