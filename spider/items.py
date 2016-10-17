@@ -150,9 +150,10 @@ class SpiderProcessInfoItem(SqlalchemyItem):
     data_sour = Field()
 
 
-class ListedCorpInfoItem(SqlalchemyItem, HBaseItem):
+class ListedCorpInfoItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = ListedCorpInfo
+    table_name = 'listed_corp_info'
 
     data_sour = Field()
     year = Field()
@@ -193,8 +194,9 @@ class ListedCorpInfoItem(SqlalchemyItem, HBaseItem):
         )
 
 
-class AsstLiabTableItem(SqlalchemyItem, HBaseItem):
+class AsstLiabTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
+    table_name = 'asst_liab_table'
     model = AsstLiabTable
 
     year = Field()
@@ -278,8 +280,9 @@ class AsstLiabTableItem(SqlalchemyItem, HBaseItem):
         )
 
 
-class ProfitTableItem(SqlalchemyItem, HBaseItem):
+class ProfitTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
+    table_name = 'profit_table'
     model = ProfitTable
 
     year = Field()
@@ -320,8 +323,9 @@ class ProfitTableItem(SqlalchemyItem, HBaseItem):
         )
 
 
-class CashFlowTableItem(SqlalchemyItem, HBaseItem):
+class CashFlowTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
+    table_name = 'cash_flow_table'
     model = CashFlowTable
 
     year = Field()

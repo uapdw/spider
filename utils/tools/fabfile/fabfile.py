@@ -44,7 +44,8 @@ env.roledefs = {
         '172.20.14.80',
     ],
     'stock': [
-        '172.20.19.139',
+        # '172.20.19.139',
+        '172.20.13.215'
     ]
 }
 
@@ -142,7 +143,7 @@ def deploySpiderCode():
 @roles('stock')
 def deployStockSpiderCode():
     '''向长城项目机器部署爬虫相关代码'''
-    getNewCode()
+    # getNewCode()
     build()
     copyFile()
     put('./spider_env/stock/settings.py', '/data0/sourcecode/spider/current/spider/')

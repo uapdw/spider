@@ -18,7 +18,7 @@ ITEM_PIPELINES = {
     'spider.pipelines.NamedFilesPipeline': 300,
     'spider.pipelines.SqlalchemyPipeline': 500,
     # 'spider.pipelines.JSONWriterPipeline': 1,
-    # 'spider.pipelines.HBaseItemPipeline': 3,
+    'spider.pipelines.HBaseItemPipeline': 700,
     # 'spider.pipelines.SolrItemPipeline': 2
 }
 
@@ -46,7 +46,7 @@ RETRY_ENABLED = False
 # LOG_FILE = '/tmp/scrapy.log'
 
 
-HBASE_HOST = '172.20.6.61'
+HBASE_HOST = '172.20.13.183'
 HBASE_PORT = 9090
 SOLR_HOST = '172.20.13.207'
 SOLR_PORT = 8983

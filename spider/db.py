@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://uradar:uradar@172.20.20.73/greatwall?charset=utf8'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://stock:stock@172.20.13.215/stock?charset=utf8'
 SQLALCHEMY_POOL_RECYCLE = 60 * 60 * 2  # 2 hours, same as uradar
 
 
