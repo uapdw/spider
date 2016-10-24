@@ -37,6 +37,27 @@ class HBaseItem(RequiredFieldItem):
         return self[self.row_key_field]
 
 
+class PM25ChinaItem(HBaseItem):
+    table_name = 'ae_weather'
+    column_family = 'info'
+    required_fields = ['monitor_code', 'publishtime']
+
+    areacode = Field()
+    areaname = Field()
+    publishtime = Field()
+    index_value = Field()
+    monitor_code = Field()
+    monitor_name = Field()
+    monitor_aqi = Field()
+    monitor_pm25 = Field()
+    monitor_pm10 = Field()
+    monitor_key = Field()
+    crawltime = Field()
+
+    def get_row_key(self):
+        return self['monitor_code'] + self['publishtime']
+
+
 class PublishItem(HBaseItem):
     def validate(self):
         super(HBaseItem, self).validate()

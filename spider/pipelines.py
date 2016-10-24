@@ -203,8 +203,10 @@ class HBaseItemPipeline(object):
             if value:
                 if isinstance(value, datetime.datetime):
                     value = value.strftime("%Y-%m-%d %H:%M:%S")
+                elif isinstance(value, unicode) or isinstance(value, str):
+                    value = value.encode('utf-8')
                 else:
-                    value = str(value).encode('utf-8')
+                    value = str(value)
 
             column = '%s:%s' % (column_family, field)
             value = value
