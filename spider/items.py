@@ -38,7 +38,7 @@ class HBaseItem(RequiredFieldItem):
 
 
 class PM25ChinaItem(HBaseItem):
-    table_name = 'ae_weather'
+    table_name = 'dw_weather'
     column_family = 'info'
     required_fields = ['monitor_code', 'publishtime']
 
@@ -174,7 +174,8 @@ class SpiderProcessInfoItem(SqlalchemyItem):
 class ListedCorpInfoItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
     model = ListedCorpInfo
-    table_name = 'listed_corp_info'
+    table_name = 'dw_company'
+    column_family = 'info'
 
     data_sour = Field()
     year = Field()
@@ -217,8 +218,10 @@ class ListedCorpInfoItem(HBaseItem):
 
 class AsstLiabTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
-    table_name = 'asst_liab_table'
     model = AsstLiabTable
+
+    table_name = 'dw_balance'
+    column_family = 'balance'
 
     year = Field()
     period = Field()
@@ -303,7 +306,8 @@ class AsstLiabTableItem(HBaseItem):
 
 class ProfitTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
-    table_name = 'profit_table'
+    table_name = 'dw_profit'
+    column_family = 'profit'
     model = ProfitTable
 
     year = Field()
@@ -346,7 +350,8 @@ class ProfitTableItem(HBaseItem):
 
 class CashFlowTableItem(HBaseItem):
     required_fields = ['stock_cd', 'year', 'period', 'data_sour']
-    table_name = 'cash_flow_table'
+    table_name = 'dw_cashflow'
+    column_family = 'cash'
     model = CashFlowTable
 
     year = Field()
