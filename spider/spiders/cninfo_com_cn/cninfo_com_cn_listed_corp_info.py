@@ -83,7 +83,6 @@ class CninfoComCnListedCorpInfo(Spider):
         item = ListedCorpInfoItem()
         item['stock_cd'] = stockCode
         item['stock_sname'] = stockName
-        item['is_crawl'] = '1'
         item['modifytime'] = datetime.datetime.now().strftime(
             '%Y-%m-%d %H:%M:%S'
         )

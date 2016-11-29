@@ -212,7 +212,6 @@ CREATE TABLE `listed_corp_info` (
   `main_underw` varchar(200) DEFAULT NULL,
   `listed_referr` varchar(50) DEFAULT NULL,
   `recomm_org` varchar(100) DEFAULT NULL,
-  `is_crawl` varchar(2) DEFAULT NULL,
   `modifytime` varchar(19) DEFAULT NULL,
   PRIMARY KEY (`data_sour`,`year`,`period`,`stock_cd`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

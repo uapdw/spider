@@ -64,7 +64,6 @@ class ListedCorpInfo(Base):
     main_underw = Column(String(200))
     listed_referr = Column(String(50))
     recomm_org = Column(String(100))
-    is_crawl = Column(String(2))
     modifytime = Column(String(19))
 
 

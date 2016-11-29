@@ -204,7 +204,6 @@ class ListedCorpInfoItem(HBaseItem):
     main_underw = Field()
     listed_referr = Field()
     recomm_org = Field()
-    is_crawl = Field()
     modifytime = Field()
 
     def get_row_key(self):
