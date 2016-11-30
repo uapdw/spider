@@ -45,10 +45,6 @@ class CninfoComCnListedCorpInfo(Spider):
     def start_requests(self):
         session = Session()
         try:
-            self.periodlist = session.query(PeriodList).order_by(
-                desc(PeriodList.year), desc(PeriodList.period)
-            ).limit(1).one()
-
             stock_cd_market_part_list = session.query(
                 CurrListedCorp.stock_cd, CurrListedCorp.market_part
             ).all()
@@ -86,9 +82,6 @@ class CninfoComCnListedCorpInfo(Spider):
         item['modifytime'] = datetime.datetime.now().strftime(
             '%Y-%m-%d %H:%M:%S'
         )
-        item['data_sour'] = '2'
-        item['year'] = self.periodlist.year
-        item['period'] = self.periodlist.period
 
         for title, value in arr_res.iteritems():
             if title in self.arrStockInfoColumn:

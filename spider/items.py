@@ -9,9 +9,7 @@ from sqlalchemy import DECIMAL, Integer
 from sqlalchemy.exc import IntegrityError as SqlalchemyIntegrityError
 from pymysql.err import IntegrityError as PymysqlIntegrityError
 
-from spider.models import (CurrListedCorp, PeriodList, SpiderProcessInfo,
-                           ListedCorpInfo, AsstLiabTable, ProfitTable,
-                           CashFlowTable)
+from spider.models import (CurrListedCorp, PeriodList)
 from spider.db import Session
 
 
@@ -56,16 +54,6 @@ class PM25ChinaItem(HBaseItem):
 
     def get_row_key(self):
         return self['monitor_code'] + self['publishtime']
-
-
-class PublishItem(HBaseItem):
-    def validate(self):
-        super(HBaseItem, self).validate()
-
-        publish_time = getattr(self, 'publish_time', None)
-        if isinstance(publish_time, datetime.datetime) and \
-                publish_time > datetime.datetime.now():
-            raise DropItem('invalid publish_time %s' % publish_time)
 
 
 class SqlalchemyItem(RequiredFieldItem):
@@ -161,25 +149,11 @@ class PeriodListItem(SqlalchemyItem):
     period = Field()
 
 
-class SpiderProcessInfoItem(SqlalchemyItem):
-    required_fields = ['corp_stock_cd', 'year', 'period']
-    model = SpiderProcessInfo
-
-    corp_stock_cd = Field()
-    year = Field()
-    period = Field()
-    data_sour = Field()
-
-
 class ListedCorpInfoItem(HBaseItem):
-    required_fields = ['stock_cd', 'year', 'period', 'data_sour']
-    model = ListedCorpInfo
+    required_fields = ['stock_cd']
     table_name = 'dw_company'
     column_family = 'info'
 
-    data_sour = Field()
-    year = Field()
-    period = Field()
     stock_cd = Field()
     stock_sname = Field()
     corp_sname = Field()
@@ -207,17 +181,11 @@ class ListedCorpInfoItem(HBaseItem):
     modifytime = Field()
 
     def get_row_key(self):
-        return '%s_%s_%s_%s' % (
-            self['data_sour'],
-            self['year'],
-            self['period'],
-            self['stock_cd']
-        )
+        return self['stock_cd']
 
 
 class AsstLiabTableItem(HBaseItem):
-    required_fields = ['stock_cd', 'year', 'period', 'data_sour']
-    model = AsstLiabTable
+    required_fields = ['stock_cd', 'year', 'period']
 
     table_name = 'dw_balance'
     column_family = 'balance'
@@ -225,7 +193,6 @@ class AsstLiabTableItem(HBaseItem):
     year = Field()
     period = Field()
     stock_cd = Field()
-    data_sour = Field()
     curr_fund = Field()
     notes_recev = Field()
     txn_fin_ast = Field()
@@ -295,19 +262,17 @@ class AsstLiabTableItem(HBaseItem):
     modifytime = Field()
 
     def get_row_key(self):
-        return '%s_%s_%s_%s' % (
-            self['data_sour'],
+        return '%s_%s_%s' % (
+            self['stock_cd'],
             self['year'],
-            self['period'],
-            self['stock_cd']
+            self['period']
         )
 
 
 class ProfitTableItem(HBaseItem):
-    required_fields = ['stock_cd', 'year', 'period', 'data_sour']
+    required_fields = ['stock_cd', 'year', 'period']
     table_name = 'dw_profit'
     column_family = 'profit'
-    model = ProfitTable
 
     year = Field()
     period = Field()
@@ -339,19 +304,17 @@ class ProfitTableItem(HBaseItem):
     modifytime = Field()
 
     def get_row_key(self):
-        return '%s_%s_%s_%s' % (
-            self['data_sour'],
+        return '%s_%s_%s' % (
+            self['stock_cd'],
             self['year'],
-            self['period'],
-            self['stock_cd']
+            self['period']
         )
 
 
 class CashFlowTableItem(HBaseItem):
-    required_fields = ['stock_cd', 'year', 'period', 'data_sour']
+    required_fields = ['stock_cd', 'year', 'period']
     table_name = 'dw_cashflow'
     column_family = 'cash'
-    model = CashFlowTable
 
     year = Field()
     period = Field()
@@ -391,161 +354,8 @@ class CashFlowTableItem(HBaseItem):
     modifytime = Field()
 
     def get_row_key(self):
-        return '%s_%s_%s_%s' % (
-            self['data_sour'],
+        return '%s_%s_%s' % (
+            self['stock_cd'],
             self['year'],
-            self['period'],
-            self['stock_cd']
+            self['period']
         )
-
-
-class PdfItem(Item):
-    stock_cd = Field()
-    year = Field()
-    period = Field()
-    title = Field()
-
-    file_urls = Field()
-    files = Field()
-
-
-class UradarWeiboItem(PublishItem):
-    table_name = 'uradar_weibo'
-
-    required_fields = ['weibo_id', 'weibo_url', 'content', 'created_at']
-
-    weibo_id = Field()
-    weibo_url = Field()
-    content = Field()
-    created_at = Field()
-
-    user_url = Field()
-    screen_name = Field()
-    user_pic = Field()
-
-    comment_count = Field()
-    repost_count = Field()
-
-    def get_row_key(self):
-        return self['weibo_url']
-
-
-class UradarBBSItem(PublishItem):
-    table_name = 'uradar_bbs'
-    required_fields = ['thread_id', 'post_id', 'url', 'title', 'content',
-                       'publish_time']
-
-    thread_id = Field()
-    post_id = Field()
-
-    url = Field()
-    title = Field()
-    abstract = Field()
-    keywords = Field()
-    content = Field()
-    author = Field()
-    publish_time = Field()
-
-    source = Field()
-
-    site_domain = Field()
-    site_name = Field()
-
-    sentiment = Field()
-
-    def get_row_key(self):
-        return '%s_%s_%s' % (self['site_domain'], self['thread_id'],
-                             self['post_id'])
-
-
-class UradarArticleItem(PublishItem):
-
-    table_name = 'uradar_article'
-    row_key_field = 'url'
-    required_fields = ['url', 'title', 'content', 'publish_time']
-
-    url = Field()
-    title = Field()
-    author = Field()
-    abstract = Field()
-    content = Field()
-    publish_time = Field()
-    source = Field()  # 文章来源
-    keywords = Field()
-
-    article_type = Field()  # 文章类型
-    site_domain = Field()
-    site_name = Field()
-
-    add_time = Field()
-    sentiment = Field()
-
-
-class UradarNewsItem(UradarArticleItem):
-
-    def __init__(self):
-        super(UradarNewsItem, self).__init__(article_type='1')
-
-
-class UradarBlogItem(UradarArticleItem):
-
-    def __init__(self):
-        super(UradarBlogItem, self).__init__(article_type='3')
-
-
-class UradarWeixinItem(UradarArticleItem):
-
-    def __init__(self):
-        super(UradarWeixinItem, self).__init__(article_type='2')
-
-
-class UradarReportItem(UradarArticleItem):
-
-    def __init__(self):
-        super(UradarReportItem, self).__init__(article_type='4')
-
-
-class UradarActivityItem(HBaseItem):
-
-    table_name = 'uradar_activity'
-    row_key_field = 'url'
-    required_fields = ['url', 'title', 'start_time', 'end_time']
-
-    url = Field()
-    title = Field()
-    start_time = Field()
-    end_time = Field()
-    location = Field()
-    trad = Field()
-    content = Field()
-    keywords = Field()
-
-    source_domain = Field()
-    source_name = Field()
-    add_time = Field()
-
-
-class CarComDetailItem(PublishItem):
-
-    table_name = 'car_com_detail'
-    row_key_field = 'comment_id'
-    required_fields = ['comment_id', 'product_id', 'url', 'content', 'author', 'publish_time']
-
-    comment_id = Field()
-    product_id = Field()
-    url = Field()
-    author = Field()
-    content = Field()
-    publish_time = Field()
-    sentiment = Field()
-
-
-class CarDanPinItem(HBaseItem):
-
-    table_name = 'car_danpin'
-    row_key_field = 'product_id'
-    required_fields = ['product_id', 'brand', 'type']
-
-    product_id = Field()
-    brand = Field()
-    type = Field()

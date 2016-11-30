@@ -20,7 +20,7 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
     # ]
 
 
-  
+
     balanceSheetColumn = {
     u'货币资金':'curr_fund',
     u'应收票据':'notes_recev',
@@ -91,7 +91,7 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
     }
     def start_requests(self):
         session = Session()
-        try: 
+        try:
             self.periodlist = session.query(PeriodList).order_by(
                 desc(PeriodList.year), desc(PeriodList.period)
                 ).all()
@@ -128,13 +128,9 @@ class CnInfoComCnBalanceSpider(CrawlSpider):
         item['year'] = year
         item['period'] = month
         item['stock_cd'] = stockCode
-        item['data_sour'] = '2'
         item['modifytime'] = time.strftime("%Y-%m-%d %H:%M:%S")
         for key in arrRes.keys():
             if key in self.balanceSheetColumn:
                 item[self.balanceSheetColumn[key]] = arrRes[key].replace(',','')
 
         return item
-        
-
-        

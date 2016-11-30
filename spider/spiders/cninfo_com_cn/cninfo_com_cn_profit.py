@@ -11,7 +11,7 @@ from spider.models import CurrListedCorp, PeriodList
 class CninfoComCnProfitSpider(Spider):
     name = "cninfo_com_cn_profit"
     allowed_domains = ["cninfo.com.cn"]
-    
+
     arrStockProfitColumn = {
 		u"一、营业收入": "biz_income",
         u"减:营业成本": "biz_cost",
@@ -68,7 +68,7 @@ class CninfoComCnProfitSpider(Spider):
                             'period': period,
                         },
                         callback=self.parse_profit
-                    )                   
+                    )
         finally:
             session.close()
 
@@ -89,7 +89,6 @@ class CninfoComCnProfitSpider(Spider):
         item['stock_cd'] = response.meta['stock_cd']
         item['year'] = response.meta['year']
         item['period'] = response.meta['period']
-        item['data_sour'] = '2'
        	item['modifytime'] = datetime.datetime.now().strftime(
             '%Y-%m-%d %H:%M:%S'
         )

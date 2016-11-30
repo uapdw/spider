@@ -44,9 +44,3 @@ class SseComCnShListedCorpInfoSpider(CrawlSpider):
             item['data_sour'] = 0
             info_detail.append(item)
         return info_detail
-
-
-
-
-
-

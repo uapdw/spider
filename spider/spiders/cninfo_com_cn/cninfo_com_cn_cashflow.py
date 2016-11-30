@@ -11,7 +11,7 @@ from spider.models import CurrListedCorp, PeriodList
 class CninfoComCnCashFlowSpiderSpider(Spider):
     name = "cninfo_com_cn_cashflow"
     allowed_domains = ["cninfo.com.cn"]
-    
+
     arrStockCashFlowColumn = {
 		u"销售商品、提供劳务收到的现金": "cash_recev_sell_goods",
 		u"收到的税费返还": "refund_taxes",
@@ -76,7 +76,7 @@ class CninfoComCnCashFlowSpiderSpider(Spider):
                             'period': period,
                         },
                         callback=self.parse_cashflow
-                    )                   
+                    )
         finally:
             session.close()
 
@@ -98,7 +98,6 @@ class CninfoComCnCashFlowSpiderSpider(Spider):
         item['stock_cd'] = response.meta['stock_cd']
         item['year'] = response.meta['year']
         item['period'] = response.meta['period']
-        item['data_sour'] = '2'
        	item['modifytime'] = datetime.datetime.now().strftime(
             '%Y-%m-%d %H:%M:%S'
         )

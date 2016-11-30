@@ -11,15 +11,10 @@ NEWSPIDER_MODULE = 'spider.spiders'
 fake = Factory.create()
 USER_AGENT = fake.internet_explorer()
 
-FILES_STORE = '/data0/files/stock_reports'
-
 ITEM_PIPELINES = {
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 100,
-    'spider.pipelines.NamedFilesPipeline': 300,
     'spider.pipelines.SqlalchemyPipeline': 500,
-    # 'spider.pipelines.JSONWriterPipeline': 1,
     'spider.pipelines.HBaseItemPipeline': 700,
-    # 'spider.pipelines.SolrItemPipeline': 2
 }
 
 RETRY_TIMES = 3
@@ -48,6 +43,3 @@ RETRY_ENABLED = False
 
 HBASE_HOST = '172.20.13.183'
 HBASE_PORT = 9090
-SOLR_HOST = '172.20.13.207'
-SOLR_PORT = 8983
-SOLR_INDEX = 'uradar_article'
